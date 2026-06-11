@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Hero from '../components/Hero.astro'
+import { featuredDishes } from '../data/menu'
+---
+
+<BaseLayout title="FRESCOLITO RESTAURANTE | Iquitos - Perú">
+  <Hero />
+
+  <section class="section">
+    <div class="container" data-reveal>
+      <h2 class="section-title">Platos Destacados</h2>
+      <div class="dish-grid">
+        {featuredDishes.map((dish) => (
+          <div class="dish-card" data-reveal>
+            <img src={dish.image} alt={dish.name} class="dish-img" loading="lazy" />
+            <div class="dish-info">
+              <h3 class="dish-name">{dish.name}</h3>
+              <span class="dish-price">S/ {dish.price.toFixed(2)}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div class="section-cta">
+        <a href="/menu" class="btn btn-primary">Ver Menú Completo</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section story-section">
+    <div class="container" style="text-align:center">
+      <h2 class="story-title" data-reveal>Nuestra Historia</h2>
+      <p class="story-text" data-reveal>
+        En FRESCOLITO traemos los sabores auténticos de la Amazonía peruana a tu mesa.
+        Desde Iquitos, preparamos cada plato con ingredientes frescos y recetas tradicionales
+        que capturan la esencia de nuestra tierra.
+      </p>
+      <a href="/nosotros" class="btn btn-primary" data-reveal>Conócenos</a>
+    </div>
+  </section>
+
+  <section class="section promo-section">
+    <div class="container" style="text-align:center">
+      <h2 data-reveal>Promo Marino</h2>
+      <p class="promo-text" data-reveal>Combina tus platos favoritos desde S/ 25.00</p>
+      <a href="/menu" class="btn btn-primary" data-reveal>Ver Promociones</a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container" style="text-align:center">
+      <h2 class="section-title" data-reveal>Galería</h2>
+      <div class="gallery-grid-preview" data-reveal>
+        <img src="imagenes/WhatsApp Image 2026-03-26 at 11.19.05 AM.jpeg" alt="Plato 1" class="gallery-thumb" loading="lazy" />
+        <img src="imagenes/WhatsApp Image 2026-03-26 at 11.19.52 AM.jpeg" alt="Plato 2" class="gallery-thumb" loading="lazy" />
+        <img src="imagenes/WhatsApp Image 2026-03-27 at 10.31.09 AM.jpeg" alt="Plato 3" class="gallery-thumb" loading="lazy" />
+        <img src="imagenes/WhatsApp Image 2026-03-27 at 10.34.41 AM.jpeg" alt="Plato 4" class="gallery-thumb" loading="lazy" />
+      </div>
+      <a href="/galeria" class="btn btn-primary" data-reveal>Ver Más Fotos</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .section-title { text-align: center; margin-bottom: var(--space-lg); }
+  .dish-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--space-lg);
+  }
+  .dish-card {
+    background: var(--color-bg); border-radius: var(--radius);
+    overflow: hidden; box-shadow: var(--shadow-sm);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .dish-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .dish-img { width: 100%; height: 200px; object-fit: cover; }
+  .dish-info { padding: var(--space-md); }
+  .dish-name { font-size: 1.1rem; margin-bottom: 0.25rem; }
+  .dish-price {
+    font-family: var(--font-heading); font-size: 1.25rem;
+    font-weight: 700; color: var(--color-primary-hover);
+  }
+  .section-cta { text-align: center; margin-top: var(--space-lg); }
+  .story-section {
+    background: linear-gradient(135deg, var(--color-dark) 0%, #1a0e0a 100%);
+    color: var(--color-bg);
+  }
+  .story-title { color: var(--color-primary); margin-bottom: var(--space-md); }
+  .story-text {
+    color: var(--color-light); max-width: 700px;
+    margin: 0 auto var(--space-lg); font-size: 1.1rem; line-height: 1.8;
+  }
+  .promo-section { background: var(--color-light); }
+  .promo-text {
+    color: var(--color-mid); margin-bottom: var(--space-lg); font-size: 1.1rem;
+  }
+  .gallery-grid-preview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-md); margin-bottom: var(--space-lg);
+  }
+  .gallery-thumb {
+    width: 100%; height: 180px; object-fit: cover;
+    border-radius: var(--radius);
+  }
+</style>

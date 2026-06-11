@@ -1,0 +1,88 @@
+---
+import { categories } from '../data/menu'
+---
+
+<div class="menu-section">
+  <div class="container">
+    {categories.map((cat) => (
+      <div class="menu-category" id={cat.id}>
+        <h2 class="menu-category-title">{cat.name}</h2>
+        <div class="menu-grid">
+          {cat.items.map((item) => (
+            <div class="menu-item">
+              <div class="menu-item-body">
+                <h3 class="menu-item-name">{item.name}</h3>
+                <p class="menu-item-desc">{item.description}</p>
+              </div>
+              <div class="menu-item-footer">
+                <span class="menu-item-price">S/ {item.price.toFixed(2)}</span>
+                <button class="btn btn-primary menu-add-btn" data-id={item.id} data-name={item.name} data-price={item.price}>
+                  + Agregar
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .menu-section { padding: var(--space-xl) 0; }
+  .menu-category { margin-bottom: var(--space-xl); }
+  .menu-category-title {
+    font-size: 2rem; margin-bottom: var(--space-lg);
+    color: var(--color-dark);
+  }
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--space-lg);
+  }
+  .menu-item {
+    background: var(--color-bg); border: 1px solid var(--color-light);
+    border-radius: var(--radius); padding: var(--space-lg);
+    display: flex; flex-direction: column; justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .menu-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+  .menu-item-name {
+    font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--color-dark);
+  }
+  .menu-item-desc {
+    color: var(--color-mid); font-size: 0.9rem; line-height: 1.6; margin-bottom: var(--space-md);
+  }
+  .menu-item-footer {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .menu-item-price {
+    font-family: var(--font-heading); font-size: 1.5rem;
+    font-weight: 700; color: var(--color-primary-hover);
+  }
+  .menu-add-btn { font-size: 0.85rem; padding: 0.5rem 1rem; }
+</style>
+
+<script>
+  document.querySelectorAll('.menu-add-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-id')
+      const name = btn.getAttribute('data-name')
+      const price = parseFloat(btn.getAttribute('data-price'))
+      if (!id || !name || !price) return
+
+      const cart = JSON.parse(localStorage.getItem('frescolito-cart') || '[]')
+      const existing = cart.find(i => i.id === id)
+      if (existing) {
+        existing.quantity++
+      } else {
+        cart.push({ id, name, price, quantity: 1 })
+      }
+      localStorage.setItem('frescolito-cart', JSON.stringify(cart))
+      document.dispatchEvent(new CustomEvent('cart-updated'))
+
+      btn.textContent = '✓ Agregado'
+      setTimeout(() => { btn.textContent = '+ Agregar' }, 1500)
+    })
+  })
+</script>

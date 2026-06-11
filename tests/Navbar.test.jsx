@@ -1,29 +1,27 @@
 import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
-import Navbar from '../src/components/Navbar'
+import { WHATSAPP_NUMBER, BUSINESS_HOURS, SITE_NAME } from '../src/data/config'
 
-describe('Navbar', () => {
-  it('debe mostrar el logo FRESCOLITO', () => {
-    render(
-      <MemoryRouter>
-        <Navbar />
-      </MemoryRouter>
-    )
-    expect(screen.getByText('FRESCOLITO')).toBeInTheDocument()
+describe('Project Config', () => {
+  it('WHATSAPP_NUMBER debe ser el número correcto', () => {
+    expect(WHATSAPP_NUMBER).toBe('51927367844')
+    expect(WHATSAPP_NUMBER).toMatch(/^\d+$/)
   })
 
-  it('debe mostrar todos los enlaces de navegación', () => {
-    render(
-      <MemoryRouter>
-        <Navbar />
-      </MemoryRouter>
-    )
-    const links = ['Inicio', 'Menú', 'Nosotros', 'Galería', 'Contacto', 'Reservas']
-    links.forEach((link) => {
-      const elements = screen.getAllByText(link)
-      expect(elements.length).toBe(2)
-      elements.forEach((el) => expect(el).toBeInTheDocument())
-    })
+  it('BUSINESS_HOURS debe tener días laborables', () => {
+    expect(BUSINESS_HOURS.days).toEqual([1, 2, 3, 4, 5])
+  })
+
+  it('BUSINESS_HOURS debe tener horario de apertura', () => {
+    expect(BUSINESS_HOURS.open.h).toBe(11)
+    expect(BUSINESS_HOURS.open.m).toBe(30)
+  })
+
+  it('BUSINESS_HOURS debe tener horario de cierre', () => {
+    expect(BUSINESS_HOURS.close.h).toBe(15)
+    expect(BUSINESS_HOURS.close.m).toBe(15)
+  })
+
+  it('SITE_NAME debe ser correcto', () => {
+    expect(SITE_NAME).toBe('FRESCOLITO RESTAURANTE')
   })
 })

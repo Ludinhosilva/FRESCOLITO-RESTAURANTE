@@ -1,15 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MemoryRouter } from 'react-router-dom'
-import Reservations from '../src/pages/Reservations'
+import ReservationForm from '../src/components/react/ReservationForm'
 
 function renderReservations() {
-  return render(
-    <MemoryRouter>
-      <Reservations />
-    </MemoryRouter>
-  )
+  return render(<ReservationForm />)
 }
 
 describe('Reservations Page - Caja Negra', () => {

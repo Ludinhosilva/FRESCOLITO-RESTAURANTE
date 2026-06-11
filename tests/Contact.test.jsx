@@ -1,15 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MemoryRouter } from 'react-router-dom'
-import Contact from '../src/pages/Contact'
+import ContactForm from '../src/components/react/ContactForm'
 
 function renderContact() {
-  return render(
-    <MemoryRouter>
-      <Contact />
-    </MemoryRouter>
-  )
+  return render(<ContactForm />)
 }
 
 describe('Contact Page - Caja Negra', () => {

@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+---
+
+<BaseLayout title="Galería | FRESCOLITO RESTAURANTE" description="Galería de fotos de nuestros platos y momentos en FRESCOLITO.">
+  <main style="padding-top: 70px">
+    <section class="page-header">
+      <div class="container">
+        <h1 class="page-title">Galería</h1>
+        <p class="page-subtitle">Nuestros platos y momentos</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="gallery-grid" id="gallery-grid">
+          <img src="imagenes/WhatsApp Image 2026-03-26 at 11.19.05 AM.jpeg" alt="Plato 1" class="gallery-img" loading="lazy" />
+          <img src="imagenes/WhatsApp Image 2026-03-26 at 11.19.52 AM.jpeg" alt="Plato 2" class="gallery-img" loading="lazy" />
+          <img src="imagenes/WhatsApp Image 2026-03-27 at 10.31.09 AM.jpeg" alt="Plato 3" class="gallery-img" loading="lazy" />
+          <img src="imagenes/WhatsApp Image 2026-03-27 at 10.34.41 AM.jpeg" alt="Plato 4" class="gallery-img" loading="lazy" />
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="lightbox" class="lightbox" style="display:none" onclick="this.style.display='none'">
+    <img id="lightbox-img" class="lightbox-img" />
+  </div>
+</BaseLayout>
+
+<style>
+  .page-header {
+    background: linear-gradient(135deg, var(--color-dark) 0%, #1a0e0a 100%);
+    text-align: center; padding: calc(70px + var(--space-xl)) 0 var(--space-lg);
+  }
+  .page-title { color: var(--color-primary); }
+  .page-subtitle { color: var(--color-light); margin-top: var(--space-sm); }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-md);
+  }
+  .gallery-img {
+    width: 100%; height: 260px; object-fit: cover;
+    border-radius: var(--radius); cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .gallery-img:hover { transform: scale(1.02); box-shadow: var(--shadow-sm); }
+  .lightbox {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2000; cursor: pointer; padding: var(--space-lg);
+  }
+  .lightbox-img {
+    max-width: 90vw; max-height: 90vh;
+    object-fit: contain; border-radius: var(--radius);
+  }
+</style>
+
+<script>
+  const grid = document.getElementById('gallery-grid')
+  const lightbox = document.getElementById('lightbox')
+  const lightboxImg = document.getElementById('lightbox-img')
+
+  if (grid && lightbox && lightboxImg) {
+    grid.addEventListener('click', (e) => {
+      const img = e.target.closest('img')
+      if (!img) return
+      lightboxImg.src = img.src
+      lightbox.style.display = 'flex'
+    })
+  }
+</script>

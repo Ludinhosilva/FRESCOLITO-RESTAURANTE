@@ -1,0 +1,40 @@
+---
+import Navbar from '../components/Navbar.astro'
+import Footer from '../components/Footer.astro'
+import BusinessHours from '../components/BusinessHours.astro'
+import CartWidget from '../components/CartWidget.astro'
+import CartDrawer from '../components/react/CartDrawer.jsx'
+import '../styles/global.css'
+
+export interface Props {
+  title?: string
+  description?: string
+}
+
+const { title = 'FRESCOLITO RESTAURANTE', description = 'Cocina regional peruana en Iquitos' } = Astro.props
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="/imagenes/frescolito.jpeg" />
+    <link rel="icon" href="/imagenes/frescolito.jpeg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <Navbar />
+    <slot />
+    <BusinessHours />
+    <CartWidget />
+    <CartDrawer client:load />
+    <Footer />
+  </body>
+</html>
