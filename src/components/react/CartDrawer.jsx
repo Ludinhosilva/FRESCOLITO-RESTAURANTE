@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from 'react'
-import { generateOrderMessage, openWhatsApp } from '../../utils/whatsapp'
+import { generateOrderMessage, openWhatsApp, COMMISSION_PER_ITEM } from '../../utils/whatsapp'
 
 export default function CartDrawer() {
   const [items, setItems] = useState([])
   const [open, setOpen] = useState(false)
   const [notes, setNotes] = useState('')
+  const [isDelivery, setIsDelivery] = useState(false)
 
   const loadCart = useCallback(() => {
     try {
@@ -28,8 +29,10 @@ export default function CartDrawer() {
     }
   }, [loadCart])
 
-  const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0)
+  const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0)
   const count = items.reduce((sum, i) => sum + i.quantity, 0)
+  const commission = isDelivery ? count * COMMISSION_PER_ITEM : 0
+  const total = subtotal + commission
 
   function updateQuantity(id, delta) {
     const updated = items
@@ -47,7 +50,7 @@ export default function CartDrawer() {
   }
 
   function sendOrder() {
-    const msg = generateOrderMessage(items, total, notes)
+    const msg = generateOrderMessage(items, subtotal, commission, isDelivery, notes)
     openWhatsApp(msg)
   }
 
@@ -79,39 +82,59 @@ export default function CartDrawer() {
           }}>✕</button>
         </div>
 
-        <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem' }}>
+        <div style={{ flex: 1, overflowY: 'auto', padding: '0 1.5rem' }}>
           {items.length === 0 ? (
             <p style={{ color: 'var(--color-mid)', textAlign: 'center', marginTop: '2rem' }}>
               Tu carrito está vacío
             </p>
           ) : (
-            items.map((item) => (
-              <div key={item.id} style={{
-                display: 'flex', justifyContent: 'space-between',
-                alignItems: 'center', padding: '1rem 0',
-                borderBottom: '1px solid var(--color-light)',
+            <>
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: '0.5rem',
+                padding: '1rem 0', borderBottom: '1px solid var(--color-light)',
+                marginBottom: '0.5rem',
               }}>
-                <div>
-                  <p style={{ fontWeight: 700, fontSize: '0.95rem' }}>{item.name}</p>
-                  <p style={{ color: 'var(--color-mid)', fontSize: '0.85rem' }}>
-                    S/ {item.price.toFixed(2)} c/u
-                  </p>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                  <button onClick={() => updateQuantity(item.id, -1)} style={{
-                    background: 'var(--color-light)', border: 'none',
-                    width: '32px', height: '32px', borderRadius: '50%',
-                    cursor: 'pointer', fontWeight: 700, fontSize: '1rem',
-                  }}>−</button>
-                  <span style={{ fontWeight: 700 }}>{item.quantity}</span>
-                  <button onClick={() => updateQuantity(item.id, 1)} style={{
-                    background: 'var(--color-primary)', border: 'none',
-                    width: '32px', height: '32px', borderRadius: '50%',
-                    cursor: 'pointer', fontWeight: 700, fontSize: '1rem',
-                  }}>+</button>
-                </div>
+                <input
+                  id="delivery-toggle"
+                  type="checkbox"
+                  checked={isDelivery}
+                  onChange={(e) => setIsDelivery(e.target.checked)}
+                  style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                />
+                <label htmlFor="delivery-toggle" style={{ fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer' }}>
+                  Para llevar <span style={{ color: 'var(--color-mid)', fontWeight: 400 }}>(+S/ {COMMISSION_PER_ITEM.toFixed(2)} x plato)</span>
+                </label>
               </div>
-            ))
+
+              {items.map((item) => (
+                <div key={item.id} style={{
+                  display: 'flex', justifyContent: 'space-between',
+                  alignItems: 'center', padding: '1rem 0',
+                  borderBottom: '1px solid var(--color-light)',
+                }}>
+                  <div>
+                    <p style={{ fontWeight: 700, fontSize: '0.95rem' }}>{item.name}</p>
+                    <p style={{ color: 'var(--color-mid)', fontSize: '0.85rem' }}>
+                      S/ {item.price.toFixed(2)} c/u
+                      {isDelivery && <span style={{ color: 'var(--color-primary-hover)' }}> + S/ {COMMISSION_PER_ITEM.toFixed(2)} envío</span>}
+                    </p>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <button onClick={() => updateQuantity(item.id, -1)} style={{
+                      background: 'var(--color-light)', border: 'none',
+                      width: '32px', height: '32px', borderRadius: '50%',
+                      cursor: 'pointer', fontWeight: 700, fontSize: '1rem',
+                    }}>−</button>
+                    <span style={{ fontWeight: 700 }}>{item.quantity}</span>
+                    <button onClick={() => updateQuantity(item.id, 1)} style={{
+                      background: 'var(--color-primary)', border: 'none',
+                      width: '32px', height: '32px', borderRadius: '50%',
+                      cursor: 'pointer', fontWeight: 700, fontSize: '1rem',
+                    }}>+</button>
+                  </div>
+                </div>
+              ))}
+            </>
           )}
         </div>
 
@@ -129,18 +152,33 @@ export default function CartDrawer() {
                 minHeight: '60px',
               }}
             />
-            <div style={{
-              display: 'flex', justifyContent: 'space-between',
-              alignItems: 'center', marginBottom: '1rem',
-            }}>
-              <span style={{ fontWeight: 700 }}>Total</span>
-              <span style={{
-                fontFamily: 'var(--font-heading)', fontSize: '1.5rem',
-                fontWeight: 700, color: 'var(--color-primary-hover)',
+
+            <div style={{ marginBottom: '1rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                <span>Subtotal</span>
+                <span style={{ fontWeight: 700 }}>S/ {subtotal.toFixed(2)}</span>
+              </div>
+              {isDelivery && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                  <span>Comisión ({count} platos x S/ {COMMISSION_PER_ITEM.toFixed(2)})</span>
+                  <span style={{ fontWeight: 700 }}>S/ {commission.toFixed(2)}</span>
+                </div>
+              )}
+              <div style={{
+                display: 'flex', justifyContent: 'space-between',
+                alignItems: 'center', paddingTop: '0.5rem',
+                borderTop: '2px solid var(--color-dark)',
               }}>
-                S/ {total.toFixed(2)}
-              </span>
+                <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>Total</span>
+                <span style={{
+                  fontFamily: 'var(--font-heading)', fontSize: '1.5rem',
+                  fontWeight: 700, color: 'var(--color-primary-hover)',
+                }}>
+                  S/ {total.toFixed(2)}
+                </span>
+              </div>
             </div>
+
             <button onClick={sendOrder} className="btn btn-primary" style={{
               width: '100%', justifyContent: 'center',
               padding: '1rem', fontSize: '1.05rem',
