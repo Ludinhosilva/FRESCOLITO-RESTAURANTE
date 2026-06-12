@@ -9,11 +9,11 @@ const links = [
 ]
 ---
 
-<nav class="navbar">
+<nav class="navbar" id="navbar">
   <div class="container nav-container">
     <a href="/" class="nav-logo">
       <img src="/imagenes/frescolito.jpeg" alt="FRESCOLITO" class="nav-logo-img" />
-      FRESCOLITO
+      <span class="nav-logo-text">FRESCOLITO</span>
     </a>
 
     <button class="hamburger-btn" id="hamburger" aria-label="Menú" aria-expanded="false">
@@ -39,7 +39,12 @@ const links = [
 <style>
   .navbar {
     position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: transparent;
+    transition: background 0.35s ease, box-shadow 0.35s ease;
+  }
+  .navbar.scrolled {
     background: var(--color-bg);
+    box-shadow: 0 1px 0 var(--color-light);
   }
   .nav-container {
     display: flex; align-items: center; justify-content: center;
@@ -47,24 +52,43 @@ const links = [
   }
   .nav-logo {
     display: flex; align-items: center; gap: 0.5rem;
-    font-family: var(--font-heading); font-size: 1.5rem;
-    font-weight: 900; color: var(--color-dark);
+    text-decoration: none;
     position: absolute; left: var(--space-md);
   }
-  .nav-logo-img { height: 45px; width: 45px; border-radius: 50%; object-fit: cover; }
+  .nav-logo-img {
+    height: 45px; width: 45px; border-radius: 50%; object-fit: cover;
+    transition: border 0.3s ease;
+    border: 2px solid transparent;
+  }
+  .navbar:not(.scrolled) .nav-logo-img {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 12px rgba(253,185,19,0.3);
+  }
+  .nav-logo-text {
+    font-family: var(--font-heading); font-size: 1.5rem;
+    font-weight: 900;
+    transition: color 0.3s ease;
+  }
+  .navbar:not(.scrolled) .nav-logo-text { color: white; text-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+  .navbar.scrolled .nav-logo-text { color: var(--color-dark); }
+
   .nav-links { display: flex; gap: 2rem; align-items: center; }
   .nav-link {
     font-family: var(--font-body); font-weight: 700; font-size: 0.85rem;
-    text-transform: uppercase; letter-spacing: 0.5px; color: var(--color-dark);
+    text-transform: uppercase; letter-spacing: 0.5px;
     position: relative; transition: color 0.3s ease;
+    text-decoration: none;
   }
+  .navbar:not(.scrolled) .nav-link { color: white; text-shadow: 0 2px 6px rgba(0,0,0,0.4); }
+  .navbar.scrolled .nav-link { color: var(--color-dark); }
   .nav-link::after {
     content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
     height: 2px; background: var(--color-primary);
     transform: scaleX(0); transition: transform 0.3s ease;
   }
   .nav-link:hover::after, .nav-link.active::after { transform: scaleX(1); }
-  .nav-link:hover { color: var(--color-primary-hover); }
+  .navbar:not(.scrolled) .nav-link:hover { color: var(--color-primary); }
+  .navbar.scrolled .nav-link:hover { color: var(--color-primary-hover); }
 
   .hamburger-btn {
     display: none; flex-direction: column; justify-content: center;
@@ -74,8 +98,10 @@ const links = [
   }
   .hamburger-btn span {
     display: block; width: 24px; height: 2px;
-    background: var(--color-dark); border-radius: 2px; transition: all 0.3s ease;
+    border-radius: 2px; transition: all 0.3s ease;
   }
+  .navbar:not(.scrolled) .hamburger-btn span { background: white; }
+  .navbar.scrolled .hamburger-btn span { background: var(--color-dark); }
   .hamburger-btn.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
   .hamburger-btn.active span:nth-child(2) { opacity: 0; }
   .hamburger-btn.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
@@ -92,6 +118,7 @@ const links = [
     font-weight: 700; font-size: 1.2rem; text-transform: uppercase;
     letter-spacing: 1px; color: var(--color-dark);
     border-bottom: 1px solid var(--color-light); transition: color 0.3s ease;
+    text-decoration: none;
   }
 
   @media (max-width: 768px) {
@@ -102,8 +129,26 @@ const links = [
 </style>
 
 <script>
+  const navbar = document.getElementById('navbar')
   const hamburger = document.getElementById('hamburger')
   const menu = document.getElementById('mobile-menu')
+  const isHome = window.location.pathname === '/'
+
+  function updateNav() {
+    if (!navbar) return
+    if (!isHome) {
+      navbar.classList.add('scrolled')
+      return
+    }
+    if (window.scrollY > window.innerHeight * 0.7) {
+      navbar.classList.add('scrolled')
+    } else {
+      navbar.classList.remove('scrolled')
+    }
+  }
+
+  updateNav()
+  window.addEventListener('scroll', updateNav, { passive: true })
 
   if (hamburger && menu) {
     hamburger.addEventListener('click', () => {
