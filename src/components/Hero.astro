@@ -1,10 +1,28 @@
 ---
-import { SITE_NAME, SITE_DESCRIPTION } from '../data/config'
+import { SITE_DESCRIPTION } from '../data/config'
+
+const images = [
+  'imagenes/carrusel/WhatsApp Image 2026-03-26 at 11.19.05 AM.jpeg',
+  'imagenes/carrusel/ChatGPT Image 12 jun 2026, 11_19_56 a.m.png',
+  'imagenes/carrusel/ChatGPT Image 12 jun 2026, 11_44_43 a.m.png',
+  'imagenes/carrusel/ChatGPT Image 12 jun 2026, 12_06_44 p.m.png',
+  'imagenes/carrusel/ChatGPT Image 12 jun 2026, 12_09_33 p.m.png',
+]
 ---
 
-<section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-overlay"></div>
+<section class="hero" id="hero">
+  <div class="swiper-container" id="hero-swiper">
+    <div class="swiper-wrapper">
+      {images.map((img, i) => (
+        <div class="swiper-slide">
+          <img src={img} alt={`FRESCOLITO ${i + 1}`} class="hero-slide-img" loading={i === 0 ? 'eager' : 'lazy'} />
+          <div class="hero-slide-overlay"></div>
+        </div>
+      ))}
+    </div>
+    <div class="swiper-pagination"></div>
+  </div>
+
   <div class="hero-content">
     <img src="/imagenes/frescolito.jpeg" alt="FRESCOLITO" class="hero-logo" />
     <h1 class="hero-title">FRESCOLITO</h1>
@@ -18,31 +36,48 @@ import { SITE_NAME, SITE_DESCRIPTION } from '../data/config'
 
 <style>
   .hero {
-    height: 100vh; display: flex; align-items: center;
-    justify-content: center; position: relative; overflow: hidden;
+    height: 100vh; position: relative; overflow: hidden;
   }
-  .hero-bg {
+  .swiper-container {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+  }
+  .hero-slide-img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+  }
+  .hero-slide-overlay {
     position: absolute; inset: 0;
-    background: linear-gradient(135deg, var(--color-dark) 0%, #1a0e0a 50%, var(--color-dark) 100%);
+    background: linear-gradient(0deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.5) 100%);
   }
-  .hero-overlay {
-    position: absolute; inset: 0;
-    background: radial-gradient(circle at 30% 40%, rgba(253,185,19,0.08) 0%, transparent 60%);
+  .hero-content {
+    text-align: center; position: relative; z-index: 2;
+    padding: 0 var(--space-md);
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; height: 100%;
   }
-  .hero-content { text-align: center; position: relative; z-index: 1; padding: 0 var(--space-md); }
   .hero-logo {
-    width: 180px; height: 180px; border-radius: 50%; object-fit: cover;
-    margin: 0 auto var(--space-lg); border: 4px solid var(--color-primary);
+    width: 150px; height: 150px; border-radius: 50%; object-fit: cover;
+    margin-bottom: var(--space-lg); border: 4px solid var(--color-primary);
     box-shadow: 0 0 40px rgba(253,185,19,0.3);
   }
   .hero-title {
-    color: var(--color-primary); font-size: clamp(2.5rem,6vw,5rem);
-    margin-bottom: var(--space-md); text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    font-family: 'Pacifico', cursive;
+    font-weight: 400;
+    font-size: clamp(3rem, 7vw, 6rem);
+    color: var(--color-primary);
+    -webkit-text-stroke: 3px var(--color-dark);
+    paint-order: stroke fill;
+    text-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    margin-bottom: var(--space-md);
+    line-height: 1.1;
   }
   .hero-subtitle {
-    color: var(--color-light); font-size: clamp(1.1rem,2vw,1.5rem);
-    font-family: var(--font-body); font-weight: 300;
+    color: white;
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    font-family: var(--font-body);
+    font-weight: 300;
     max-width: 600px; margin: 0 auto var(--space-lg);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
   }
   .hero-actions { display: flex; gap: var(--space-md); justify-content: center; flex-wrap: wrap; }
   .hero-btn { font-size: 1.1rem; padding: 1rem 2.5rem; }
@@ -51,4 +86,34 @@ import { SITE_NAME, SITE_DESCRIPTION } from '../data/config'
     border-color: var(--color-primary); color: var(--color-primary);
   }
   .hero-btn-oul:hover { background: var(--color-primary); color: var(--color-dark); }
+
+  .swiper-pagination { bottom: 30px !important; }
+  .swiper-pagination-bullet {
+    width: 10px; height: 10px; background: rgba(255,255,255,0.5);
+    opacity: 1; transition: all 0.3s ease;
+  }
+  .swiper-pagination-bullet-active {
+    background: var(--color-primary); width: 28px; border-radius: 5px;
+  }
+
+  @media (max-width: 768px) {
+    .hero-title { -webkit-text-stroke: 2px var(--color-dark); }
+    .hero-logo { width: 120px; height: 120px; }
+  }
 </style>
+
+<script>
+  import Swiper from 'swiper'
+  import { Autoplay, Pagination } from 'swiper/modules'
+  import 'swiper/css'
+
+  new Swiper('#hero-swiper', {
+    modules: [Autoplay, Pagination],
+    autoplay: { delay: 5000, disableOnInteraction: false },
+    pagination: { el: '.swiper-pagination', clickable: true },
+    effect: 'fade',
+    fadeEffect: { crossFade: true },
+    speed: 800,
+    loop: true,
+  })
+</script>

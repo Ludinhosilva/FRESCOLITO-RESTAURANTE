@@ -146,8 +146,9 @@ import { categories } from '../data/menu'
       localStorage.setItem('frescolito-cart', JSON.stringify(cart))
       document.dispatchEvent(new CustomEvent('cart-updated'))
 
-      btn.textContent = '✓ Agregado'
-      setTimeout(() => { btn.textContent = '+ Agregar' }, 1500)
+      btn.style.transform = 'scale(0.9)'
+      btn.style.transition = 'transform 0.15s ease'
+      setTimeout(() => { btn.style.transform = '' }, 150)
     })
   })
 </script>
