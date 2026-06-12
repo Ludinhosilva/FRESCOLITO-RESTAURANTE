@@ -3,42 +3,68 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 ---
 
 <BaseLayout title="Nosotros | FRESCOLITO RESTAURANTE" description="Conoce la historia de FRESCOLITO, cocina regional peruana en Iquitos.">
-  <main style="padding-top: 70px">
-    <section class="page-header">
-      <div class="container">
-        <h1 class="page-title">Nosotros</h1>
-        <p class="page-subtitle">Conoce la historia detrás de FRESCOLITO</p>
+  <main>
+    <section class="nos-hero">
+      <img src="/imagenes/carrusel/ChatGPT%20Image%2012%20jun%202026,%2011_44_43%20a.m.png" alt="" class="nos-hero-bg" />
+      <div class="nos-hero-overlay"></div>
+      <div class="nos-hero-content">
+        <h1 class="nos-hero-title">FRESCOLITO</h1>
+        <p class="nos-hero-sub">Cocina regional peruana en el corazón de Iquitos</p>
       </div>
     </section>
 
-    <section class="section">
-      <div class="container about-grid">
-        <div>
-          <h2 class="about-title">Nuestra Historia</h2>
-          <p class="about-text">
-            FRESCOLITO nació en Iquitos, en el corazón de la Amazonía peruana, con la visión
-            de compartir los sabores auténticos de nuestra región. Cada plato es una celebración
-            de la riqueza gastronómica de la selva peruana.
-          </p>
-          <p class="about-text">
-            Utilizamos ingredientes frescos y recetas tradicionales transmitidas de generación
-            en generación, combinando técnicas clásicas con un toque moderno.
-          </p>
+    <section class="nos-about">
+      <div class="container nos-about-grid">
+        <div class="nos-about-text">
+          <span class="nos-label">Sobre FRESCOLITO</span>
+          <h2>Nuestra Historia</h2>
+          <p>FRESCOLITO nació en Iquitos, en el corazón de la Amazonía peruana, con la visión de compartir los sabores auténticos de nuestra región. Cada plato es una celebración de la riqueza gastronómica de la selva peruana.</p>
+          <p>Utilizamos ingredientes frescos y recetas tradicionales transmitidas de generación en generación, combinando técnicas clásicas con un toque moderno.</p>
         </div>
-        <div class="about-image-placeholder">
-          <span>Imagen del restaurante</span>
+        <div class="nos-about-img">
+          <img src="/imagenes/carrusel/ChatGPT%20Image%2012%20jun%202026,%2012_09_33%20p.m.png" alt="FRESCOLITO Ambiente" loading="lazy" />
         </div>
       </div>
     </section>
 
-    <section class="section values-section">
+    <section class="nos-history">
+      <div class="nos-history-img">
+        <img src="/imagenes/carrusel/ChatGPT%20Image%2012%20jun%202026,%2012_06_44%20p.m.png" alt="Historia FRESCOLITO" loading="lazy" />
+      </div>
+      <div class="nos-history-content">
+        <div class="container">
+          <span class="nos-label">Como Empezamos</span>
+          <h2>El comienzo de FRESCOLITO</h2>
+          <p>FRESCOLITO comenzó como un sueño familiar en Iquitos, con la misión de llevar los auténticos sabores amazónicos a cada mesa. Desde nuestros inicios, nos comprometimos a usar ingredientes frescos de la región y recetas tradicionales que honran la rica herencia culinaria de la Amazonía peruana.</p>
+          <p>Hoy, seguimos sirviendo con la misma pasión y dedicación, ofreciendo una experiencia gastronómica única en la selva peruana.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="nos-values">
       <div class="container">
-        <h2 class="section-title">Nuestros Valores</h2>
-        <div class="values-grid">
-          <div class="value-card"><h3>Tradición</h3><p>Respetamos las recetas ancestrales de la Amazonía peruana.</p></div>
-          <div class="value-card"><h3>Frescura</h3><p>Seleccionamos los ingredientes más frescos para cada plato.</p></div>
-          <div class="value-card"><h3>Calidad</h3><p>Cada plato es preparado con los más altos estándares.</p></div>
-          <div class="value-card"><h3>Pasión</h3><p>Amamos lo que hacemos y se refleja en cada bocado.</p></div>
+        <h2 class="nos-section-title">Nuestros Valores</h2>
+        <div class="nos-values-grid">
+          <div class="nos-value-card">
+            <div class="nos-value-icon">🍲</div>
+            <h3>Tradición</h3>
+            <p>Respetamos las recetas ancestrales de la Amazonía peruana.</p>
+          </div>
+          <div class="nos-value-card">
+            <div class="nos-value-icon">🐟</div>
+            <h3>Frescura</h3>
+            <p>Seleccionamos los ingredientes más frescos para cada plato.</p>
+          </div>
+          <div class="nos-value-card">
+            <div class="nos-value-icon">⭐</div>
+            <h3>Calidad</h3>
+            <p>Cada plato es preparado con los más altos estándares.</p>
+          </div>
+          <div class="nos-value-card">
+            <div class="nos-value-icon">❤️</div>
+            <h3>Pasión</h3>
+            <p>Amamos lo que hacemos y se refleja en cada bocado.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -46,37 +72,94 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 </BaseLayout>
 
 <style>
-  .page-header {
-    background: linear-gradient(135deg, var(--color-dark) 0%, #1a0e0a 100%);
-    text-align: center; padding: calc(70px + var(--space-xl)) 0 var(--space-lg);
+  .nos-hero {
+    height: 70vh; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
   }
-  .page-title { color: var(--color-primary); }
-  .page-subtitle { color: var(--color-light); margin-top: var(--space-sm); }
-  .about-grid {
+  .nos-hero-bg {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+  }
+  .nos-hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 50%);
+  }
+  .nos-hero-content {
+    text-align: center; position: relative; z-index: 1; padding: 0 var(--space-md);
+  }
+  .nos-hero-title {
+    font-family: 'Pacifico', cursive; font-weight: 400;
+    color: var(--color-primary);
+    -webkit-text-stroke: 3px var(--color-dark);
+    paint-order: stroke fill;
+    font-size: clamp(3rem, 6vw, 5rem);
+    text-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  }
+  .nos-hero-sub {
+    color: white; font-size: 1.2rem; margin-top: var(--space-md);
+    font-family: var(--font-body); font-weight: 300;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  }
+
+  .nos-label {
+    display: inline-block; font-size: 0.85rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 2px;
+    color: var(--color-primary-hover); margin-bottom: var(--space-sm);
+  }
+
+  .nos-about { padding: var(--space-xl) 0; }
+  .nos-about-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: 1fr 1fr;
     gap: var(--space-xl); align-items: center;
   }
-  .about-title { margin-bottom: var(--space-md); }
-  .about-text { color: var(--color-mid); line-height: 1.8; margin-bottom: var(--space-md); }
-  .about-image-placeholder {
-    background: var(--color-light); border-radius: var(--radius);
-    padding: var(--space-xl); text-align: center; min-height: 300px;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--color-mid); font-style: italic;
+  .nos-about-text h2 { margin-bottom: var(--space-md); }
+  .nos-about-text p {
+    color: var(--color-mid); line-height: 1.8; margin-bottom: var(--space-md);
   }
-  .section-title { text-align: center; margin-bottom: var(--space-xl); }
-  .values-section { background: var(--color-light); }
-  .values-grid {
+  .nos-about-img img {
+    width: 100%; border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .nos-history {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--color-light);
+  }
+  .nos-history-img { height: 100%; min-height: 400px; }
+  .nos-history-img img {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .nos-history-content {
+    display: flex; align-items: center; padding: var(--space-xl);
+  }
+  .nos-history-content h2 { margin-bottom: var(--space-md); }
+  .nos-history-content p {
+    color: var(--color-mid); line-height: 1.8; margin-bottom: var(--space-md);
+  }
+
+  .nos-values { padding: var(--space-xl) 0; background: var(--color-bg); }
+  .nos-section-title { text-align: center; margin-bottom: var(--space-xl); }
+  .nos-values-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
     gap: var(--space-lg);
   }
-  .value-card {
+  .nos-value-card {
     text-align: center; padding: var(--space-lg);
-    background: var(--color-bg); border-radius: var(--radius);
-    box-shadow: var(--shadow-sm);
+    background: var(--color-bg); border: 1px solid var(--color-light);
+    border-radius: var(--radius); transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
-  .value-card h3 { margin-bottom: var(--space-sm); }
-  .value-card p { color: var(--color-mid); }
+  .nos-value-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-sm); }
+  .nos-value-icon { font-size: 2.5rem; margin-bottom: var(--space-sm); }
+  .nos-value-card h3 { margin-bottom: var(--space-sm); }
+  .nos-value-card p { color: var(--color-mid); }
+
+  @media (max-width: 768px) {
+    .nos-hero { height: 50vh; }
+    .nos-hero-title { -webkit-text-stroke: 2px var(--color-dark); }
+    .nos-about-grid, .nos-history { grid-template-columns: 1fr; }
+    .nos-history-img { min-height: 250px; }
+  }
 </style>
