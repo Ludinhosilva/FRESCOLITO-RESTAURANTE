@@ -2,11 +2,16 @@
 import { categories } from '../data/menu'
 ---
 
-<div class="menu-section">
+<div class="menu-section" id="menu-section">
   <div class="container">
+    <div class="menu-pills">
+      {categories.map((cat) => (
+        <button class="menu-pill active" data-cat={cat.id}>{cat.name}</button>
+      ))}
+    </div>
+
     {categories.map((cat) => (
-      <div class="menu-category" id={cat.id}>
-        <h2 class="menu-category-title">{cat.name}</h2>
+      <div class="menu-category active" id={`cat-${cat.id}`}>
         <div class="menu-grid">
           {cat.items.map((item) => (
             <div class="menu-item">
@@ -15,7 +20,9 @@ import { categories } from '../data/menu'
                 <p class="menu-item-desc">{item.description}</p>
               </div>
               <div class="menu-item-footer">
-                <span class="menu-item-price">S/ {item.price.toFixed(2)}</span>
+                <div class="menu-price-block">
+                  <span class="menu-item-price">S/ {item.price.toFixed(2)}</span>
+                </div>
                 <button class="btn btn-primary menu-add-btn" data-id={item.id} data-name={item.name} data-price={item.price}>
                   + Agregar
                 </button>
@@ -30,11 +37,38 @@ import { categories } from '../data/menu'
 
 <style>
   .menu-section { padding: var(--space-xl) 0; }
-  .menu-category { margin-bottom: var(--space-xl); }
-  .menu-category-title {
-    font-size: 2rem; margin-bottom: var(--space-lg);
-    color: var(--color-dark);
+  .menu-pills {
+    display: flex; justify-content: center; gap: 0.75rem;
+    margin-bottom: var(--space-xl); flex-wrap: wrap;
   }
+  .menu-pill {
+    padding: 0.65rem 2rem;
+    border: 2px solid var(--color-light);
+    background: var(--color-bg);
+    border-radius: 50px;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--color-mid);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .menu-pill:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary-hover);
+  }
+  .menu-pill.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-dark);
+    box-shadow: 0 2px 12px rgba(253,185,19,0.35);
+  }
+
+  .menu-category { display: none; }
+  .menu-category.active { display: block; }
+
   .menu-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -48,7 +82,8 @@ import { categories } from '../data/menu'
   }
   .menu-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
   .menu-item-name {
-    font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--color-dark);
+    font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--color-dark);
+    font-family: var(--font-heading); font-weight: 700;
   }
   .menu-item-desc {
     color: var(--color-mid); font-size: 0.9rem; line-height: 1.6; margin-bottom: var(--space-md);
@@ -56,14 +91,44 @@ import { categories } from '../data/menu'
   .menu-item-footer {
     display: flex; align-items: center; justify-content: space-between;
   }
+  .menu-price-block {
+    background: rgba(253,185,19,0.1);
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius);
+  }
   .menu-item-price {
-    font-family: var(--font-heading); font-size: 1.5rem;
+    font-family: var(--font-heading); font-size: 1.4rem;
     font-weight: 700; color: var(--color-primary-hover);
   }
-  .menu-add-btn { font-size: 0.85rem; padding: 0.5rem 1rem; }
+  .menu-add-btn { font-size: 0.85rem; padding: 0.55rem 1.1rem; }
+
+  @media (max-width: 480px) {
+    .menu-pill { padding: 0.5rem 1.25rem; font-size: 0.85rem; }
+    .menu-item-price { font-size: 1.2rem; }
+  }
 </style>
 
 <script>
+  const pills = document.querySelectorAll('.menu-pill')
+  const cats = document.querySelectorAll('.menu-category')
+
+  pills.forEach((pill, i) => {
+    if (i > 0) pill.classList.remove('active')
+    pill.addEventListener('click', () => {
+      const catId = pill.getAttribute('data-cat')
+      pills.forEach(p => p.classList.remove('active'))
+      pill.classList.add('active')
+      cats.forEach(c => {
+        c.classList.toggle('active', c.id === `cat-${catId}`)
+      })
+    })
+  })
+
+  cats.forEach((cat, i) => {
+    if (i === 0) cat.classList.add('active')
+    else cat.classList.remove('active')
+  })
+
   document.querySelectorAll('.menu-add-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.getAttribute('data-id')

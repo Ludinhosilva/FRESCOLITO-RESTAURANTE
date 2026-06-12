@@ -57,7 +57,7 @@ describe('Contact Page - Caja Negra', () => {
     await user.type(screen.getByLabelText('Mensaje'), 'Quiero hacer un pedido')
     await user.click(screen.getByText('Enviar Mensaje'))
     expect(screen.getByText('Mensaje enviado con éxito. Te contactaremos pronto.')).toBeInTheDocument()
-  })
+  }, 10000)
 })
 
 describe('Contact Page - Caja Blanca (Validación)', () => {

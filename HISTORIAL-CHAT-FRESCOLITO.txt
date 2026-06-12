@@ -1,0 +1,477 @@
+================================================================================
+            HISTORIAL COMPLETO DEL CHAT - FRESCOLITO RESTAURANTE
+                        Sesion de Desarrollo
+                        Fecha: 11 de Junio de 2026
+================================================================================
+
+INDICE:
+1.  INFORMACION INICIAL Y METODOLOGIA
+2.  SKILL-SDD: METODOLOGIA COMPLETA
+3.  REFERENCIAS DE DISENO
+4.  COLORES OFICIALES DEL LOGO
+5.  MENU DEL RESTAURANTE
+6.  DECISIONES TECNICAS (STACK)
+7.  PLAN DE EJECUCION
+8.  ARCHIVOS DE ESPECIFICACION (SPECS)
+9.  ESTRUCTURA DEL PROYECTO
+10. PAGINAS Y RUTAS
+11. MIGRACION A ASTRO
+12. CARRITO DE COMPRAS + WHATSAPP
+13. HORARIO DE ATENCION FLOTANTE
+14. COMISION PARA LLEVAR
+15. TESTING
+16. DESPLIEGUE
+17. COMANDOS UTILES
+
+================================================================================
+1. INFORMACION INICIAL Y METODOLOGIA
+================================================================================
+
+Para complementar la informacion de los audios y realizar un proyecto de
+software de alta calidad siguiendo las practicas de Gonzalo (BCP) y Artur
+(Globant), se aplico:
+
+ESTRATEGIA DE TESTING Y CALIDAD:
+- Piramide de pruebas: Unitarias -> Integracion -> Regresion
+- Caja Negra: validar entradas y salidas (formularios)
+- Caja Blanca: revisar logica interna, prevenir SQL Injection y XSS
+- Cobertura >= 80% (meta profesional)
+
+METODOLOGIA SDD (Spec-Driven Development) CON IA:
+- Roles de Agentes: Arquitecto, Disenador de Software, Desarrollador
+- Archivos de especificacion .md
+- Automatizacion con Hooks (linter, formateador)
+
+PRINCIPIOS SOLID + POO:
+- Desacoplar clases para poder aislar en tests
+- Abstraccion para que IA y humano puedan testear facilmente
+
+================================================================================
+2. SKILL-SDD: METODOLOGIA COMPLETA
+================================================================================
+
+Archivo creado: SKILL-FrescLito-SDD.md
+
+Roles de Agentes:
+- Arquitecto: Claude Opus / GPT-4 (decisiones de alto nivel, NO escribe codigo)
+- Software Designer: Modelo intermedio (UI, contratos de datos)
+- Desarrollador: DeepSeek / OpenCode low-cost (implementar funciones)
+
+Optimizacion de Recursos:
+- Modelos low-cost (DeepSeek) para tareas repetitivas
+- Modelos premium solo para Arquitecto
+- OpenCode como orquestador low-cost
+
+Checklist por Iteracion:
+[ ] Los tests unitarios pasan?
+[ ] Los tests de integracion pasan?
+[ ] Cobertura >= 80%?
+[ ] Caja negra validada (input -> output)?
+[ ] Caja blanca revisada (seguridad, logica)?
+[ ] Linter y formateador ejecutados?
+[ ] ADR actualizado si cambio alguna decision?
+[ ] Pruebas de regresion ejecutadas?
+
+================================================================================
+3. REFERENCIAS DE DISENO
+================================================================================
+
+- Estructura: Figma Community "Restaurant Landing Page Template"
+  https://www.figma.com/design/vbIPuttYpokzGPEIVKLF6P/Restaurent-Landing-Page-Template--Community-
+
+- Estilo/Vibra: primoschickenbar.pe (scroll suave Lenis, animaciones GSAP,
+  carruseles Swiper)
+
+- Inspiracion anterior: lalena.com.pe
+
+Tecnologias de referencia:
+- Lenis: libreria ligera para smooth scroll
+- GSAP + ScrollTrigger: animaciones al ritmo del scroll
+- Swiper.js / Splide.js: carruseles de platos
+
+================================================================================
+4. COLORES OFICIALES DEL LOGO
+================================================================================
+
+Amarillo principal: #FDB913  (vibrante, fondo del logo)
+Amarillo oscuro:    #F39C12  (profundidad, hover)
+Marron oscuro:      #3E2723  (chocolate oscuro, textos principales)
+Marron medio:       #8D6E63  (bordes, fondos secundarios)
+Beige claro:        #BCAAA4  (fondos de tarjetas, secciones)
+Blanco:             #FFFFFF  (fondo general)
+Negro:              #000000  (texto corporal)
+
+Tipografia:
+- Titulos: Playfair Display (400, 700, 900)
+- Cuerpo: Lato (300, 400, 700)
+
+================================================================================
+5. MENU DEL RESTAURANTE
+================================================================================
+
+Restaurante: FRESCOLITO
+Ubicacion: Iquitos, Peru
+Tipo: Cocina regional peruana - Menu y A la carta
+
+A LA CARTA:
+  Ceviche Simple (1S)    - S/ 10.00
+  Ceviche Simple (2S)    - S/ 15.00
+  Ceviche Simple (3S)    - S/ 20.00
+  Ceviche Mixto          - S/ 25.00
+  Chicharron de Pollo    - S/ 20.00
+  Chicharron de Pescado  - S/ 20.00
+  Arroz con Mariscos     - S/ 20.00
+  Chaufa con Mariscos    - S/ 20.00
+  Chaufa con Cecina      - S/ 20.00
+
+PROMO MARINO:
+  Ceviche + Chicharron              - S/ 25.00
+  Ceviche + Arroz con Mariscos      - S/ 25.00
+  Ceviche + Chaufa con Mariscos     - S/ 25.00
+  Ceviche + Chaufa con Cecina       - S/ 25.00
+  Chicharron + Arroz con Mariscos   - S/ 25.00
+  Chicharron + Chaufa con Mariscos  - S/ 25.00
+  Chicharron + Chaufa con Cecina    - S/ 25.00
+  Trio Marino                       - S/ 40.00
+  Leche de Tigre                    - S/ 15.00
+
+================================================================================
+6. DECISIONES TECNICAS (STACK)
+================================================================================
+
+Stack FINAL: Astro + React Islands + Vite + Vitest
+
+Tecnologias:
+- Framework principal: Astro 6 (static output)
+- Islas interactivas: React 19 (formularios y carrito)
+- Build tool: Vite 8
+- Testing: Vitest 4 + Testing Library + jsdom
+- Animaciones: Lenis + GSAP ScrollTrigger
+- Mapas: Leaflet.js + OpenStreetMap
+- Despliegue: Vercel
+
+Dependencias principales:
+  astro, @astrojs/react, react, react-dom
+  gsap, leaflet, lenis, swiper
+  @testing-library/react, @testing-library/jest-dom
+  @testing-library/user-event, vitest, jsdom
+
+WhatsApp Numero: +51 927367844
+Horario: Lunes a Viernes 11:30 AM - 3:15 PM
+Comision para llevar: S/ 2.00 por plato
+
+================================================================================
+7. PLAN DE EJECUCION
+================================================================================
+
+Fase 1: Specs Ligeros (4 archivos .md)
+Fase 2: Scaffold React + Vite
+Fase 3: Pagina Home (Hero, Platos Destacados, Galeria preview)
+Fase 4: Pagina Menu (grid platos + precios reales)
+Fase 5: Pagina Nosotros (historia, valores, equipo)
+Fase 6: Pagina Galeria (grid + lightbox)
+Fase 7: Pagina Contacto (formulario + Leaflet mapa)
+Fase 8: Pagina Reservas (formulario fecha/hora/personas)
+Fase 9: Animaciones Lenis + GSAP
+Fase 10: Testing (18 tests iniciales)
+Fase 11: Polish final (responsive, SEO, performance)
+-- MIGRACION A ASTRO --
+Fase 12: Migrar a Astro + React islands
+Fase 13: Carrito de compras + WhatsApp
+Fase 14: Horario flotante Abierto/Cerrado
+Fase 15: Comision S/2 para llevar
+Fase 16: Testing final (44 tests)
+Fase 17: Deploy a Vercel
+
+================================================================================
+8. ARCHIVOS DE ESPECIFICACION (SPECS)
+================================================================================
+
+Carpeta: D:\FRESCOLITO\specs\
+
+ARCHITECTURE.md:
+  Stack, estructura de carpetas, rutas, principios de diseno
+  Original: React + Vite + React Router
+  Actualizado: Astro + React islands
+
+DESIGN-TOKENS.md:
+  Colores (#FDB913, #3E2723, #BCAAA4, #8D6E63, #FFF, #000)
+  Tipografia (Playfair Display + Lato)
+  Espaciados, bordes, sombras, transiciones
+
+ADR.md - Architecture Decision Records:
+  ADR-001: React + Vite sobre HTML plano
+  ADR-002: React Router con lazy loading
+  ADR-003: Lenis + GSAP sobre AOS
+  ADR-004: Leaflet.js para mapa
+  ADR-005: Swiper.js para carruseles
+  ADR-006: Migracion a Astro con React islands
+  ADR-007: Carrito de compras via WhatsApp
+  ADR-008: Indicador flotante de horario de atencion
+
+SECURITY-CHECKLIST.md:
+  Sanitizar inputs, validar email, prevenir XSS, rate limiting
+  Headers CORS, Content Security Policy
+
+================================================================================
+9. ESTRUCTURA DEL PROYECTO
+================================================================================
+
+D:\FRESCOLITO\
+|-- .github/workflows/deploy.yml
+|-- .gitignore
+|-- specs/
+|   |-- ARCHITECTURE.md
+|   |-- DESIGN-TOKENS.md
+|   |-- ADR.md
+|   |-- SECURITY-CHECKLIST.md
+|-- public/imagenes/
+|   |-- frescolito.jpeg (logo)
+|   |-- carta.jpeg
+|   |-- (4 fotos de platos)
+|-- src/
+|   |-- layouts/
+|   |   |-- BaseLayout.astro
+|   |-- pages/
+|   |   |-- index.astro (Home)
+|   |   |-- menu.astro (Menu)
+|   |   |-- nosotros.astro (Nosotros)
+|   |   |-- galeria.astro (Galeria + Lightbox)
+|   |   |-- contacto.astro (Contacto - React island)
+|   |   |-- reservas.astro (Reservas - React island)
+|   |   |-- _Home.jsx, _Menu.jsx, _About.jsx (backup de version React)
+|   |   |-- _Gallery.jsx, _Contact.jsx, _Reservations.jsx (backup)
+|   |-- components/
+|   |   |-- Navbar.astro
+|   |   |-- Footer.astro
+|   |   |-- Hero.astro
+|   |   |-- MenuSection.astro
+|   |   |-- BusinessHours.astro
+|   |   |-- CartWidget.astro
+|   |   |-- react/
+|   |       |-- ContactForm.jsx (isla React)
+|   |       |-- ReservationForm.jsx (isla React)
+|   |       |-- CartDrawer.jsx (isla React)
+|   |-- data/
+|   |   |-- config.js (whatsapp number, horarios, sitio)
+|   |   |-- menu.js (categorias, items, platos destacados)
+|   |-- hooks/
+|   |   |-- useLenis.js
+|   |   |-- useScrollReveal.js
+|   |-- utils/
+|   |   |-- paths.js
+|   |   |-- whatsapp.js (generador de mensajes WA)
+|   |   |-- businessHours.js (logica abierto/cerrado)
+|   |-- styles/
+|       |-- global.css
+|-- tests/
+|   |-- cart.test.js (8 tests)
+|   |-- whatsapp.test.js (10 tests)
+|   |-- businessHours.test.js (5 tests)
+|   |-- Contact.test.jsx (7 tests)
+|   |-- Reservations.test.jsx (3 tests)
+|   |-- menu.test.js (6 tests)
+|   |-- Navbar.test.jsx (5 tests)
+|   |-- setup.js
+|-- astro.config.mjs
+|-- package.json
+|-- vite.config.js
+|-- vercel.json (eliminado - Astro maneja SPA)
+|-- SKILL-FrescLito-SDD.md
+|-- HISTORIAL-CHAT-FRESCOLITO.txt (este archivo)
+
+================================================================================
+10. PAGINAS Y RUTAS
+================================================================================
+
+Ruta   Pagina          Tipo               JS
+/      Inicio          .astro estatico    0 KB
+/menu  Menu completo   .astro estatico    0 KB
+/nosotros  Nosotros    .astro estatico    0 KB
+/galeria   Galeria     .astro estatico    0 KB
+/contacto  Contacto    React island       ~50 KB
+/reservas  Reservas    React island       ~50 KB
+
+Secciones en Home:
+- Hero (fondo oscuro, logo, titulo, CTAs)
+- Platos Destacados (grid de 4 platos)
+- Nuestra Historia
+- Promo Marino
+- Galeria preview
+- Footer
+
+================================================================================
+11. MIGRACION A ASTRO
+================================================================================
+
+Se migro de React SPA (Vite + React Router) a Astro con React islands.
+
+BENEFICIOS:
+- Paginas estaticas (Home, Menu, Nosotros, Galeria): CERO JavaScript
+- Solo las paginas interactivas cargan React (Contacto, Reservas, Carrito)
+- Bundle JS reducido de ~250KB a ~50KB
+- 100/100 Lighthouse potencial
+- File-based routing (mas simple que React Router)
+- Imagenes optimizadas nativamente
+
+CAMBIOS REALIZADOS:
+- astro.config.mjs creado con integracion React
+- package.json scripts cambiados de vite a astro
+- src/pages/ convertidas a .astro (index, menu, nosotros, galeria, contacto, reservas)
+- Componentes React movidos a src/components/react/ como islas
+- src/layouts/BaseLayout.astro con layout global
+- Componentes Astro creados: Navbar, Footer, Hero, MenuSection, BusinessHours, CartWidget
+- Antiguas paginas React renombradas a _*.jsx (backup)
+
+================================================================================
+12. CARRITO DE COMPRAS + WHATSAPP
+================================================================================
+
+FLUJO DEL CARRITO:
+1. Usuario hace clic en "+ Agregar" en cualquier plato del menu
+2. El item se guarda en localStorage (persiste al recargar)
+3. CartWidget muestra badge con el contador de items
+4. Al hacer clic en el badge, se abre CartDrawer (drawer lateral)
+5. En el drawer se puede:
+   - Ver lista de items con precios
+   - Aumentar/disminuir cantidad (+/-)
+   - Activar "Para llevar" (agrega S/2 por plato)
+   - Agregar notas
+   - Ver subtotal, comision y total
+6. Al enviar, se abre WhatsApp con el mensaje generado
+
+MENSAJE DE WHATSAPP GENERADO:
+  "Hola FRESCOLITO, quiero hacer un pedido:
+   1. 2x Ceviche Simple - S/ 20.00
+   2. 1x Arroz con Mariscos - S/ 20.00
+   Subtotal: S/ 40.00
+   Comision para llevar (S/ 2.00 x 3 platos): S/ 6.00
+   Total: S/ 46.00"
+
+Numero: +51 927367844
+Formato: https://wa.me/51927367844?text={mensaje_codificado}
+
+================================================================================
+13. HORARIO DE ATENCION FLOTANTE
+================================================================================
+
+Componente: BusinessHours.astro
+Posicion: fixed, abajo-izquierda
+Estados:
+  - Verde + "Abierto ahora" (Lun-Vie 11:30 - 15:15)
+  - Rojo + "Cerrado" (fuera del horario)
+Tooltip al hover con horario completo
+Actualizacion automatica cada 60 segundos
+
+Configuracion en src/data/config.js:
+  dias: [1, 2, 3, 4, 5] (Lunes a Viernes)
+  apertura: 11:30
+  cierre: 15:15
+
+================================================================================
+14. COMISION PARA LLEVAR
+================================================================================
+
+Cuando el usuario activa "Para llevar" en el carrito:
+- Se agrega S/ 2.00 por cada plato
+- Se muestra desglose: Subtotal -> Comision -> Total
+- Cada item muestra "+ S/ 2.00 envio"
+- El mensaje de WhatsApp incluye la comision
+
+Configurable en src/utils/whatsapp.js:
+  COMMISSION_PER_ITEM = 2.00
+
+================================================================================
+15. TESTING
+================================================================================
+
+TOTAL: 44 tests - 7 suites - 100% pasando
+
+Suite              Tests  Tipo
+cart.test.js       8      Unitaria (caja blanca)
+  - agregar items
+  - incrementar cantidad si existe
+  - multiples items diferentes
+  - eliminar items
+  - actualizar cantidad
+  - eliminar item si cantidad llega a 0
+  - calcular total
+  - persistir en localStorage
+
+whatsapp.test.js   10     Caja negra + caja blanca
+  - generar mensaje con items
+  - incluir cantidades correctas
+  - incluir notas
+  - codificar para URL
+  - calcular subtotal
+  - caracteres especiales
+  - incluir comision si es para llevar
+  - mostrar total con comision
+  - NO incluir comision si no es para llevar
+  - COMMISSION_PER_ITEM = 2.00
+
+businessHours.test.js  5  Caja negra
+  - isOpen es booleano
+  - label correcto
+  - formato hora
+  - apertura 11:30
+  - cierre 15:15
+
+Contact.test.jsx    7   Caja negra + integracion
+  - renderizar formulario
+  - mostrar errores al enviar vacio
+  - validar email invalido
+  - validar telefono (menos de 7 digitos)
+  - enviar con datos validos
+  - (pruebas de caja blanca en validaciones)
+
+Reservations.test.jsx  3  Caja negra
+  - renderizar formulario
+  - mostrar errores al enviar vacio
+  - enviar con datos validos
+
+menu.test.js        6   Unitaria
+  - 2 categorias
+  - A la Carta: 9 platos
+  - Promo Marino: 9 items
+  - todos tienen id, name, price
+  - precios positivos
+  - 4 platos destacados
+
+Navbar.test.jsx     5   Unitaria (config)
+  - WhatsApp number correcto
+  - Business hours dias
+  - horario apertura
+  - horario cierre
+  - SITE_NAME
+
+================================================================================
+16. DESPLIEGUE
+================================================================================
+
+URL Produccion: https://frescolito-restaurante.vercel.app
+Repositorio:    https://github.com/Ludinhosilva/FRESCOLITO-RESTAURANTE
+Hosting:        Vercel (auto-deploy desde GitHub)
+
+Cada push a la rama main activa un deploy automatico en Vercel.
+
+WhatsApp del encargado:   +51 927367844
+Horario de atencion:      Lunes a Viernes 11:30 AM - 3:15 PM
+Comision para llevar:     S/ 2.00 por plato
+
+================================================================================
+17. COMANDOS UTILES
+================================================================================
+
+npm run dev           # Iniciar servidor local (http://localhost:3000)
+npm run build         # Build de produccion (output en dist/)
+npm test              # Ejecutar todos los tests (Vitest)
+npm run preview       # Vista previa del build
+npm run test:watch    # Tests en modo watch
+npm run test:coverage # Tests con reporte de cobertura
+git push              # Push a GitHub + auto-deploy a Vercel
+
+================================================================================
+                FIN DEL HISTORIAL - FRESCOLITO RESTAURANTE
+                        (C) 2026 - Todos los derechos reservados
+================================================================================
