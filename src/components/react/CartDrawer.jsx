@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { generateOrderMessage, openWhatsApp, COMMISSION_PER_ITEM } from '../../utils/whatsapp'
 
 export default function CartDrawer() {
@@ -6,6 +6,13 @@ export default function CartDrawer() {
   const [open, setOpen] = useState(false)
   const [notes, setNotes] = useState('')
   const [isDelivery, setIsDelivery] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const openPing = useRef(false)
+
+  useEffect(() => {
+    setMounted(true)
+    openPing.current = localStorage.getItem('frescolito-cart-open') === 'true'
+  }, [])
 
   const loadCart = useCallback(() => {
     try {
@@ -18,15 +25,17 @@ export default function CartDrawer() {
 
   useEffect(() => {
     loadCart()
-    const handler = () => loadCart()
-    window.addEventListener('cart-updated', handler)
-    window.addEventListener('open-cart', () => setOpen(true))
-    window.addEventListener('storage', handler)
-    return () => {
-      window.removeEventListener('cart-updated', handler)
-      window.removeEventListener('open-cart', () => setOpen(true))
-      window.removeEventListener('storage', handler)
-    }
+
+    const interval = setInterval(() => {
+      const flag = localStorage.getItem('frescolito-cart-open')
+      if (flag === 'true') {
+        setOpen(true)
+        localStorage.setItem('frescolito-cart-open', '')
+        loadCart()
+      }
+    }, 200)
+
+    return () => clearInterval(interval)
   }, [loadCart])
 
   const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0)

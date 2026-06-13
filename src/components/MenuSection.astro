@@ -144,8 +144,7 @@ import { categories } from '../data/menu'
         cart.push({ id, name, price, quantity: 1 })
       }
       localStorage.setItem('frescolito-cart', JSON.stringify(cart))
-      document.dispatchEvent(new CustomEvent('cart-updated'))
-      document.dispatchEvent(new CustomEvent('open-cart'))
+      localStorage.setItem('frescolito-cart-open', 'true')
 
       btn.style.transform = 'scale(0.9)'
       btn.style.transition = 'transform 0.15s ease'

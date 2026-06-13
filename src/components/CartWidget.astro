@@ -31,23 +31,26 @@
 </style>
 
 <script>
+  let prevCart = ''
+
   function updateCartUI() {
     const btn = document.getElementById('cart-btn')
     const count = document.getElementById('cart-count')
     if (!btn || !count) return
     try {
-      const cart = JSON.parse(localStorage.getItem('frescolito-cart') || '[]')
+      const raw = localStorage.getItem('frescolito-cart') || '[]'
+      const cart = JSON.parse(raw)
       const total = cart.reduce((s, i) => s + i.quantity, 0)
       btn.style.display = total > 0 ? 'flex' : 'none'
       count.textContent = total
+      prevCart = raw
     } catch { btn.style.display = 'none' }
   }
 
   updateCartUI()
-  window.addEventListener('storage', updateCartUI)
-  document.addEventListener('cart-updated', updateCartUI)
+  setInterval(updateCartUI, 250)
 
   document.getElementById('cart-btn')?.addEventListener('click', () => {
-    document.dispatchEvent(new CustomEvent('open-cart'))
+    localStorage.setItem('frescolito-cart-open', 'true')
   })
 </script>
