@@ -2,8 +2,8 @@
 import { categories } from '../data/menu'
 
 const catImages = {
-  carta: '/imagenes/carrusel/ChatGPT%20Image%2012%20jun%202026,%2012_09_33%20p.m.png',
-  promos: '/imagenes/carrusel/WhatsApp%20Image%202026-03-26%20at%2011.19.05%20AM.jpeg',
+  carta: '/imagenes/cat-carta.png',
+  promos: '/imagenes/cat-promo.jpg',
 }
 
 const catIcons = {
@@ -17,7 +17,7 @@ const catIcons = {
     <div class="swiper-wrapper">
       {categories.map((cat) => (
         <div class="swiper-slide menu-cat-card" data-cat={cat.id}>
-          <div class="menu-cat-bg" style={`background-image: url(${catImages[cat.id]})`}></div>
+          <div class="menu-cat-bg" style={`background-image:url('${catImages[cat.id]}')`}></div>
           <div class="menu-cat-overlay"></div>
           <div class="menu-cat-content">
             <span class="menu-cat-icon">{catIcons[cat.id]}</span>
