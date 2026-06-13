@@ -1,37 +1,17 @@
 ---
 import { categories } from '../data/menu'
-
-const catImages = {
-  carta: '/imagenes/cat-carta.png',
-  promos: '/imagenes/cat-promo.jpg',
-}
-
-const catIcons = {
-  carta: '🍽️',
-  promos: '🔥',
-}
 ---
 
 <div class="menu-section" id="menu-section">
-  <div class="menu-cats-carousel">
-    <div class="swiper-wrapper">
+  <div class="container">
+    <div class="menu-pills">
       {categories.map((cat) => (
-        <div class="swiper-slide menu-cat-card" data-cat={cat.id}>
-          <div class="menu-cat-bg" style={`background-image:url('${catImages[cat.id]}')`}></div>
-          <div class="menu-cat-overlay"></div>
-          <div class="menu-cat-content">
-            <span class="menu-cat-icon">{catIcons[cat.id]}</span>
-            <h3 class="menu-cat-name">{cat.name}</h3>
-            <span class="menu-cat-count">{cat.items.length} platos</span>
-          </div>
-        </div>
+        <button class="menu-pill active" data-cat={cat.id}>{cat.name}</button>
       ))}
     </div>
-  </div>
 
-  <div class="container">
     {categories.map((cat) => (
-      <div class="menu-category" id={`cat-${cat.id}`}>
+      <div class="menu-category active" id={`cat-${cat.id}`}>
         <div class="menu-grid">
           {cat.items.map((item) => (
             <div class="menu-item">
@@ -57,55 +37,30 @@ const catIcons = {
 
 <style>
   .menu-section { padding: var(--space-xl) 0; }
-
-  .menu-cats-carousel {
-    overflow-x: auto; display: flex; gap: 1rem;
-    padding: 0 var(--space-md) var(--space-xl);
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+  .menu-pills {
+    display: flex; justify-content: center; gap: 0.75rem;
+    margin-bottom: var(--space-xl); flex-wrap: wrap;
   }
-  .menu-cats-carousel::-webkit-scrollbar { display: none; }
-
-  .menu-cat-card {
-    scroll-snap-align: start;
-    flex: 0 0 300px; height: 220px;
-    border-radius: var(--radius);
-    position: relative; overflow: hidden;
+  .menu-pill {
+    padding: 0.65rem 2rem;
+    border: 2px solid var(--color-light);
+    background: var(--color-bg);
+    border-radius: 50px;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--color-mid);
     cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
-  .menu-cat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-  .menu-cat-card.active {
-    box-shadow: 0 0 0 3px var(--color-primary), var(--shadow-lg);
-  }
-
-  .menu-cat-bg {
-    position: absolute; inset: 0;
-    background-size: cover; background-position: center;
-    transition: transform 0.4s ease;
-  }
-  .menu-cat-card:hover .menu-cat-bg { transform: scale(1.08); }
-
-  .menu-cat-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 60%);
-  }
-
-  .menu-cat-content {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    padding: 1.5rem; z-index: 1;
-    display: flex; flex-direction: column; gap: 0.25rem;
-  }
-  .menu-cat-icon { font-size: 2rem; margin-bottom: 0.25rem; }
-  .menu-cat-name {
-    color: white; font-family: var(--font-heading);
-    font-size: 1.3rem; font-weight: 700; margin: 0;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  }
-  .menu-cat-count {
-    color: var(--color-primary); font-size: 0.85rem;
-    font-weight: 600; font-family: var(--font-body);
+  .menu-pill:hover { border-color: var(--color-primary); color: var(--color-primary-hover); }
+  .menu-pill.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-dark);
+    box-shadow: 0 2px 12px rgba(253,185,19,0.35);
   }
 
   .menu-category { display: none; }
@@ -145,24 +100,22 @@ const catIcons = {
   .menu-add-btn { font-size: 0.85rem; padding: 0.55rem 1.1rem; }
 
   @media (max-width: 480px) {
+    .menu-pill { padding: 0.5rem 1.25rem; font-size: 0.85rem; }
     .menu-item-price { font-size: 1.2rem; }
   }
 </style>
 
 <script>
-  const cards = document.querySelectorAll('.menu-cat-card')
+  const pills = document.querySelectorAll('.menu-pill')
   const cats = document.querySelectorAll('.menu-category')
 
-  cards.forEach((card, i) => {
-    if (i === 0) card.classList.add('active')
-    card.addEventListener('click', () => {
-      const catId = card.getAttribute('data-cat')
-      cards.forEach(c => c.classList.remove('active'))
-      card.classList.add('active')
-      cats.forEach(c => {
-        c.classList.toggle('active', c.id === `cat-${catId}`)
-      })
-      card.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' })
+  pills.forEach((pill, i) => {
+    if (i > 0) pill.classList.remove('active')
+    pill.addEventListener('click', () => {
+      const catId = pill.getAttribute('data-cat')
+      pills.forEach(p => p.classList.remove('active'))
+      pill.classList.add('active')
+      cats.forEach(c => { c.classList.toggle('active', c.id === `cat-${catId}`) })
     })
   })
 
@@ -180,11 +133,7 @@ const catIcons = {
 
       const cart = JSON.parse(localStorage.getItem('frescolito-cart') || '[]')
       const existing = cart.find(i => i.id === id)
-      if (existing) {
-        existing.quantity++
-      } else {
-        cart.push({ id, name, price, quantity: 1 })
-      }
+      if (existing) { existing.quantity++ } else { cart.push({ id, name, price, quantity: 1 }) }
       localStorage.setItem('frescolito-cart', JSON.stringify(cart))
       localStorage.setItem('frescolito-cart-open', 'true')
 
