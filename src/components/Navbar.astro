@@ -88,7 +88,9 @@ const links = [
   }
   .nav-link:hover::after, .nav-link.active::after { transform: scaleX(1); }
   .navbar:not(.scrolled) .nav-link:hover { color: var(--color-primary); }
+  .navbar:not(.scrolled) .nav-link:active { color: var(--color-bg); }
   .navbar.scrolled .nav-link:hover { color: var(--color-primary-hover); }
+  .navbar.scrolled .nav-link:active { color: var(--color-dark); }
 
   .hamburger-btn {
     display: none; flex-direction: column; justify-content: center;

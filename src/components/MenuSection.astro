@@ -61,6 +61,7 @@ import { categories } from '../data/menu'
     letter-spacing: 0.5px;
   }
   .menu-pill:hover { border-color: var(--color-primary); color: var(--color-primary-hover); }
+  .menu-pill:active { color: var(--color-dark); background: var(--color-primary); border-color: var(--color-primary); }
   .menu-pill.active {
     background: var(--color-primary);
     border-color: var(--color-primary);
@@ -103,6 +104,7 @@ import { categories } from '../data/menu'
     font-weight: 700; color: var(--color-primary-hover);
   }
   .menu-add-btn { font-size: 0.85rem; padding: 0.55rem 1.1rem; }
+  .menu-add-btn:active { background: var(--color-primary); color: #5a2a0a; transform: scale(0.95); }
 
   @media (max-width: 480px) {
     .menu-pill { padding: 0.5rem 1.25rem; font-size: 0.85rem; }
