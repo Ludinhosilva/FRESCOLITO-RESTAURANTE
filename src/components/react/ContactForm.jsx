@@ -28,14 +28,14 @@ export default function ContactForm() {
       if (cancelled) return
       try {
         const map = L.default.map(mapRef.current, { scrollWheelZoom: false })
-          .setView([-3.7621462, -73.2700371], 16)
+          .setView([-3.7621462, -73.2700371], 17)
         L.default.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '&copy; OpenStreetMap contributors',
           maxZoom: 19,
         }).addTo(map)
         L.default.marker([-3.7621462, -73.2700371])
           .addTo(map)
-          .bindPopup('<b>FRESCOLITO RESTAURANTE</b><br/>Iquitos, Perú')
+          .bindPopup('<b>FRESCOLITO RESTAURANTE</b><br/>Iquitos, Perú<br/><a href="https://www.google.com/maps/place/Frescolito+Restaurante/@-3.7621462,-73.2700371,17z" target="_blank" style="color:#1B4965;font-weight:700">Ver en Google Maps →</a>')
           .openPopup()
         mapInstance.current = map
       } catch (e) {
