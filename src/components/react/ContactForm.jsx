@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 
 const initialForm = { name: '', email: '', phone: '', message: '' }
 
@@ -17,39 +17,6 @@ export default function ContactForm() {
   const [form, setForm] = useState(initialForm)
   const [errors, setErrors] = useState({})
   const [submitted, setSubmitted] = useState(false)
-  const mapRef = useRef(null)
-  const mapInstance = useRef(null)
-
-  useEffect(() => {
-    if (mapInstance.current || !mapRef.current) return
-    let cancelled = false
-    import('leaflet').then((L) => {
-      import('leaflet/dist/leaflet.css')
-      if (cancelled) return
-      try {
-        const map = L.default.map(mapRef.current, { scrollWheelZoom: false })
-          .setView([-3.7621462, -73.2700371], 16)
-        L.default.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; OpenStreetMap contributors',
-          maxZoom: 19,
-        }).addTo(map)
-        L.default.marker([-3.7621462, -73.2700371])
-          .addTo(map)
-          .bindPopup('<b>FRESCOLITO RESTAURANTE</b><br/>Iquitos, Perú')
-          .openPopup()
-        mapInstance.current = map
-      } catch (e) {
-        console.warn('Leaflet map could not be initialized:', e.message)
-      }
-    })
-    return () => {
-      cancelled = true
-      if (mapInstance.current) {
-        mapInstance.current.remove()
-        mapInstance.current = null
-      }
-    }
-  }, [])
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -123,7 +90,18 @@ export default function ContactForm() {
             <div className="info-block">
               <h3>Horarios</h3><p>Lunes a Viernes: 11:30 AM - 3:15 PM</p>
             </div>
-            <div ref={mapRef} className="contact-map" />
+            <div className="contact-map">
+              <iframe
+                src="https://www.google.com/maps?q=-3.7621462,-73.2700371&z=16&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0, borderRadius: 'var(--radius)' }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Ubicación FRESCOLITO Restaurante"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -164,8 +142,9 @@ export default function ContactForm() {
         .info-block a { color: var(--color-primary-hover); font-weight: 700; }
         .contact-map {
           border-radius: var(--radius); height: 300px;
-          margin-top: var(--space-lg); z-index: 1; position: relative;
+          margin-top: var(--space-lg); overflow: hidden;
         }
+        .contact-map iframe { border-radius: var(--radius); }
       `}</style>
     </section>
   )
