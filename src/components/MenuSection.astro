@@ -112,16 +112,17 @@ import { categories } from '../data/menu'
   }
 
   .menu-toast {
-    position: fixed; top: 90px; left: 50%; transform: translateX(-50%) translateY(-120px);
+    position: fixed; top: 90px; left: 50%; transform: translateX(-50%);
     background: var(--color-dark); color: white;
     padding: 0.75rem 1.5rem; border-radius: 50px;
     font-family: var(--font-body); font-size: 0.9rem; font-weight: 700;
     z-index: 9999; display: flex; align-items: center; gap: 0.5rem;
     box-shadow: var(--shadow-lg);
-    transition: transform 0.35s ease;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
     pointer-events: none;
+    opacity: 0; visibility: hidden;
   }
-  .menu-toast.show { transform: translateX(-50%) translateY(0); }
+  .menu-toast.show { opacity: 1; visibility: visible; }
 </style>
 
 <script>
