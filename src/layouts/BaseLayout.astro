@@ -28,6 +28,37 @@ const { title = 'FRESCOLITO RESTAURANTE', description = 'Cocina regional peruana
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:wght@400;700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Restaurant",
+        "@id": "https://frescolito-restaurante.vercel.app",
+        "name": "FRESCOLITO RESTAURANTE",
+        "description": "Cocina regional peruana en Iquitos. Ceviches, chicharrones, arroz con mariscos y más.",
+        "image": "/imagenes/frescolito.jpeg",
+        "url": "https://frescolito-restaurante.vercel.app",
+        "telephone": "+51927367844",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Iquitos",
+          "addressCountry": "PE"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": -3.7621462,
+          "longitude": -73.2700371
+        },
+        "openingHoursSpecification": {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+          "opens": "11:30",
+          "closes": "15:15"
+        },
+        "servesCuisine": "Peruvian",
+        "priceRange": "S/10 - S/40",
+        "menu": "https://frescolito-restaurante.vercel.app/menu"
+      }
+    </script>
     <title>{title}</title>
   </head>
   <body>

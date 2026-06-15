@@ -32,6 +32,11 @@ const images = [
       <a href="/reservas" class="btn btn-outline hero-btn-oul">Reserva Ahora</a>
     </div>
   </div>
+
+  <div class="hero-scroll">
+    <span class="hero-scroll-text">Desliza para explorar</span>
+    <span class="hero-scroll-arrow">⌄</span>
+  </div>
 </section>
 
 <style>
@@ -86,6 +91,24 @@ const images = [
     border-color: var(--color-primary); color: var(--color-primary);
   }
   .hero-btn-oul:hover { background: var(--color-primary); color: var(--color-dark); }
+
+  .hero-scroll {
+    position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);
+    z-index: 2; display: flex; flex-direction: column; align-items: center;
+    gap: 4px; animation: bounce 2s ease-in-out infinite;
+  }
+  .hero-scroll-text {
+    color: rgba(255,255,255,0.7); font-size: 0.75rem;
+    text-transform: uppercase; letter-spacing: 2px;
+    font-family: var(--font-body); font-weight: 600;
+  }
+  .hero-scroll-arrow {
+    color: var(--color-primary); font-size: 1.5rem; line-height: 1;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
 
   .swiper-pagination { bottom: 30px !important; }
   .swiper-pagination-bullet {

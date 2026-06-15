@@ -35,6 +35,11 @@ import { categories } from '../data/menu'
   </div>
 </div>
 
+<div class="menu-toast" id="menu-toast">
+  <span class="menu-toast-icon">✅</span>
+  Agregado al carrito
+</div>
+
 <style>
   .menu-section { padding: var(--space-xl) 0; }
   .menu-pills {
@@ -103,6 +108,18 @@ import { categories } from '../data/menu'
     .menu-pill { padding: 0.5rem 1.25rem; font-size: 0.85rem; }
     .menu-item-price { font-size: 1.2rem; }
   }
+
+  .menu-toast {
+    position: fixed; top: 90px; left: 50%; transform: translateX(-50%) translateY(-120px);
+    background: var(--color-dark); color: white;
+    padding: 0.75rem 1.5rem; border-radius: 50px;
+    font-family: var(--font-body); font-size: 0.9rem; font-weight: 700;
+    z-index: 9999; display: flex; align-items: center; gap: 0.5rem;
+    box-shadow: var(--shadow-lg);
+    transition: transform 0.35s ease;
+    pointer-events: none;
+  }
+  .menu-toast.show { transform: translateX(-50%) translateY(0); }
 </style>
 
 <script>
@@ -125,6 +142,16 @@ import { categories } from '../data/menu'
   })
 
   document.querySelectorAll('.menu-add-btn').forEach(btn => {
+    let toastTimer = null
+    const toast = document.getElementById('menu-toast')
+
+    function showToast() {
+      if (!toast) return
+      clearTimeout(toastTimer)
+      toast.classList.add('show')
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2000)
+    }
+
     btn.addEventListener('click', () => {
       const id = btn.getAttribute('data-id')
       const name = btn.getAttribute('data-name')
@@ -136,6 +163,7 @@ import { categories } from '../data/menu'
       if (existing) { existing.quantity++ } else { cart.push({ id, name, price, quantity: 1 }) }
       localStorage.setItem('frescolito-cart', JSON.stringify(cart))
       localStorage.setItem('frescolito-cart-open', 'true')
+      showToast()
 
       btn.style.transform = 'scale(0.9)'
       btn.style.transition = 'transform 0.15s ease'
