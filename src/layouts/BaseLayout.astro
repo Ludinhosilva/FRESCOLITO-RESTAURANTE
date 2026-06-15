@@ -7,6 +7,7 @@ import WhatsAppFAB from '../components/WhatsAppFAB.astro'
 import CartDrawer from '../components/react/CartDrawer.jsx'
 import { GOOGLE_MAPS_URL } from '../data/config'
 import '../styles/global.css'
+import Preloader from '../components/Preloader.astro'
 
 export interface Props {
   title?: string
@@ -63,6 +64,7 @@ const { title = 'FRESCOLITO RESTAURANTE', description = 'Cocina regional peruana
     <title>{title}</title>
   </head>
   <body>
+    <Preloader />
     <Navbar />
     <slot />
     <BusinessHours />
@@ -72,3 +74,25 @@ const { title = 'FRESCOLITO RESTAURANTE', description = 'Cocina regional peruana
     <Footer />
   </body>
 </html>
+
+<script>
+  import Lenis from 'lenis'
+  import initScrollReveal from '../utils/scrollReveal'
+
+  const lenis = new Lenis({
+    duration: 1.2,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    wheelMultiplier: 1,
+    touchMultiplier: 1.5,
+  })
+
+  function raf(time) {
+    lenis.raf(time)
+    requestAnimationFrame(raf)
+  }
+
+  requestAnimationFrame(raf)
+
+  document.addEventListener('astro:page-load', initScrollReveal)
+  initScrollReveal()
+</script>

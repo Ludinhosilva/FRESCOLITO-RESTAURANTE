@@ -139,4 +139,16 @@ const images = [
     speed: 800,
     loop: true,
   })
+
+  const hero = document.getElementById('hero')
+  if (hero) {
+    const heroBg = hero.querySelector('.swiper-container')
+    window.addEventListener('scroll', () => {
+      const scrolled = window.scrollY
+      const maxParallax = 150
+      if (scrolled < window.innerHeight) {
+        heroBg.style.transform = `translateY(${Math.min(scrolled * 0.3, maxParallax)}px)`
+      }
+    }, { passive: true })
+  }
 </script>
