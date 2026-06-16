@@ -14,7 +14,7 @@ const images = [
     <div class="swiper-wrapper">
       {images.map((img, i) => (
         <div class="swiper-slide">
-          <img src={img} alt={`Frescolito ${i + 1}`} class="hero-slide-img" loading={i === 0 ? 'eager' : 'lazy'} />
+          <img src={img} alt={`FRESCOLITO ${i + 1}`} class="hero-slide-img" loading={i === 0 ? 'eager' : 'lazy'} />
           <div class="hero-slide-overlay"></div>
         </div>
       ))}
@@ -23,8 +23,8 @@ const images = [
   </div>
 
   <div class="hero-content">
-    <img src="/imagenes/frescolito.jpeg" alt="Frescolito" class="hero-logo" />
-    <h1 class="hero-title">Frescolito</h1>
+    <img src="/imagenes/frescolito.jpeg" alt="FRESCOLITO" class="hero-logo" />
+    <h1 class="hero-title">FRESCOLITO</h1>
     <p class="hero-subtitle">{SITE_DESCRIPTION}</p>
     <div class="hero-actions">
       <a href="/menu" class="btn btn-primary hero-btn">Ver Menú</a>
@@ -58,6 +58,11 @@ const images = [
     padding: 0 var(--space-md);
     display: flex; flex-direction: column; align-items: center;
     justify-content: center; height: 100%;
+    animation: hero-in 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s both;
+  }
+  @keyframes hero-in {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
   }
   .hero-logo {
     width: 150px; height: 150px; border-radius: 50%; object-fit: cover;

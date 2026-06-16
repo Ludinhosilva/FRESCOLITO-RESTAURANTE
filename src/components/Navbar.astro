@@ -12,8 +12,8 @@ const links = [
 <nav class="navbar" id="navbar">
   <div class="container nav-container">
     <a href="/" class="nav-logo">
-      <img src="/imagenes/frescolito.jpeg" alt="Frescolito" class="nav-logo-img" />
-      <span class="nav-logo-text">Frescolito</span>
+      <img src="/imagenes/frescolito.jpeg" alt="FRESCOLITO" class="nav-logo-img" />
+      <span class="nav-logo-text">FRESCOLITO</span>
     </a>
 
     <button class="hamburger-btn" id="hamburger" aria-label="Menú" aria-expanded="false">
@@ -43,7 +43,9 @@ const links = [
     transition: background 0.35s ease, box-shadow 0.35s ease;
   }
   .navbar.scrolled {
-    background: var(--color-bg);
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 1px 0 var(--color-light);
   }
   .nav-container {

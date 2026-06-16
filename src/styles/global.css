@@ -8,18 +8,18 @@
   --color-text: #000000;
 
   --font-heading: 'Playfair Display', Georgia, serif;
-  --font-body: 'Lato', system-ui, sans-serif;
+  --font-body: 'Poppins', 'Work Sans', system-ui, sans-serif;
 
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
   --space-md: 1rem;
-  --space-lg: 2rem;
-  --space-xl: 4rem;
+  --space-lg: 2.5rem;
+  --space-xl: 5rem;
 
-  --radius: 8px;
-  --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.2);
-  --transition: 0.3s ease-in-out;
+  --radius: 12px;
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.12);
+  --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 *,
