@@ -31,17 +31,7 @@ const categories = [
 ---
 
 <BaseLayout title="Galería | FRESCOLITO RESTAURANTE" description="Galería de fotos de nuestros platos, ambiente y momentos en FRESCOLITO.">
-  <main>
-    <section class="gal-hero">
-      <img src={images[0].src} alt="" class="gal-hero-bg" />
-      <div class="gal-hero-overlay"></div>
-      <div class="gal-hero-content">
-        <h1 class="gal-hero-title">Nuestra Galería</h1>
-        <p class="gal-hero-sub">Momentos y sabores de FRESCOLITO</p>
-        <span class="gal-count">{images.length} fotos</span>
-      </div>
-    </section>
-
+  <main style="padding-top:70px">
     <section class="gal-section">
       <div class="container">
         <div class="gal-filters" id="gal-filters">
@@ -80,34 +70,6 @@ const categories = [
     height: 50vh; position: relative; overflow: hidden;
     display: flex; align-items: center; justify-content: center;
   }
-  .gal-hero-bg {
-    position: absolute; inset: 0; width: 100%; height: 100%;
-    object-fit: cover; object-position: center;
-    filter: brightness(0.4);
-  }
-  .gal-hero-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(0deg, rgba(0,0,0,0.5) 0%, transparent 50%);
-  }
-  .gal-hero-content { text-align: center; position: relative; z-index: 1; padding: 0 var(--space-md); }
-  .gal-hero-title {
-    font-family: 'Pacifico', cursive; font-weight: 400;
-    color: var(--color-primary);
-    -webkit-text-stroke: 2px var(--color-dark);
-    paint-order: stroke fill;
-    font-size: clamp(2.5rem,5vw,4rem);
-    text-shadow: 0 4px 16px rgba(0,0,0,0.4);
-    margin-bottom: var(--space-sm);
-  }
-  .gal-hero-sub { color: white; font-size: 1.1rem; font-weight: 300; margin-bottom: var(--space-sm); }
-  .gal-count {
-    display: inline-block; padding: 0.35rem 1rem;
-    background: rgba(255,255,255,0.15);
-    border-radius: 50px; color: white;
-    font-size: 0.85rem; font-weight: 600;
-    backdrop-filter: blur(4px);
-  }
-
   .gal-section { padding: var(--space-xl) 0; }
   .gal-filters {
     display: flex; justify-content: center; gap: 0.75rem;
