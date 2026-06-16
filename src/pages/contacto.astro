@@ -5,22 +5,9 @@ import ContactForm from '../components/react/ContactForm.jsx'
 
 <BaseLayout title="Contacto | FRESCOLITO RESTAURANTE" description="Contáctanos. Estamos ubicados en Iquitos, Perú.">
   <main style="padding-top: 70px">
-    <section class="page-header">
-      <div class="container">
-        <h1 class="page-title">Contacto</h1>
-        <p class="page-subtitle">Estamos ubicados en Iquitos, Perú</p>
-      </div>
-    </section>
-
     <ContactForm client:load />
   </main>
 </BaseLayout>
 
 <style>
-  .page-header {
-    background: linear-gradient(135deg, var(--color-dark) 0%, #1a0e0a 100%);
-    text-align: center; padding: calc(70px + var(--space-xl)) 0 var(--space-lg);
-  }
-  .page-title { color: var(--color-primary); }
-  .page-subtitle { color: var(--color-light); margin-top: var(--space-sm); }
 </style>
