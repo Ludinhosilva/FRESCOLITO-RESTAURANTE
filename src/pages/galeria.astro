@@ -1,73 +1,330 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
+
+const images = [
+  { src: 'imagenes/galeria/ArrozMarisco.png', alt: 'Arroz con Mariscos', cat: 'platos' },
+  { src: 'imagenes/galeria/Ceviche20.png', alt: 'Ceviche', cat: 'platos' },
+  { src: 'imagenes/galeria/ChaufaRegional.png', alt: 'Chaufa Regional', cat: 'platos' },
+  { src: 'imagenes/galeria/Chicharron.png', alt: 'Chicharrón', cat: 'platos' },
+  { src: 'imagenes/galeria/CombinadoCc.png', alt: 'Combinado', cat: 'platos' },
+  { src: 'imagenes/galeria/CombinadoCevChau.jpeg', alt: 'Ceviche y Chaufa', cat: 'platos' },
+  { src: 'imagenes/galeria/Lomo.png', alt: 'Lomo Saltado', cat: 'platos' },
+  { src: 'imagenes/galeria/Pescado.png', alt: 'Pescado', cat: 'platos' },
+  { src: 'imagenes/galeria/RONDA.png', alt: 'Ronda de Platos', cat: 'platos' },
+  { src: 'imagenes/galeria/Cilindro.png', alt: 'Cocina FRESCOLITO', cat: 'ambiente' },
+  { src: 'imagenes/galeria/Comidas.png', alt: 'Preparación', cat: 'ambiente' },
+  { src: 'imagenes/galeria/EQUIPO.jpeg', alt: 'Equipo FRESCOLITO', cat: 'ambiente' },
+  { src: 'imagenes/galeria/Historia.png', alt: 'Historia FRESCOLITO', cat: 'ambiente' },
+  { src: 'imagenes/galeria/Plancha.png', alt: 'Cocina a la Plancha', cat: 'ambiente' },
+  { src: 'imagenes/galeria/Presentacion.png', alt: 'Presentación de Platos', cat: 'ambiente' },
+  { src: 'imagenes/galeria/Mesacomida.png', alt: 'Mesa Servida', cat: 'mesa' },
+  { src: 'imagenes/galeria/MesaGaleria.png', alt: 'Galería de Mesa', cat: 'mesa' },
+  { src: 'imagenes/galeria/MesaRepresentativa.png', alt: 'Mesa Representativa', cat: 'mesa' },
+]
+
+const categories = [
+  { id: 'todas', name: 'Todas' },
+  { id: 'platos', name: 'Platos' },
+  { id: 'ambiente', name: 'Ambiente' },
+  { id: 'mesa', name: 'Mesa y Presentación' },
+]
 ---
 
-<BaseLayout title="Galería | FRESCOLITO RESTAURANTE" description="Galería de fotos de nuestros platos y momentos en FRESCOLITO.">
-  <main style="padding-top: 70px">
-    <section class="page-header">
-      <div class="container">
-        <h1 class="page-title">Galería</h1>
-        <p class="page-subtitle">Nuestros platos y momentos</p>
+<BaseLayout title="Galería | FRESCOLITO RESTAURANTE" description="Galería de fotos de nuestros platos, ambiente y momentos en FRESCOLITO.">
+  <main>
+    <section class="gal-hero">
+      <img src={images[0].src} alt="" class="gal-hero-bg" />
+      <div class="gal-hero-overlay"></div>
+      <div class="gal-hero-content">
+        <h1 class="gal-hero-title">Nuestra Galería</h1>
+        <p class="gal-hero-sub">Momentos y sabores de FRESCOLITO</p>
+        <span class="gal-count">{images.length} fotos</span>
       </div>
     </section>
 
-    <section class="section">
+    <section class="gal-section">
       <div class="container">
-        <div class="gallery-grid" id="gallery-grid">
-          <img src="imagenes/WhatsApp Image 2026-03-26 at 11.19.05 AM.jpeg" alt="Plato 1" class="gallery-img" loading="lazy" />
-          <img src="imagenes/WhatsApp Image 2026-03-26 at 11.19.52 AM.jpeg" alt="Plato 2" class="gallery-img" loading="lazy" />
-          <img src="imagenes/WhatsApp Image 2026-03-27 at 10.31.09 AM.jpeg" alt="Plato 3" class="gallery-img" loading="lazy" />
-          <img src="imagenes/WhatsApp Image 2026-03-27 at 10.34.41 AM.jpeg" alt="Plato 4" class="gallery-img" loading="lazy" />
+        <div class="gal-filters" id="gal-filters">
+          {categories.map((cat) => (
+            <button class="gal-filter active" data-cat={cat.id}>{cat.name}</button>
+          ))}
+        </div>
+
+        <div class="gal-masonry" id="gal-masonry">
+          {images.map((img, i) => (
+            <div class="gal-item" data-cat={img.cat} data-reveal>
+              <img src={img.src} alt={img.alt} class="gal-img" loading={i < 6 ? 'eager' : 'lazy'} />
+              <div class="gal-item-overlay">
+                <span class="gal-item-name">{img.alt}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
   </main>
 
-  <div id="lightbox" class="lightbox" style="display:none" onclick="this.style.display='none'">
-    <img id="lightbox-img" class="lightbox-img" />
+  <div class="gal-lightbox" id="gal-lightbox">
+    <button class="gal-lb-close" id="gal-lb-close">✕</button>
+    <button class="gal-lb-nav gal-lb-prev" id="gal-lb-prev">‹</button>
+    <button class="gal-lb-nav gal-lb-next" id="gal-lb-next">›</button>
+    <div class="gal-lb-content">
+      <img id="gal-lb-img" class="gal-lb-img" />
+      <span class="gal-lb-caption" id="gal-lb-caption"></span>
+    </div>
   </div>
 </BaseLayout>
 
 <style>
-  .page-header {
-    background: linear-gradient(135deg, var(--color-dark) 0%, #1a0e0a 100%);
-    text-align: center; padding: calc(70px + var(--space-xl)) 0 var(--space-lg);
-  }
-  .page-title { color: var(--color-primary); }
-  .page-subtitle { color: var(--color-light); margin-top: var(--space-sm); }
-  .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: var(--space-md);
-  }
-  .gallery-img {
-    width: 100%; height: 260px; object-fit: cover;
-    border-radius: var(--radius); cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  .gallery-img:hover { transform: scale(1.02); box-shadow: var(--shadow-sm); }
-  .lightbox {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+  .gal-hero {
+    height: 50vh; position: relative; overflow: hidden;
     display: flex; align-items: center; justify-content: center;
-    z-index: 2000; cursor: pointer; padding: var(--space-lg);
   }
-  .lightbox-img {
-    max-width: 90vw; max-height: 90vh;
+  .gal-hero-bg {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+    filter: brightness(0.4);
+  }
+  .gal-hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(0deg, rgba(0,0,0,0.5) 0%, transparent 50%);
+  }
+  .gal-hero-content { text-align: center; position: relative; z-index: 1; padding: 0 var(--space-md); }
+  .gal-hero-title {
+    font-family: 'Pacifico', cursive; font-weight: 400;
+    color: var(--color-primary);
+    -webkit-text-stroke: 2px var(--color-dark);
+    paint-order: stroke fill;
+    font-size: clamp(2.5rem,5vw,4rem);
+    text-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    margin-bottom: var(--space-sm);
+  }
+  .gal-hero-sub { color: white; font-size: 1.1rem; font-weight: 300; margin-bottom: var(--space-sm); }
+  .gal-count {
+    display: inline-block; padding: 0.35rem 1rem;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50px; color: white;
+    font-size: 0.85rem; font-weight: 600;
+    backdrop-filter: blur(4px);
+  }
+
+  .gal-section { padding: var(--space-xl) 0; }
+  .gal-filters {
+    display: flex; justify-content: center; gap: 0.75rem;
+    margin-bottom: var(--space-xl); flex-wrap: wrap;
+  }
+  .gal-filter {
+    padding: 0.6rem 1.5rem; border: 2px solid var(--color-light);
+    background: var(--color-bg); border-radius: 50px;
+    font-family: var(--font-body); font-weight: 600;
+    font-size: 0.9rem; color: var(--color-mid);
+    cursor: pointer; transition: all 0.3s ease;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .gal-filter:hover { border-color: var(--color-primary); color: var(--color-primary-hover); }
+  .gal-filter.active {
+    background: var(--color-primary); border-color: var(--color-primary);
+    color: var(--color-dark);
+  }
+
+  .gal-masonry {
+    column-count: 3; column-gap: var(--space-md);
+  }
+  .gal-item {
+    break-inside: avoid; margin-bottom: var(--space-md);
+    position: relative; overflow: hidden;
+    border-radius: var(--radius); cursor: pointer;
+  }
+  .gal-img {
+    width: 100%; display: block;
+    transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+  .gal-item:hover .gal-img { transform: scale(1.06); }
+  .gal-item-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(0deg, rgba(0,0,0,0.6) 0%, transparent 50%);
+    display: flex; align-items: flex-end; padding: 1rem;
+    opacity: 0; transition: opacity 0.3s ease;
+  }
+  .gal-item:hover .gal-item-overlay { opacity: 1; }
+  .gal-item-name {
+    color: white; font-weight: 600; font-size: 0.9rem;
+    font-family: var(--font-body);
+  }
+
+  .gal-lightbox {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.92); z-index: 9999;
+    align-items: center; justify-content: center;
+  }
+  .gal-lb-close {
+    position: absolute; top: 20px; right: 20px;
+    width: 44px; height: 44px;
+    background: none; border: none; color: white;
+    font-size: 1.5rem; cursor: pointer; z-index: 10;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.1); border-radius: 50%;
+    transition: background 0.3s;
+  }
+  .gal-lb-close:hover { background: rgba(255,255,255,0.2); }
+  .gal-lb-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 48px; height: 48px; background: rgba(255,255,255,0.1);
+    border: none; border-radius: 50%; cursor: pointer;
+    color: white; font-size: 2rem; z-index: 10;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.3s;
+  }
+  .gal-lb-nav:hover { background: rgba(255,255,255,0.25); }
+  .gal-lb-prev { left: 20px; }
+  .gal-lb-next { right: 20px; }
+  .gal-lb-content {
+    display: flex; flex-direction: column; align-items: center;
+    gap: var(--space-md); max-width: 85vw; max-height: 90vh;
+  }
+  .gal-lb-img {
+    max-width: 100%; max-height: 80vh;
     object-fit: contain; border-radius: var(--radius);
+  }
+  .gal-lb-caption {
+    color: white; font-size: 0.95rem; font-weight: 500;
+    font-family: var(--font-body);
+  }
+
+  @media (max-width: 768px) {
+    .gal-hero { height: 40vh; }
+    .gal-masonry { column-count: 2; }
+    .gal-lb-prev { left: 10px; }
+    .gal-lb-next { right: 10px; }
+  }
+  @media (max-width: 480px) {
+    .gal-masonry { column-count: 1; }
   }
 </style>
 
 <script>
-  const grid = document.getElementById('gallery-grid')
-  const lightbox = document.getElementById('lightbox')
-  const lightboxImg = document.getElementById('lightbox-img')
+  const items = document.querySelectorAll('.gal-item')
+  const filters = document.querySelectorAll('.gal-filter')
+  const lightbox = document.getElementById('gal-lightbox')
+  const lbImg = document.getElementById('gal-lb-img')
+  const lbCaption = document.getElementById('gal-lb-caption')
+  const lbClose = document.getElementById('gal-lb-close')
+  const lbPrev = document.getElementById('gal-lb-prev')
+  const lbNext = document.getElementById('gal-lb-next')
+  let currentIdx = 0
 
-  if (grid && lightbox && lightboxImg) {
-    grid.addEventListener('click', (e) => {
-      const img = e.target.closest('img')
-      if (!img) return
-      lightboxImg.src = img.src
-      lightbox.style.display = 'flex'
+  const allImages = Array.from(items).map(item => ({
+    src: item.querySelector('img').src,
+    alt: item.querySelector('.gal-item-name').textContent,
+  }))
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed')
+        observer.unobserve(entry.target)
+      }
     })
+  }, { threshold: 0.1 })
+
+  items.forEach(item => observer.observe(item))
+
+  filters.forEach(filter => {
+    filter.addEventListener('click', () => {
+      filters.forEach(f => f.classList.remove('active'))
+      filter.classList.add('active')
+      const cat = filter.getAttribute('data-cat')
+      items.forEach(item => {
+        if (cat === 'todas' || item.getAttribute('data-cat') === cat) {
+          item.style.display = 'block'
+        } else {
+          item.style.display = 'none'
+        }
+      })
+    })
+  })
+
+  function openLightbox(idx) {
+    currentIdx = idx
+    lbImg.src = allImages[idx].src
+    lbCaption.textContent = allImages[idx].alt
+    lightbox.style.display = 'flex'
+    document.body.style.overflow = 'hidden'
   }
+
+  function closeLightbox() {
+    lightbox.style.display = 'none'
+    document.body.style.overflow = ''
+  }
+
+  function prevImage() {
+    const visible = allImages.filter((_, i) => items[i].style.display !== 'none')
+    const visibleIdx = visible.findIndex((_, i) => {
+      let count = 0
+      for (let j = 0; j < items.length; j++) {
+        if (items[j].style.display !== 'none') {
+          if (j === currentIdx) return true
+          count++
+        }
+      }
+      return false
+    })
+    const prev = visibleIdx > 0 ? visibleIdx - 1 : visible.length - 1
+    const realIdx = Array.from(items).findIndex((item, i) => {
+      if (item.style.display !== 'none') {
+        let count = 0
+        for (let j = 0; j <= i; j++) {
+          if (items[j].style.display !== 'none') count++
+        }
+        return count - 1 === prev
+      }
+      return false
+    })
+    if (realIdx >= 0) openLightbox(realIdx)
+  }
+
+  function nextImage() {
+    const visible = allImages.filter((_, i) => items[i].style.display !== 'none')
+    const visibleIdx = visible.findIndex((_, i) => {
+      let count = 0
+      for (let j = 0; j < items.length; j++) {
+        if (items[j].style.display !== 'none') {
+          if (j === currentIdx) return true
+          count++
+        }
+      }
+      return false
+    })
+    const next = visibleIdx < visible.length - 1 ? visibleIdx + 1 : 0
+    const realIdx = Array.from(items).findIndex((item, i) => {
+      if (item.style.display !== 'none') {
+        let count = 0
+        for (let j = 0; j <= i; j++) {
+          if (items[j].style.display !== 'none') count++
+        }
+        return count - 1 === next
+      }
+      return false
+    })
+    if (realIdx >= 0) openLightbox(realIdx)
+  }
+
+  items.forEach((item, i) => {
+    item.addEventListener('click', () => openLightbox(i))
+  })
+
+  lbClose.addEventListener('click', closeLightbox)
+  lbPrev.addEventListener('click', prevImage)
+  lbNext.addEventListener('click', nextImage)
+
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox || e.target === lbImg) closeLightbox()
+  })
+
+  document.addEventListener('keydown', (e) => {
+    if (lightbox.style.display !== 'flex') return
+    if (e.key === 'Escape') closeLightbox()
+    if (e.key === 'ArrowLeft') prevImage()
+    if (e.key === 'ArrowRight') nextImage()
+  })
 </script>
