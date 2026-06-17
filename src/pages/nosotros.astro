@@ -6,7 +6,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
   <main style="padding-top: 70px">
     <section class="nos-about" data-reveal>
       <div class="container nos-about-grid">
-        <div class="nos-about-img" data-reveal-left>
+        <div class="nos-about-img parallax-img" data-reveal-left>
           <img src="/imagenes/galeria/EQUIPO.jpeg" alt="Equipo FRESCOLITO" loading="lazy" />
         </div>
         <div class="nos-about-text">
@@ -18,16 +18,34 @@ import BaseLayout from '../layouts/BaseLayout.astro'
       </div>
     </section>
 
+    <div class="nos-divider">
+      <svg viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,0 C300,60 900,0 1200,40 L1200,0 L0,0 Z" fill="var(--color-light)"/></svg>
+    </div>
+
     <section class="nos-history" data-reveal>
       <div class="nos-history-content">
         <div class="container">
           <span class="nos-label">Como Empezamos</span>
           <h2>El comienzo de FRESCOLITO</h2>
-          <p>FRESCOLITO comenzó como un sueño familiar en Iquitos, con la misión de llevar los auténticos sabores amazónicos a cada mesa. Desde nuestros inicios, nos comprometimos a usar ingredientes frescos de la región y recetas tradicionales que honran la rica herencia culinaria de la Amazonía peruana.</p>
-          <p>Hoy, seguimos sirviendo con la misma pasión y dedicación, ofreciendo una experiencia gastronómica única en la selva peruana.</p>
+          <div class="nos-timeline">
+            <div class="nos-timeline-item">
+              <div class="nos-timeline-dot"></div>
+              <div>
+                <span class="nos-timeline-year">2020</span>
+                <p>Nace FRESCOLITO en Iquitos con la visión de compartir los sabores de la Amazonía.</p>
+              </div>
+            </div>
+            <div class="nos-timeline-item">
+              <div class="nos-timeline-dot"></div>
+              <div>
+                <span class="nos-timeline-year">Hoy</span>
+                <p>Seguimos sirviendo con pasión ingredientes frescos y recetas tradicionales.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="nos-history-img" data-reveal-right>
+      <div class="nos-history-img parallax-img" data-reveal-right>
         <img src="/imagenes/galeria/MesaRepresentativa.png" alt="Ambiente FRESCOLITO" loading="lazy" />
       </div>
     </section>
@@ -35,8 +53,8 @@ import BaseLayout from '../layouts/BaseLayout.astro'
     <section class="nos-stats" data-reveal>
       <div class="container nos-stats-grid">
         <div class="nos-stat">
-          <span class="nos-stat-number">18</span>
-          <span class="nos-stat-label">Platos</span>
+          <span class="nos-stat-number" data-count-up="18">0</span>
+          <span class="nos-stat-label">Platos en carta</span>
         </div>
         <div class="nos-stat">
           <span class="nos-stat-number">📍</span>
@@ -104,17 +122,21 @@ import BaseLayout from '../layouts/BaseLayout.astro'
   .nos-about-text p {
     color: var(--color-mid); line-height: 1.8; margin-bottom: var(--space-md);
   }
+  .nos-about-img { border-radius: var(--radius); overflow: hidden; }
   .nos-about-img img {
-    width: 100%; border-radius: var(--radius);
+    width: 100%; display: block;
     box-shadow: var(--shadow-lg);
   }
+
+  .nos-divider { line-height: 0; }
+  .nos-divider svg { display: block; width: 100%; height: 40px; }
 
   .nos-history {
     display: grid;
     grid-template-columns: 1fr 1fr;
     background: linear-gradient(135deg, var(--color-light) 0%, #f5f0eb 100%);
   }
-  .nos-history-img { height: 100%; min-height: 400px; }
+  .nos-history-img { height: 100%; min-height: 400px; overflow: hidden; }
   .nos-history-img img {
     width: 100%; height: 100%; object-fit: cover;
   }
@@ -122,9 +144,21 @@ import BaseLayout from '../layouts/BaseLayout.astro'
     display: flex; align-items: center; padding: var(--space-xl);
   }
   .nos-history-content h2 { margin-bottom: var(--space-md); }
-  .nos-history-content p {
-    color: var(--color-mid); line-height: 1.8; margin-bottom: var(--space-md);
+
+  .nos-timeline { display: flex; flex-direction: column; gap: var(--space-lg); margin-top: var(--space-md); }
+  .nos-timeline-item { display: flex; gap: var(--space-md); align-items: flex-start; }
+  .nos-timeline-dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--color-primary);
+    border: 3px solid var(--color-bg);
+    box-shadow: 0 0 0 2px var(--color-primary);
+    flex-shrink: 0; margin-top: 4px;
   }
+  .nos-timeline-year {
+    font-family: var(--font-heading); font-weight: 700;
+    font-size: 1.1rem; color: var(--color-dark);
+  }
+  .nos-timeline-item p { color: var(--color-mid); line-height: 1.6; font-size: 0.95rem; margin-top: 0.25rem; }
 
   .nos-stats { padding: var(--space-xl) 0; background: var(--color-dark); }
   .nos-stats-grid {
@@ -156,8 +190,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
     background: var(--color-bg);
     border-radius: var(--radius);
     box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    transition: transform 0.3s cubic-bezier(.25,.46,.45,.94),
-                box-shadow 0.3s ease;
+    transition: transform 0.3s cubic-bezier(.25,.46,.45,.94), box-shadow 0.3s ease;
     position: relative; overflow: hidden;
   }
   .nos-value-card::before {
@@ -180,23 +213,16 @@ import BaseLayout from '../layouts/BaseLayout.astro'
     color: var(--color-mid); margin-bottom: var(--space-lg); font-size: 1.1rem;
   }
 
-  [data-reveal] {
-    opacity: 0; transform: translateY(30px);
-    transition: opacity 0.6s cubic-bezier(.25,.46,.45,.94),
+  [data-reveal], [data-reveal-left], [data-reveal-right], [data-reveal-scale] {
+    opacity: 0; transition: opacity 0.6s cubic-bezier(.25,.46,.45,.94),
                 transform 0.6s cubic-bezier(.25,.46,.45,.94);
   }
-  [data-reveal-left] {
-    opacity: 0; transform: translateX(-30px);
-    transition: opacity 0.6s cubic-bezier(.25,.46,.45,.94),
-                transform 0.6s cubic-bezier(.25,.46,.45,.94);
-  }
-  [data-reveal-right] {
-    opacity: 0; transform: translateX(30px);
-    transition: opacity 0.6s cubic-bezier(.25,.46,.45,.94),
-                transform 0.6s cubic-bezier(.25,.46,.45,.94);
-  }
-  [data-reveal].revealed, [data-reveal-left].revealed, [data-reveal-right].revealed {
-    opacity: 1; transform: translateX(0) translateY(0);
+  [data-reveal] { transform: translateY(30px); }
+  [data-reveal-left] { transform: translateX(-30px); }
+  [data-reveal-right] { transform: translateX(30px); }
+  [data-reveal-scale] { transform: scale(0.9); }
+  [data-reveal].revealed, [data-reveal-left].revealed, [data-reveal-right].revealed, [data-reveal-scale].revealed {
+    opacity: 1; transform: translateX(0) translateY(0) scale(1);
   }
 
   @media (max-width: 768px) {
