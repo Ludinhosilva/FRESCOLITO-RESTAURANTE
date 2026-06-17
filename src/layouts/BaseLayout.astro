@@ -12,9 +12,10 @@ import Preloader from '../components/Preloader.astro'
 export interface Props {
   title?: string
   description?: string
+  effect?: 'stripes' | 'slide-up' | 'fade' | 'scale' | 'slide-right' | 'slide-left'
 }
 
-const { title = 'FRESCOLITO RESTAURANTE', description = 'Cocina regional peruana en Iquitos' } = Astro.props
+const { title = 'FRESCOLITO RESTAURANTE', description = 'Cocina regional peruana en Iquitos', effect = 'fade' } = Astro.props
 ---
 
 <!doctype html>
@@ -65,7 +66,7 @@ const { title = 'FRESCOLITO RESTAURANTE', description = 'Cocina regional peruana
     <title>{title}</title>
   </head>
   <body>
-    <Preloader />
+    <Preloader effect={effect} />
     <Navbar />
     <slot />
     <BusinessHours />

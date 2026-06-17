@@ -1,11 +1,23 @@
 ---
+export interface Props {
+  effect?: 'stripes' | 'slide-up' | 'fade' | 'scale' | 'slide-right' | 'slide-left'
+}
+
+const { effect = 'fade' } = Astro.props
 ---
 
-<div class="preloader" id="preloader">
-  <div class="preloader-content">
+<div class="preloader" id="preloader" data-effect={effect}>
+  <div class="preloader-inner" id="preloader-inner" style={`animation-duration:0.5s;animation-fill-mode:both;animation-delay:0.6s`}>
     <img src="/imagenes/frescolito.jpeg" alt="FRESCOLITO" class="preloader-logo" />
     <h1 class="preloader-title">FRESCOLITO</h1>
   </div>
+  {effect === 'stripes' && (
+    <div class="stripe-overlay" id="stripe-overlay">
+      {Array.from({ length: 20 }).map((_, i) => (
+        <div class="stripe-bar" style={`animation-delay:${i * 0.035}s`}></div>
+      ))}
+    </div>
+  )}
 </div>
 
 <style>
@@ -13,18 +25,14 @@
     position: fixed; inset: 0; z-index: 99999;
     display: flex; align-items: center; justify-content: center;
     background: var(--color-bg);
-    animation: preloader-hide 0.35s ease 2.5s forwards;
-  }
-  .preloader-content {
-    text-align: center;
-    animation: preloader-fade 0.4s ease;
+    pointer-events: none;
   }
   .preloader-logo {
     width: 100px; height: 100px; border-radius: 50%; object-fit: cover;
     margin: 0 auto var(--space-sm);
     border: 4px solid var(--color-primary);
     box-shadow: 0 0 40px rgba(253,185,19,0.3);
-    animation: preloader-pulse 0.8s ease-in-out infinite;
+    animation: ppulse 0.8s ease-in-out infinite;
   }
   .preloader-title {
     font-family: 'Pacifico', cursive; font-weight: 400;
@@ -33,17 +41,80 @@
     paint-order: stroke fill;
     font-size: 2rem;
     text-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    margin-bottom: 0;
+    text-align: center;
   }
-  @keyframes preloader-hide {
-    to { opacity: 0; visibility: hidden; }
+  .preloader-inner { text-align: center; z-index: 2; }
+
+  /* STRIPES - Home */
+  .stripe-overlay {
+    position: fixed; inset: 0; z-index: 3;
+    display: flex; flex-direction: column;
   }
-  @keyframes preloader-fade {
+  .stripe-bar {
+    flex: 1; background: var(--color-bg);
+    animation: shide 0.4s ease forwards;
+  }
+  @keyframes shide { to { opacity: 0; } }
+
+  /* SLIDE-UP */
+  .preloader[data-effect="slide-up"] .preloader-inner {
+    animation-name: slup;
+  }
+  .preloader[data-effect="slide-up"] {
+    animation: pfhide 0.6s ease 0.8s forwards;
+  }
+  @keyframes slup { to { opacity: 0; transform: translateY(-30px); } }
+
+  /* FADE */
+  .preloader[data-effect="fade"] {
+    animation: pfhide 0.6s ease 0.7s forwards;
+  }
+  @keyframes pfhide { to { opacity: 0; visibility: hidden; } }
+
+  /* SCALE */
+  .preloader[data-effect="scale"] .preloader-inner {
+    animation-name: scl;
+  }
+  .preloader[data-effect="scale"] {
+    animation: pfhide 0.5s ease 0.7s forwards;
+  }
+  @keyframes scl { to { opacity: 0; transform: scale(0.85); } }
+
+  /* SLIDE-RIGHT */
+  .preloader[data-effect="slide-right"] .preloader-inner {
+    animation-name: srig;
+  }
+  .preloader[data-effect="slide-right"] {
+    animation: pfhide 0.5s ease 0.7s forwards;
+  }
+  @keyframes srig { to { opacity: 0; transform: translateX(40px); } }
+
+  /* SLIDE-LEFT */
+  .preloader[data-effect="slide-left"] .preloader-inner {
+    animation-name: slef;
+  }
+  .preloader[data-effect="slide-left"] {
+    animation: pfhide 0.5s ease 0.7s forwards;
+  }
+  @keyframes slef { to { opacity: 0; transform: translateX(-40px); } }
+
+  @keyframes pfade {
     from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  @keyframes preloader-pulse {
+  @keyframes ppulse {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.04); }
   }
 </style>
+
+<script>
+  const preloader = document.getElementById('preloader')
+  if (!preloader) {}
+  const effect = preloader?.getAttribute('data-effect')
+  const stripeOverlay = document.getElementById('stripe-overlay')
+
+  if (effect === 'stripes' && stripeOverlay) {
+    setTimeout(() => { stripeOverlay.style.display = 'none'; preloader.style.display = 'none' }, 1200)
+  }
+</script>
