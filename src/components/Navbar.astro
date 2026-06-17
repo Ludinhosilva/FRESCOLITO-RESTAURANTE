@@ -13,7 +13,6 @@ const links = [
   <div class="container nav-container">
     <a href="/" class="nav-logo">
       <img src="/imagenes/frescolito.jpeg" alt="FRESCOLITO" class="nav-logo-img" />
-      <span class="nav-logo-text">FRESCOLITO</span>
     </a>
 
     <button class="hamburger-btn" id="hamburger" aria-label="Menú" aria-expanded="false">
@@ -65,14 +64,6 @@ const links = [
     border-color: var(--color-primary);
     box-shadow: 0 0 12px rgba(253,185,19,0.3);
   }
-  .nav-logo-text {
-    font-family: 'Pacifico', cursive; font-size: 1.6rem;
-    font-weight: 400;
-    transition: color 0.3s ease;
-  }
-  .navbar:not(.scrolled) .nav-logo-text { color: white; text-shadow: 0 2px 8px rgba(0,0,0,0.5); }
-  .navbar.scrolled .nav-logo-text { color: var(--color-dark); }
-
   .nav-links { display: flex; gap: 2.5rem; align-items: center; }
   .nav-link {
     font-family: var(--font-body); font-weight: 600; font-size: 0.9rem;
