@@ -5,16 +5,25 @@ import { categories } from '../data/menu'
 <div class="menu-section" id="menu-section">
   <div class="container">
     <div class="menu-pills">
-      {categories.map((cat) => (
-        <button class="menu-pill active" data-cat={cat.id}>{cat.name}</button>
+      {categories.map((cat, i) => (
+        <button class="menu-pill active" data-cat={cat.id}>
+          <span class="pill-icon">{cat.icon}</span>
+          {cat.name}
+          <span class="pill-count">{cat.items.length}</span>
+        </button>
       ))}
     </div>
 
     {categories.map((cat) => (
-      <div class="menu-category active" id={`cat-${cat.id}`}>
+      <div class="menu-category" id={`cat-${cat.id}`}>
         <div class="menu-grid">
           {cat.items.map((item) => (
-            <div class="menu-item">
+            <div class="menu-item" data-reveal>
+              {item.image && (
+                <div class="menu-item-img-wrap">
+                  <img src={item.image} alt={item.name} class="menu-item-img" loading="lazy" />
+                </div>
+              )}
               <div class="menu-item-body">
                 <h3 class="menu-item-name">{item.name}</h3>
                 <p class="menu-item-desc">{item.description}</p>
@@ -36,7 +45,7 @@ import { categories } from '../data/menu'
 </div>
 
 <div class="menu-toast" id="menu-toast">
-  <span class="menu-toast-icon">✅</span>
+  <span class="menu-toast-icon">✓</span>
   Agregado al carrito
 </div>
 
@@ -44,30 +53,37 @@ import { categories } from '../data/menu'
   .menu-section { padding: var(--space-xl) 0; }
   .menu-pills {
     display: flex; justify-content: center; gap: 0.75rem;
-    margin-bottom: var(--space-xl); flex-wrap: wrap;
+    margin-bottom: var(--space-lg); flex-wrap: wrap;
   }
   .menu-pill {
-    padding: 0.65rem 2rem;
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.6rem 1.5rem;
     border: 2px solid var(--color-light);
     background: var(--color-bg);
     border-radius: 50px;
     font-family: var(--font-body);
-    font-weight: 700;
+    font-weight: 600;
     font-size: 0.95rem;
     color: var(--color-mid);
     cursor: pointer;
     transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
   }
   .menu-pill:hover { border-color: var(--color-primary); color: var(--color-primary-hover); }
-  .menu-pill:active { color: var(--color-dark); background: var(--color-primary); border-color: var(--color-primary); }
+  .menu-pill:active { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-dark); }
   .menu-pill.active {
     background: var(--color-primary);
     border-color: var(--color-primary);
     color: var(--color-dark);
     box-shadow: 0 2px 12px rgba(253,185,19,0.35);
   }
+  .pill-icon { font-size: 1rem; }
+  .pill-count {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 22px; height: 22px; padding: 0 6px;
+    border-radius: 50px; font-size: 0.75rem; font-weight: 700;
+    background: rgba(0,0,0,0.1); color: inherit;
+  }
+  .menu-pill.active .pill-count { background: rgba(0,0,0,0.15); }
 
   .menu-category { display: none; }
   .menu-category.active { display: block; }
@@ -78,51 +94,85 @@ import { categories } from '../data/menu'
     gap: var(--space-lg);
   }
   .menu-item {
-    background: var(--color-bg); border: 1px solid var(--color-light);
-    border-radius: var(--radius); padding: var(--space-lg);
-    display: flex; flex-direction: column; justify-content: space-between;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: var(--color-bg);
+    border-radius: var(--radius);
+    padding: 0; overflow: hidden;
+    display: flex; flex-direction: column;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: transform 0.3s cubic-bezier(.25,.46,.45,.94),
+                box-shadow 0.3s ease;
+    position: relative;
   }
-  .menu-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+  .menu-item::before {
+    content: ''; position: absolute; top: 0; left: 0; bottom: 0;
+    width: 4px; background: var(--color-primary);
+    transform: scaleY(0); transition: transform 0.3s ease;
+    border-radius: 0 2px 2px 0;
+  }
+  .menu-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  }
+  .menu-item:hover::before { transform: scaleY(1); }
+
+  .menu-item-img-wrap {
+    width: 100%; height: 180px; overflow: hidden;
+  }
+  .menu-item-img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.5s cubic-bezier(.25,.46,.45,.94);
+  }
+  .menu-item:hover .menu-item-img { transform: scale(1.05); }
+
+  .menu-item-body { padding: var(--space-md) var(--space-lg) 0; flex: 1; }
   .menu-item-name {
-    font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--color-dark);
     font-family: var(--font-heading); font-weight: 700;
+    font-size: 1.15rem; margin-bottom: 0.35rem; color: var(--color-dark);
   }
   .menu-item-desc {
-    color: var(--color-mid); font-size: 0.9rem; line-height: 1.6; margin-bottom: var(--space-md);
+    color: var(--color-mid); font-size: 0.9rem; line-height: 1.6;
+    font-style: italic;
   }
   .menu-item-footer {
     display: flex; align-items: center; justify-content: space-between;
+    padding: var(--space-md) var(--space-lg);
   }
   .menu-price-block {
-    background: rgba(253,185,19,0.1);
-    padding: 0.35rem 0.75rem;
-    border-radius: var(--radius);
+    background: rgba(253,185,19,0.12);
+    padding: 0.4rem 0.85rem;
+    border-radius: 50px;
   }
   .menu-item-price {
-    font-family: var(--font-heading); font-size: 1.4rem;
+    font-family: var(--font-body); font-size: 1.2rem;
     font-weight: 700; color: var(--color-primary-hover);
   }
-  .menu-add-btn { font-size: 0.85rem; padding: 0.55rem 1.1rem; }
-  .menu-add-btn:active { background: var(--color-primary); color: #5a2a0a; transform: scale(0.95); }
-
-  @media (max-width: 480px) {
-    .menu-pill { padding: 0.5rem 1.25rem; font-size: 0.85rem; }
-    .menu-item-price { font-size: 1.2rem; }
-  }
+  .menu-add-btn { font-size: 0.85rem; padding: 0.5rem 1.2rem; border-radius: 50px; }
+  .menu-add-btn:active { transform: scale(0.92); }
 
   .menu-toast {
     position: fixed; top: 90px; left: 50%; transform: translateX(-50%);
     background: var(--color-dark); color: white;
     padding: 0.75rem 1.5rem; border-radius: 50px;
-    font-family: var(--font-body); font-size: 0.9rem; font-weight: 700;
+    font-family: var(--font-body); font-size: 0.9rem; font-weight: 600;
     z-index: 9999; display: flex; align-items: center; gap: 0.5rem;
     box-shadow: var(--shadow-lg);
-    transition: opacity 0.35s ease, visibility 0.35s ease;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
     pointer-events: none;
     opacity: 0; visibility: hidden;
   }
   .menu-toast.show { opacity: 1; visibility: visible; }
+
+  [data-reveal] {
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.5s cubic-bezier(.25,.46,.45,.94),
+                transform 0.5s cubic-bezier(.25,.46,.45,.94);
+  }
+  [data-reveal].revealed { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 480px) {
+    .menu-pill { padding: 0.5rem 1rem; font-size: 0.85rem; }
+    .menu-item-img-wrap { height: 140px; }
+  }
 </style>
 
 <script>
@@ -144,17 +194,30 @@ import { categories } from '../data/menu'
     else cat.classList.remove('active')
   })
 
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed')
+        revealObserver.unobserve(entry.target)
+      }
+    })
+  }, { threshold: 0.1 })
+
+  document.querySelectorAll('.menu-item[data-reveal]').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.06}s`
+    revealObserver.observe(el)
+  })
+
+  let toastTimer = null
+  const toast = document.getElementById('menu-toast')
+  function showToast() {
+    if (!toast) return
+    clearTimeout(toastTimer)
+    toast.classList.add('show')
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 1500)
+  }
+
   document.querySelectorAll('.menu-add-btn').forEach(btn => {
-    let toastTimer = null
-    const toast = document.getElementById('menu-toast')
-
-    function showToast() {
-      if (!toast) return
-      clearTimeout(toastTimer)
-      toast.classList.add('show')
-      toastTimer = setTimeout(() => toast.classList.remove('show'), 2000)
-    }
-
     btn.addEventListener('click', () => {
       const id = btn.getAttribute('data-id')
       const name = btn.getAttribute('data-name')
