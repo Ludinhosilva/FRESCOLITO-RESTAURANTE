@@ -75,10 +75,17 @@ const images = [
     font-weight: 700;
     font-size: clamp(3rem, 7vw, 5.5rem);
     letter-spacing: 0.025em;
-    color: var(--color-primary);
-    text-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    background: linear-gradient(90deg, #FDB913 0%, #FFE68F 25%, #FFF 40%, #FFE68F 55%, #FDB913 75%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: 0;
     line-height: 1.1;
+    animation: title-shine 3s ease-in-out infinite;
+  }
+  @keyframes title-shine {
+    to { background-position: 200% center; }
   }
   .hero-divider {
     display: block; width: 40px; height: 3px;
