@@ -5,9 +5,52 @@ import ContactForm from '../components/react/ContactForm.jsx'
 
 <BaseLayout title="Contacto | FRESCOLITO RESTAURANTE" description="Contáctanos. Estamos ubicados en Iquitos, Perú." effect="slide-right">
   <main style="padding-top: 70px">
+    <section class="pc-header">
+      <div class="container" style="text-align:center">
+        <span class="pc-label">· Contáctanos ·</span>
+        <h1 class="pc-title">Contacto</h1>
+        <span class="pc-divider"></span>
+        <p class="pc-sub">Estamos ubicados en Iquitos, Perú</p>
+      </div>
+    </section>
     <ContactForm client:load />
   </main>
 </BaseLayout>
 
 <style>
+  .pc-header { padding: var(--space-lg) 0 var(--space-md); }
+  .pc-label {
+    font-family: var(--font-body); font-size: 0.7rem;
+    text-transform: uppercase; letter-spacing: 0.2em;
+    color: var(--color-mid); margin-bottom: var(--space-xs);
+    display: block;
+  }
+  .pc-title {
+    font-family: var(--font-heading); font-weight: 700;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--color-dark);
+    background: linear-gradient(90deg,
+      var(--color-dark) 0%, var(--color-dark) 20%,
+      var(--color-primary-hover) 50%, var(--color-dark) 80%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: pc-shine 3.5s ease-in-out infinite;
+    margin-bottom: var(--space-sm);
+  }
+  @keyframes pc-shine {
+    from { background-position: 200% center; }
+    to { background-position: -200% center; }
+  }
+  .pc-divider {
+    display: block; width: 30px; height: 2px;
+    background: var(--color-primary); border-radius: 2px;
+    margin: 0 auto var(--space-sm);
+  }
+  .pc-sub {
+    font-family: var(--font-body); font-size: 0.9rem;
+    color: var(--color-mid); margin: 0;
+  }
 </style>
