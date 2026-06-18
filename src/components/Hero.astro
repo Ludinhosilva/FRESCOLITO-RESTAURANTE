@@ -25,6 +25,8 @@ const images = [
   <div class="hero-content">
     <img src="/imagenes/frescolito.jpeg" alt="FRESCOLITO" class="hero-logo" />
     <h1 class="hero-title">FRESCOLITO</h1>
+    <span class="hero-divider"></span>
+    <p class="hero-sub-restaurant">· RESTAURANT ·</p>
     <p class="hero-subtitle">{SITE_DESCRIPTION}</p>
     <div class="hero-actions">
       <a href="/menu" class="btn btn-primary hero-btn">Ver Menú</a>
@@ -70,15 +72,27 @@ const images = [
     box-shadow: 0 0 40px rgba(253,185,19,0.3);
   }
   .hero-title {
-    font-family: 'Pacifico', cursive;
-    font-weight: 400;
-    font-size: clamp(3rem, 7vw, 6rem);
-    color: var(--color-primary);
-    -webkit-text-stroke: 3px var(--color-dark);
-    paint-order: stroke fill;
-    text-shadow: 0 4px 16px rgba(0,0,0,0.4);
-    margin-bottom: var(--space-md);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    letter-spacing: 0.025em;
+    color: #451A03;
+    text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    margin-bottom: 0;
     line-height: 1.1;
+  }
+  .hero-divider {
+    display: block; width: 40px; height: 3px;
+    background: var(--color-primary);
+    border-radius: 2px; margin: 0.5rem 0;
+  }
+  .hero-sub-restaurant {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #57534E;
+    margin-bottom: var(--space-md);
   }
   .hero-subtitle {
     color: white;
@@ -125,7 +139,6 @@ const images = [
   }
 
   @media (max-width: 768px) {
-    .hero-title { -webkit-text-stroke: 2px var(--color-dark); }
     .hero-logo { width: 120px; height: 120px; }
   }
 </style>
