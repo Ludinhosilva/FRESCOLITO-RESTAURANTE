@@ -1,6 +1,4 @@
 ---
-import { SITE_DESCRIPTION } from '../data/config'
-
 const images = [
   'imagenes/galeria/MesaGaleria.webp',
   'imagenes/galeria/ArrozMarisco.webp',
@@ -28,7 +26,6 @@ const images = [
       <h1 class="hero-title">FRESCOLITO</h1>
       <span class="hero-divider"></span>
       <p class="hero-sub-restaurant">· RESTAURANT ·</p>
-      <p class="hero-subtitle">{SITE_DESCRIPTION}</p>
       <div class="hero-actions">
         <a href="/menu" class="btn btn-primary hero-btn">Ver Menú</a>
         <a href="/reservas" class="btn btn-outline hero-btn-oul">Reserva Ahora</a>
@@ -122,14 +119,6 @@ const images = [
     text-transform: uppercase;
     color: rgb(255, 255, 255);
     margin-bottom: var(--space-md);
-  }
-  .hero-subtitle {
-    color: white;
-    font-size: clamp(1.1rem, 2vw, 1.4rem);
-    font-family: var(--font-body);
-    font-weight: 300;
-    max-width: 600px; margin: 0 auto var(--space-lg);
-    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
   }
   .hero-actions { display: flex; gap: var(--space-md); justify-content: center; flex-wrap: wrap; }
   .hero-btn { font-size: 0.9rem; padding: 0.65rem 1.5rem; }
