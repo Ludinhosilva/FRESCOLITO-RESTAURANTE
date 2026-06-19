@@ -88,11 +88,11 @@ const images = [
     background-clip: text;
     margin-bottom: 0;
     line-height: 1.1;
-    animation: title-shine 2.5s ease-in-out infinite;
+    animation: title-shine 6s ease-in-out infinite;
   }
   @keyframes title-shine {
-    from { background-position: 200% center; }
-    to { background-position: -200% center; }
+    from { background-position: 300% center; }
+    to { background-position: -300% center; }
   }
   .hero-divider {
     display: block; width: 40px; height: 3px;
@@ -127,7 +127,7 @@ const images = [
   .hero-scroll {
     position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);
     z-index: 2; display: flex; flex-direction: column; align-items: center;
-    gap: 4px; animation: bounce 2s ease-in-out infinite;
+    gap: 4px; animation: bounce 6s ease-in-out infinite;
   }
   .hero-scroll-text {
     color: rgba(255,255,255,0.7);     font-size: 0.85rem;
@@ -183,3 +183,4 @@ const images = [
     }, { passive: true })
   }
 </script>
+
