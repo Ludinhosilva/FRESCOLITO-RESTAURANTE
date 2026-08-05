@@ -1,6 +1,4 @@
 ---
-import { SITE_DESCRIPTION } from '../data/config'
-
 const images = [
   'imagenes/galeria/MesaGaleria.webp',
   'imagenes/galeria/ArrozMarisco.webp',
@@ -29,7 +27,7 @@ const images = [
     <p class="hero-sub-restaurant">· RESTAURANT ·</p>
     <div class="hero-actions">
       <a href="/menu" class="btn btn-primary hero-btn">Ver Menú</a>
-      <a href="/reservas" class="btn btn-outline hero-btn-oul">Reserva Ahora</a>
+      <a href="https://wa.me/51927367844?text=Hola%20FRESCOLITO%2C%20quisiera%20hacer%20una%20reserva" class="btn btn-outline hero-btn-oul">Reserva Ahora</a>
     </div>
   </div>
 
@@ -114,24 +112,25 @@ const images = [
   .hero-btn-oul:active { background: var(--color-primary); color: #5a2a0a; }
 
   .hero-scroll {
-    position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);
+    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
     z-index: 2; display: flex; flex-direction: column; align-items: center;
-    gap: 4px; animation: bounce 6s ease-in-out infinite;
+    gap: 2px; animation: bounce 2.5s ease-in-out infinite;
   }
   .hero-scroll-text {
-    color: rgba(255,255,255,0.7);     font-size: 0.85rem;
+    color: rgba(255,255,255,0.7);
+    font-size: 0.75rem;
     text-transform: uppercase; letter-spacing: 2px;
     font-family: var(--font-body); font-weight: 600;
   }
   .hero-scroll-arrow {
-    color: var(--color-primary); font-size: 1.5rem; line-height: 1;
+    color: var(--color-primary); font-size: 1.2rem; line-height: 1;
   }
   @keyframes bounce {
     0%, 100% { transform: translateX(-50%) translateY(0); }
     50% { transform: translateX(-50%) translateY(8px); }
   }
 
-  .swiper-pagination { bottom: 30px !important; }
+  .swiper-pagination { bottom: 60px !important; }
   .swiper-pagination-bullet {
     width: 10px; height: 10px; background: rgba(255,255,255,0.5);
     opacity: 1; transition: all 0.3s ease;
@@ -141,7 +140,10 @@ const images = [
   }
 
   @media (max-width: 768px) {
-    .hero-logo { width: 120px; height: 120px; }
+    .hero-logo { width: 100px; height: 100px; }
+    .hero-btn, .hero-btn-oul { font-size: 0.8rem; padding: 0.55rem 1.2rem; }
+    .swiper-pagination { bottom: 50px !important; }
+    .hero-scroll { bottom: 10px; }
   }
 </style>
 
