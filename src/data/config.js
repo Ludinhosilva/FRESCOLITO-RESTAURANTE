@@ -10,5 +10,4 @@ export const BUSINESS_HOURS = {
 }
 
 export const SITE_NAME = 'FRESCOLITO RESTAURANTE'
-export const SITE_DESCRIPTION = 'Cocina regional peruana en Iquitos. Ceviches, chicharrones, arroz con mariscos y más.'
 

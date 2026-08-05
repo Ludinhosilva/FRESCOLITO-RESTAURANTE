@@ -32,8 +32,8 @@ import { categories } from '../data/menu'
                 <div class="menu-price-block">
                   <span class="menu-item-price">S/ {item.price.toFixed(2)}</span>
                 </div>
-                <button class="btn btn-primary menu-add-btn" data-id={item.id} data-name={item.name} data-price={item.price}>
-                  + Agregar
+                <button class="btn btn-primary menu-order-btn" data-name={item.name} data-price={item.price}>
+                  Ordenar por WhatsApp
                 </button>
               </div>
             </div>
@@ -44,10 +44,6 @@ import { categories } from '../data/menu'
   </div>
 </div>
 
-<div class="menu-toast" id="menu-toast">
-  <span class="menu-toast-icon">✓</span>
-  Agregado al carrito
-</div>
 
 <style>
   .menu-section { padding: var(--space-xl) 0; }
@@ -146,21 +142,8 @@ import { categories } from '../data/menu'
     font-family: var(--font-body); font-size: 1.2rem;
     font-weight: 700; color: var(--color-primary-hover);
   }
-  .menu-add-btn { font-size: 0.85rem; padding: 0.5rem 1.2rem; border-radius: 50px; }
-  .menu-add-btn:active { transform: scale(0.92); }
-
-  .menu-toast {
-    position: fixed; top: 90px; left: 50%; transform: translateX(-50%);
-    background: var(--color-dark); color: white;
-    padding: 0.75rem 1.5rem; border-radius: 50px;
-    font-family: var(--font-body); font-size: 0.9rem; font-weight: 600;
-    z-index: 9999; display: flex; align-items: center; gap: 0.5rem;
-    box-shadow: var(--shadow-lg);
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-    pointer-events: none;
-    opacity: 0; visibility: hidden;
-  }
-  .menu-toast.show { opacity: 1; visibility: visible; }
+  .menu-order-btn { font-size: 0.85rem; padding: 0.5rem 1.2rem; border-radius: 50px; }
+  .menu-order-btn:active { transform: scale(0.92); }
 
   [data-reveal] {
     opacity: 0; transform: translateY(20px);
@@ -208,32 +191,16 @@ import { categories } from '../data/menu'
     revealObserver.observe(el)
   })
 
-  let toastTimer = null
-  const toast = document.getElementById('menu-toast')
-  function showToast() {
-    if (!toast) return
-    clearTimeout(toastTimer)
-    toast.classList.add('show')
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 1500)
-  }
+  const WHATSAPP = '51927367844'
 
-  document.querySelectorAll('.menu-add-btn').forEach(btn => {
+  document.querySelectorAll('.menu-order-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const id = btn.getAttribute('data-id')
       const name = btn.getAttribute('data-name')
       const price = parseFloat(btn.getAttribute('data-price'))
-      if (!id || !name || !price) return
+      if (!name || !price) return
 
-      const cart = JSON.parse(localStorage.getItem('frescolito-cart') || '[]')
-      const existing = cart.find(i => i.id === id)
-      if (existing) { existing.quantity++ } else { cart.push({ id, name, price, quantity: 1 }) }
-      localStorage.setItem('frescolito-cart', JSON.stringify(cart))
-      localStorage.setItem('frescolito-cart-open', 'true')
-      showToast()
-
-      btn.style.transform = 'scale(0.9)'
-      btn.style.transition = 'transform 0.15s ease'
-      setTimeout(() => { btn.style.transform = '' }, 150)
+      const msg = encodeURIComponent(`Hola FRESCOLITO, quiero ordenar:\n\n${name} - S/ ${price.toFixed(2)}`)
+      window.open(`https://wa.me/${WHATSAPP}?text=${msg}`, '_blank')
     })
   })
 </script>

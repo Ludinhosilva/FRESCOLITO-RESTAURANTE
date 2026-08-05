@@ -7,10 +7,12 @@ import MenuSection from '../components/MenuSection.astro'
   <main style="padding-top: 70px">
     <section class="pm-header">
       <div class="container" style="text-align:center">
-        <span class="pm-label">· Descubre ·</span>
-        <h1 class="pm-title">Nuestro Menú</h1>
-        <span class="pm-divider"></span>
-        <p class="pm-sub">Sabores auténticos de la Amazonía peruana</p>
+        <div class="pm-frame">
+          <span class="pm-label">· Descubre ·</span>
+          <h1 class="pm-title">Nuestro Menú</h1>
+          <span class="pm-divider"></span>
+          <p class="pm-sub">Sabores auténticos de la Amazonía peruana</p>
+        </div>
       </div>
     </section>
     <MenuSection />
@@ -19,6 +21,28 @@ import MenuSection from '../components/MenuSection.astro'
 
 <style>
   .pm-header { padding: var(--space-lg) 0 var(--space-md); }
+
+  .pm-frame {
+    position: relative;
+    display: inline-block;
+    padding: 2.5rem 3.5rem;
+  }
+  .pm-frame::before,
+  .pm-frame::after {
+    content: '';
+    position: absolute;
+    border: 3px solid var(--color-dark);
+    pointer-events: none;
+  }
+  .pm-frame::before { inset: 0; }
+  .pm-frame::after {
+    inset: -7px 0 0 -7px;
+    opacity: 0.25;
+  }
+  @media (max-width: 480px) {
+    .pm-frame { padding: 1.5rem 1.25rem; }
+  }
+
   .pm-label {
     font-family: var(--font-body); font-size: 0.7rem;
     text-transform: uppercase; letter-spacing: 0.2em;

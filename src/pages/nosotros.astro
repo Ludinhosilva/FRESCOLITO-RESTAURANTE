@@ -39,8 +39,8 @@ import BaseLayout from '../layouts/BaseLayout.astro'
     <section class="abt-stats" data-reveal>
       <div class="container abt-stats-grid">
         <div class="abt-stat"><span class="abt-stat-n" data-count-up="18">0</span><span class="abt-stat-l">Platos en carta</span></div>
-        <div class="abt-stat"><span class="abt-stat-n">📍</span><span class="abt-stat-l">Iquitos, Perú</span></div>
-        <div class="abt-stat"><span class="abt-stat-n">⭐</span><span class="abt-stat-l">Cocina Regional</span></div>
+        <div class="abt-stat"><span class="abt-stat-n abt-stat-letra">IQ</span><span class="abt-stat-l">Iquitos, Perú</span></div>
+        <div class="abt-stat"><span class="abt-stat-n abt-stat-letra">CR</span><span class="abt-stat-l">Cocina Regional</span></div>
       </div>
     </section>
 
@@ -48,10 +48,10 @@ import BaseLayout from '../layouts/BaseLayout.astro'
       <div class="container">
         <h2 class="abt-ttl">Nuestros Valores</h2>
         <div class="abt-vals">
-          <div class="abt-val"><span class="abt-vic">🍲</span><h3>Tradición</h3><p>Respetamos las recetas ancestrales de la Amazonía peruana.</p></div>
-          <div class="abt-val"><span class="abt-vic">🐟</span><h3>Frescura</h3><p>Seleccionamos los ingredientes más frescos para cada plato.</p></div>
-          <div class="abt-val"><span class="abt-vic">⭐</span><h3>Calidad</h3><p>Cada plato es preparado con los más altos estándares.</p></div>
-          <div class="abt-val"><span class="abt-vic">❤️</span><h3>Pasión</h3><p>Amamos lo que hacemos y se refleja en cada bocado.</p></div>
+          <div class="abt-val"><span class="abt-vic">T</span><h3>Tradición</h3><p>Respetamos las recetas ancestrales de la Amazonía peruana.</p></div>
+          <div class="abt-val"><span class="abt-vic">F</span><h3>Frescura</h3><p>Seleccionamos los ingredientes más frescos para cada plato.</p></div>
+          <div class="abt-val"><span class="abt-vic">C</span><h3>Calidad</h3><p>Cada plato es preparado con los más altos estándares.</p></div>
+          <div class="abt-val"><span class="abt-vic">P</span><h3>Pasión</h3><p>Amamos lo que hacemos y se refleja en cada bocado.</p></div>
         </div>
       </div>
     </section>
@@ -142,7 +142,15 @@ import BaseLayout from '../layouts/BaseLayout.astro'
     transform: translateY(-3px);
     box-shadow: 0 8px 24px rgba(0,0,0,0.08);
   }
-  .abt-vic { font-size: 2.5rem; display: block; margin-bottom: var(--space-sm); }
+  .abt-vic {
+    font-family: var(--font-heading); font-size: 3.5rem; font-weight: 900;
+    color: var(--color-primary); line-height: 1; display: block;
+    margin-bottom: var(--space-sm);
+  }
+  .abt-stat-letra {
+    font-family: var(--font-heading); font-size: 2.5rem; font-weight: 900;
+    color: var(--color-primary); line-height: 1;
+  }
   .abt-val h3 { margin-bottom: var(--space-sm); }
   .abt-val p { color: var(--color-mid); }
 
