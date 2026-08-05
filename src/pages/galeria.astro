@@ -32,11 +32,20 @@ const categories = [
 
 <BaseLayout title="Galería | FRESCOLITO RESTAURANTE" description="Galería de fotos de nuestros platos, ambiente y momentos en FRESCOLITO." effect="scale">
   <main style="padding-top:70px">
+    <section class="gal-header">
+      <div class="container" style="text-align:center">
+        <span class="gal-label">· Explora ·</span>
+        <h1 class="gal-title">Galería</h1>
+        <span class="gal-divider"></span>
+        <p class="gal-sub">Descubre nuestros platos, ambiente y momentos</p>
+      </div>
+    </section>
+
     <section class="gal-section">
       <div class="container">
         <div class="gal-filters" id="gal-filters">
           {categories.map((cat) => (
-            <button class="gal-filter active" data-cat={cat.id}>{cat.name}</button>
+            <button class={cat.id === 'todas' ? 'gal-filter active' : 'gal-filter'} data-cat={cat.id}>{cat.name}</button>
           ))}
         </div>
 
@@ -66,11 +75,43 @@ const categories = [
 </BaseLayout>
 
 <style>
-  .gal-hero {
-    height: 50vh; position: relative; overflow: hidden;
-    display: flex; align-items: center; justify-content: center;
+  .gal-header { padding: var(--space-lg) 0 var(--space-md); }
+  .gal-label {
+    font-family: var(--font-body); font-size: 0.7rem;
+    text-transform: uppercase; letter-spacing: 0.2em;
+    color: var(--color-mid); margin-bottom: var(--space-xs);
+    display: block;
   }
-  .gal-section { padding: var(--space-xl) 0; }
+  .gal-title {
+    font-family: var(--font-heading); font-weight: 700;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--color-dark);
+    background: linear-gradient(90deg,
+      var(--color-dark) 0%, var(--color-dark) 20%,
+      var(--color-primary-hover) 50%, var(--color-dark) 80%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gal-shine 6s ease-in-out infinite;
+    margin-bottom: var(--space-sm);
+  }
+  @keyframes gal-shine {
+    from { background-position: 200% center; }
+    to { background-position: -200% center; }
+  }
+  .gal-divider {
+    display: block; width: 30px; height: 2px;
+    background: var(--color-primary); border-radius: 2px;
+    margin: 0 auto var(--space-sm);
+  }
+  .gal-sub {
+    font-family: var(--font-body); font-size: 0.9rem;
+    color: var(--color-mid); margin: 0;
+  }
+
+  .gal-section { padding: 0 0 var(--space-xl); }
   .gal-filters {
     display: flex; justify-content: center; gap: 0.75rem;
     margin-bottom: var(--space-xl); flex-wrap: wrap;
@@ -98,7 +139,7 @@ const categories = [
     border-radius: var(--radius); cursor: pointer;
   }
   .gal-img {
-    width: 100%; display: block;
+    width: 100%; display: block; min-height: 180px; object-fit: cover;
     transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
   }
   .gal-item:hover .gal-img { transform: scale(1.06); }
@@ -154,7 +195,6 @@ const categories = [
   }
 
   @media (max-width: 768px) {
-    .gal-hero { height: 40vh; }
     .gal-masonry { column-count: 2; }
     .gal-lb-prev { left: 10px; }
     .gal-lb-next { right: 10px; }
@@ -165,7 +205,12 @@ const categories = [
 </style>
 
 <script>
-  const items = document.querySelectorAll('.gal-item')
+  import gsap from 'gsap'
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+  gsap.registerPlugin(ScrollTrigger)
+
+  const masonry = document.getElementById('gal-masonry')
+  const items = Array.from(document.querySelectorAll('.gal-item'))
   const filters = document.querySelectorAll('.gal-filter')
   const lightbox = document.getElementById('gal-lightbox')
   const lbImg = document.getElementById('gal-lb-img')
@@ -175,23 +220,48 @@ const categories = [
   const lbNext = document.getElementById('gal-lb-next')
   let currentIdx = 0
 
-  const allImages = Array.from(items).map(item => ({
+  const allImages = items.map(item => ({
     src: item.querySelector('img').src,
     alt: item.querySelector('.gal-item-name').textContent,
+    cat: item.getAttribute('data-cat'),
   }))
+
+  function filterGallery(cat) {
+    const visible = []
+    const hidden = []
+
+    items.forEach(item => {
+      if (cat === 'todas' || item.getAttribute('data-cat') === cat) {
+        item.style.display = 'block'
+        visible.push(item)
+      } else {
+        item.style.display = 'none'
+        hidden.push(item)
+      }
+    })
+
+    const fragment = document.createDocumentFragment()
+    visible.forEach(el => fragment.appendChild(el))
+    hidden.forEach(el => fragment.appendChild(el))
+    masonry.appendChild(fragment)
+
+    setTimeout(() => {
+      ScrollTrigger.refresh()
+      resetLightboxIndexes()
+    }, 50)
+  }
+
+  function resetLightboxIndexes() {
+    const idxMap = {}
+    items.forEach((item, i) => { idxMap[item] = i })
+    currentIdx = 0
+  }
 
   filters.forEach(filter => {
     filter.addEventListener('click', () => {
       filters.forEach(f => f.classList.remove('active'))
       filter.classList.add('active')
-      const cat = filter.getAttribute('data-cat')
-      items.forEach(item => {
-        if (cat === 'todas' || item.getAttribute('data-cat') === cat) {
-          item.style.display = 'block'
-        } else {
-          item.style.display = 'none'
-        }
-      })
+      filterGallery(filter.getAttribute('data-cat'))
     })
   })
 
@@ -208,56 +278,25 @@ const categories = [
     document.body.style.overflow = ''
   }
 
+  function getVisibleIndices() {
+    return items.reduce((arr, item, i) => {
+      if (item.style.display !== 'none') arr.push(i)
+      return arr
+    }, [])
+  }
+
   function prevImage() {
-    const visible = allImages.filter((_, i) => items[i].style.display !== 'none')
-    const visibleIdx = visible.findIndex((_, i) => {
-      let count = 0
-      for (let j = 0; j < items.length; j++) {
-        if (items[j].style.display !== 'none') {
-          if (j === currentIdx) return true
-          count++
-        }
-      }
-      return false
-    })
-    const prev = visibleIdx > 0 ? visibleIdx - 1 : visible.length - 1
-    const realIdx = Array.from(items).findIndex((item, i) => {
-      if (item.style.display !== 'none') {
-        let count = 0
-        for (let j = 0; j <= i; j++) {
-          if (items[j].style.display !== 'none') count++
-        }
-        return count - 1 === prev
-      }
-      return false
-    })
-    if (realIdx >= 0) openLightbox(realIdx)
+    const visible = getVisibleIndices()
+    const pos = visible.indexOf(currentIdx)
+    const prev = pos > 0 ? visible[pos - 1] : visible[visible.length - 1]
+    if (prev !== undefined) openLightbox(prev)
   }
 
   function nextImage() {
-    const visible = allImages.filter((_, i) => items[i].style.display !== 'none')
-    const visibleIdx = visible.findIndex((_, i) => {
-      let count = 0
-      for (let j = 0; j < items.length; j++) {
-        if (items[j].style.display !== 'none') {
-          if (j === currentIdx) return true
-          count++
-        }
-      }
-      return false
-    })
-    const next = visibleIdx < visible.length - 1 ? visibleIdx + 1 : 0
-    const realIdx = Array.from(items).findIndex((item, i) => {
-      if (item.style.display !== 'none') {
-        let count = 0
-        for (let j = 0; j <= i; j++) {
-          if (items[j].style.display !== 'none') count++
-        }
-        return count - 1 === next
-      }
-      return false
-    })
-    if (realIdx >= 0) openLightbox(realIdx)
+    const visible = getVisibleIndices()
+    const pos = visible.indexOf(currentIdx)
+    const next = pos < visible.length - 1 ? visible[pos + 1] : visible[0]
+    if (next !== undefined) openLightbox(next)
   }
 
   items.forEach((item, i) => {
