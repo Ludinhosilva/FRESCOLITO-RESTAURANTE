@@ -4,10 +4,10 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 
 <BaseLayout title="Nosotros | FRESCOLITO RESTAURANTE" description="Conoce la historia de FRESCOLITO, cocina regional peruana en Iquitos." effect="fade">
   <main style="padding-top:70px">
-    <section class="abt" data-reveal>
+    <section class="abt">
       <div class="container">
         <div class="abt-grid">
-          <div class="abt-img" data-reveal-left>
+          <div class="abt-img">
             <img src="/imagenes/galeria/EQUIPO.webp" alt="Equipo FRESCOLITO" loading="eager" />
           </div>
           <div class="abt-text">
@@ -20,7 +20,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
       </div>
     </section>
 
-    <section class="abt abt-alt" data-reveal>
+    <section class="abt abt-alt">
       <div class="container">
         <div class="abt-grid abt-grid-rev">
           <div class="abt-text">
@@ -29,40 +29,13 @@ import BaseLayout from '../layouts/BaseLayout.astro'
             <p>FRESCOLITO comenzó como un sueño familiar en Iquitos, con la misión de llevar los auténticos sabores amazónicos a cada mesa. Desde nuestros inicios, nos comprometimos a usar ingredientes frescos de la región y recetas tradicionales.</p>
             <p>Hoy, seguimos sirviendo con la misma pasión y dedicación, ofreciendo una experiencia gastronómica única en la selva peruana.</p>
           </div>
-          <div class="abt-img" data-reveal-right>
+          <div class="abt-img">
             <img src="/imagenes/galeria/MesaRepresentativa.webp" alt="Ambiente FRESCOLITO" loading="lazy" />
           </div>
         </div>
       </div>
     </section>
 
-    <section class="abt-stats" data-reveal>
-      <div class="container abt-stats-grid">
-        <div class="abt-stat"><span class="abt-stat-n" data-count-up="18">0</span><span class="abt-stat-l">Platos en carta</span></div>
-        <div class="abt-stat"><span class="abt-stat-n abt-stat-letra">IQ</span><span class="abt-stat-l">Iquitos, Perú</span></div>
-        <div class="abt-stat"><span class="abt-stat-n abt-stat-letra">CR</span><span class="abt-stat-l">Cocina Regional</span></div>
-      </div>
-    </section>
-
-    <section class="abt" data-reveal>
-      <div class="container">
-        <h2 class="abt-ttl">Nuestros Valores</h2>
-        <div class="abt-vals">
-          <div class="abt-val"><span class="abt-vic">T</span><h3>Tradición</h3><p>Respetamos las recetas ancestrales de la Amazonía peruana.</p></div>
-          <div class="abt-val"><span class="abt-vic">F</span><h3>Frescura</h3><p>Seleccionamos los ingredientes más frescos para cada plato.</p></div>
-          <div class="abt-val"><span class="abt-vic">C</span><h3>Calidad</h3><p>Cada plato es preparado con los más altos estándares.</p></div>
-          <div class="abt-val"><span class="abt-vic">P</span><h3>Pasión</h3><p>Amamos lo que hacemos y se refleja en cada bocado.</p></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="abt-cta" data-reveal>
-      <div class="container" style="text-align:center">
-        <h2>Descubre nuestros platos</h2>
-        <p style="color:var(--color-mid);margin-bottom:var(--space-lg)">Ven y disfruta de los sabores auténticos de la Amazonía peruana.</p>
-        <a href="/menu" class="btn btn-primary" style="padding:1rem 2.5rem">Ver Menú</a>
-      </div>
-    </section>
   </main>
 </BaseLayout>
 
@@ -107,72 +80,10 @@ import BaseLayout from '../layouts/BaseLayout.astro'
     width: 100%; display: block;
   }
 
-  .abt-stats {
-    padding: var(--space-xl) 0;
-    background: var(--color-dark);
-  }
-  .abt-stats-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-xl); text-align: center;
-  }
-  .abt-stat {
-    display: flex; flex-direction: column; align-items: center; gap: 0.25rem;
-  }
-  .abt-stat-n {
-    font-family: var(--font-heading); font-size: 2.5rem;
-    font-weight: 900; color: var(--color-primary);
-  }
-  .abt-stat-l {
-    font-size: 0.9rem; color: var(--color-light); font-weight: 500;
-  }
-
-  .abt-ttl { text-align: center; margin-bottom: var(--space-xl); }
-  .abt-vals {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-    gap: var(--space-lg);
-  }
-  .abt-val {
-    text-align: center; padding: var(--space-lg);
-    background: var(--color-bg); border-radius: var(--radius);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  .abt-val:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-  }
-  .abt-vic {
-    font-family: var(--font-heading); font-size: 3.5rem; font-weight: 900;
-    color: var(--color-primary); line-height: 1; display: block;
-    margin-bottom: var(--space-sm);
-  }
-  .abt-stat-letra {
-    font-family: var(--font-heading); font-size: 2.5rem; font-weight: 900;
-    color: var(--color-primary); line-height: 1;
-  }
-  .abt-val h3 { margin-bottom: var(--space-sm); }
-  .abt-val p { color: var(--color-mid); }
-
-  .abt-cta { padding: var(--space-xl) 0; background: var(--color-light); }
-  .abt-cta h2 { margin-bottom: var(--space-sm); }
-
-  [data-reveal],[data-reveal-left],[data-reveal-right] {
-    opacity: 0;
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-  [data-reveal] { transform: translateY(25px); }
-  [data-reveal-left] { transform: translateX(-25px); }
-  [data-reveal-right] { transform: translateX(25px); }
-  [data-reveal].revealed, [data-reveal-left].revealed, [data-reveal-right].revealed {
-    opacity: 1; transform: translateX(0) translateY(0);
-  }
-
   @media (max-width: 768px) {
     .abt-grid, .abt-grid-rev { grid-template-columns: 1fr; }
     .abt-grid-rev .abt-text { order: 0; }
     .abt-grid-rev .abt-img { order: 0; }
-    .abt-stats-grid { grid-template-columns: 1fr; gap: var(--space-lg); }
   }
 </style>
 

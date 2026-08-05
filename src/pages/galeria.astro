@@ -42,7 +42,7 @@ const categories = [
 
         <div class="gal-masonry" id="gal-masonry">
           {images.map((img, i) => (
-            <div class="gal-item" data-cat={img.cat} data-reveal>
+            <div class="gal-item" data-cat={img.cat}>
               <img src={img.src} alt={img.alt} class="gal-img" loading={i < 6 ? 'eager' : 'lazy'} />
               <div class="gal-item-overlay">
                 <span class="gal-item-name">{img.alt}</span>
@@ -179,17 +179,6 @@ const categories = [
     src: item.querySelector('img').src,
     alt: item.querySelector('.gal-item-name').textContent,
   }))
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('revealed')
-        observer.unobserve(entry.target)
-      }
-    })
-  }, { threshold: 0.1 })
-
-  items.forEach(item => observer.observe(item))
 
   filters.forEach(filter => {
     filter.addEventListener('click', () => {

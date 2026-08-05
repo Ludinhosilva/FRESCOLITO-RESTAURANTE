@@ -18,7 +18,7 @@ import { categories } from '../data/menu'
       <div class="menu-category" id={`cat-${cat.id}`}>
         <div class="menu-grid">
           {cat.items.map((item) => (
-            <div class="menu-item" data-reveal>
+            <div class="menu-item">
               {item.image && (
                 <div class="menu-item-img-wrap">
                   <img src={item.image} alt={item.name} class="menu-item-img" loading="lazy" />
@@ -145,13 +145,6 @@ import { categories } from '../data/menu'
   .menu-order-btn { font-size: 0.85rem; padding: 0.5rem 1.2rem; border-radius: 50px; }
   .menu-order-btn:active { transform: scale(0.92); }
 
-  [data-reveal] {
-    opacity: 0; transform: translateY(20px);
-    transition: opacity 0.5s cubic-bezier(.25,.46,.45,.94),
-                transform 0.5s cubic-bezier(.25,.46,.45,.94);
-  }
-  [data-reveal].revealed { opacity: 1; transform: translateY(0); }
-
   @media (max-width: 480px) {
     .menu-pill { padding: 0.5rem 1rem; font-size: 0.85rem; }
     .menu-item-img-wrap { height: 140px; }
@@ -175,20 +168,6 @@ import { categories } from '../data/menu'
   cats.forEach((cat, i) => {
     if (i === 0) cat.classList.add('active')
     else cat.classList.remove('active')
-  })
-
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('revealed')
-        revealObserver.unobserve(entry.target)
-      }
-    })
-  }, { threshold: 0.1 })
-
-  document.querySelectorAll('.menu-item[data-reveal]').forEach((el, i) => {
-    el.style.transitionDelay = `${i * 0.06}s`
-    revealObserver.observe(el)
   })
 
   const WHATSAPP = '51927367844'

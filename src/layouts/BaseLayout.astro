@@ -75,6 +75,7 @@ const { title = 'FRESCOLITO RESTAURANTE', description = 'Cocina regional peruana
 <script>
   import Lenis from 'lenis'
   import initScrollReveal from '../utils/scrollReveal'
+  import { initScrollAnimations } from '../utils/scrollAnimations'
 
   const lenis = new Lenis({
     duration: 1.2,
@@ -91,5 +92,7 @@ const { title = 'FRESCOLITO RESTAURANTE', description = 'Cocina regional peruana
   requestAnimationFrame(raf)
 
   document.addEventListener('astro:page-load', initScrollReveal)
+  document.addEventListener('astro:page-load', initScrollAnimations)
   initScrollReveal()
+  initScrollAnimations()
 </script>
