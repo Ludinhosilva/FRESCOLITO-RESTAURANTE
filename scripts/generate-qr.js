@@ -1,5 +1,4 @@
 import QRCode from 'qrcode'
-import { writeFileSync } from 'fs'
 import { existsSync, mkdirSync } from 'fs'
 
 const URL = 'https://frescolito-restaurante.vercel.app'

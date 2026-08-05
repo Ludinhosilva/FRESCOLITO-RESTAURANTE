@@ -27,7 +27,7 @@ const links = [
 </nav>
 
 <div class="mobile-menu" id="mobile-menu">
-  <div class="container" style="padding-top: 90px">
+  <div class="container" style="padding-top: 1rem">
     {links.map((link) => (
       <a href={link.to} class="mobile-link">{link.label}</a>
     ))}
@@ -101,9 +101,10 @@ const links = [
 
   .mobile-menu {
     display: none; position: fixed; top: 70px; left: 0; right: 0;
-    background: var(--color-bg); z-index: 999;
+    background: var(--color-bg); z-index: 1002;
+    height: calc(100vh - 70px); overflow-y: auto;
     transform: translateY(-110%); transition: transform 0.35s ease;
-    box-shadow: var(--shadow-lg); max-height: calc(100vh - 70px); overflow-y: auto;
+    box-shadow: var(--shadow-lg);
   }
   .mobile-menu.open { transform: translateY(0); }
   .mobile-link {
