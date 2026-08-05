@@ -11,7 +11,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "optimize:images": "node scripts/optimize-images.js"
+    "optimize:images": "node scripts/optimize-images.js",
+    "qr": "node scripts/generate-qr.js"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.7",
@@ -34,6 +35,7 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.6.0",
     "jsdom": "^29.1.1",
+    "qrcode": "^1.5.4",
     "sharp": "^0.35.1",
     "vite": "^8.0.12",
     "vitest": "^4.1.8"
