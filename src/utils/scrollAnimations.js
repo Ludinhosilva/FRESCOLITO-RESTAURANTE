@@ -150,18 +150,6 @@ function animateNosotros() {
 }
 
 function animateGaleria() {
-  const filterBtns = gsap.utils.toArray('.gal-filter')
-  if (filterBtns.length) {
-    gsap.from(filterBtns, {
-      scrollTrigger: { trigger: '.gal-filters', start: 'top bottom-=60px' },
-      opacity: 0,
-      y: 15,
-      duration: 0.4,
-      stagger: 0.07,
-      ease: 'power3.out',
-    })
-  }
-
   const galleryItems = gsap.utils.toArray('.gal-item')
   galleryItems.forEach((el, i) => {
     gsap.from(el, {

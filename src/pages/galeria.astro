@@ -123,11 +123,13 @@ const categories = [
     font-size: 0.9rem; color: var(--color-mid);
     cursor: pointer; transition: all 0.3s ease;
     text-transform: uppercase; letter-spacing: 0.5px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
   }
-  .gal-filter:hover { border-color: var(--color-primary); color: var(--color-primary-hover); }
+  .gal-filter:hover { border-color: var(--color-primary); color: var(--color-primary-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
   .gal-filter.active {
     background: var(--color-primary); border-color: var(--color-primary);
-    color: var(--color-dark);
+    color: var(--color-dark); box-shadow: 0 2px 10px rgba(253,185,19,0.35);
+    transform: translateY(-1px);
   }
 
   .gal-masonry {
