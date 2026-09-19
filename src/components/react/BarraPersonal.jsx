@@ -28,7 +28,7 @@ export default function BarraPersonal({ children }) {
     <div className="app-shell">
       <header className="topbar">
         <a className="topbar-brand" href="/">
-          <img className="logo-dot" src="/logo.png" alt="Frescolito" />
+          <img className="logo-dot" src="/imagenes/frescolito.jpeg" alt="Frescolito" />
           <span className="topbar-title">Frescolito</span>
         </a>
         <div className="topbar-right">

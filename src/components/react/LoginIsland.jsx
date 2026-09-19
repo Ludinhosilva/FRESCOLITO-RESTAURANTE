@@ -28,7 +28,7 @@ function Form() {
   return (
     <div className="login-wrap">
       <form className="login-card" onSubmit={handleSubmit}>
-        <img className="login-logo" src="/logo.png" alt="Frescolito" />
+        <img className="login-logo" src="/imagenes/frescolito.jpeg" alt="Frescolito" />
         <h1 className="login-title">Frescolito</h1>
         <p className="login-sub">Acceso del personal</p>
 

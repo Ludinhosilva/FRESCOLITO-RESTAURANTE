@@ -1,11 +1,13 @@
-/* Reset y fondo SOLO para las páginas del panel (personal/admin/cocina/mesera/repartidor) */
+/* Base SOLO para las páginas del panel (personal/admin/cocina/mesera/repartidor) */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body { height: 100%; }
 
 body {
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-family: 'Poppins', 'Work Sans', system-ui, sans-serif;
   background: #FAF7F2;
   color: #3E2723;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
 }

@@ -1,4 +1,6 @@
 ---
+import Navbar from '../components/Navbar.astro'
+import '../styles/global.css'
 import '../styles/panel-base.css'
 const { title = 'Frescolito' } = Astro.props
 ---
@@ -10,9 +12,19 @@ const { title = 'Frescolito' } = Astro.props
     <meta name="theme-color" content="#FDB913" />
     <meta name="robots" content="noindex" />
     <link rel="icon" type="image/jpeg" href="/imagenes/frescolito.jpeg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:wght@400;700;900&family=Poppins:wght@300;400;600;700&family=Work+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" />
     <title>{title}</title>
   </head>
   <body>
-    <slot />
+    <Navbar />
+    <div class="panel-top">
+      <slot />
+    </div>
   </body>
 </html>
+
+<style>
+  .panel-top { padding-top: 70px; min-height: 100vh; }
+</style>
