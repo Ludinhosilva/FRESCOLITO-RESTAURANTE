@@ -1,6 +1,4 @@
 ---
-import { PEDIR_URL } from '../data/config'
-
 const images = [
   'imagenes/galeria/MesaGaleria.webp',
   'imagenes/galeria/ArrozMarisco.webp',
@@ -28,7 +26,7 @@ const images = [
     <span class="hero-divider"></span>
     <p class="hero-sub-restaurant">· RESTAURANT ·</p>
     <div class="hero-actions">
-      <a href={PEDIR_URL} class="btn btn-primary hero-btn">Pedir ahora 🛵</a>
+      <button type="button" class="btn btn-primary hero-btn" data-pedir>Pedir ahora 🛵</button>
       <a href="/menu" class="btn hero-btn hero-btn-oul">Ver Menú</a>
     </div>
   </div>

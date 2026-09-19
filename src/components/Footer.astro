@@ -1,5 +1,4 @@
 ---
-import { PEDIR_URL, LOGIN_URL } from '../data/config'
 const year = new Date().getFullYear()
 ---
 
@@ -14,7 +13,7 @@ const year = new Date().getFullYear()
       <div class="footer-links">
         <a href="/">Inicio</a>
         <a href="/menu">Menú</a>
-        <a href={PEDIR_URL}>Pedir online</a>
+        <a href="#" data-pedir>Pedir online</a>
         <a href="/nosotros">Nosotros</a>
         <a href="/contacto">Contacto</a>
       </div>
@@ -47,7 +46,7 @@ const year = new Date().getFullYear()
   </div>
   <div class="footer-bottom">
     &copy; {year} FRESCOLITO RESTAURANTE. Todos los derechos reservados.
-    <a href={LOGIN_URL} class="footer-login">Acceso personal</a>
+    <a href="/personal" class="footer-login">Acceso personal</a>
   </div>
 </footer>
 

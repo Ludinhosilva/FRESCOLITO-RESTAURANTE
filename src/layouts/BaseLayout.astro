@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar.astro'
 import Footer from '../components/Footer.astro'
 import BusinessHours from '../components/BusinessHours.astro'
 import WhatsAppFAB from '../components/WhatsAppFAB.astro'
+import PedirIsland from '../components/react/PedirIsland.jsx'
 import '../styles/global.css'
 import Preloader from '../components/Preloader.astro'
 
@@ -68,6 +69,7 @@ const { title = 'FRESCOLITO RESTAURANTE', description = 'Cocina regional peruana
     <slot />
     <BusinessHours />
     <WhatsAppFAB />
+    <PedirIsland client:load />
     <Footer />
   </body>
 </html>
@@ -95,4 +97,13 @@ const { title = 'FRESCOLITO RESTAURANTE', description = 'Cocina regional peruana
   document.addEventListener('astro:page-load', initScrollAnimations)
   initScrollReveal()
   initScrollAnimations()
+
+  const abrirPedido = () => window.dispatchEvent(new CustomEvent('abrir-pedido'))
+  document.addEventListener('click', (e) => {
+    const el = e.target.closest && e.target.closest('[data-pedir]')
+    if (el) {
+      e.preventDefault()
+      abrirPedido()
+    }
+  })
 </script>

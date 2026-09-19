@@ -28,5 +28,13 @@ dist-ssr
 # App de gestion (repositorio separado: FRESCOLITO-APP)
 app/
 
+# Variables de entorno
+.env
+.env.local
+*.local
+
 # APKs generados
 *.apk
+
+# Astro
+.astro/

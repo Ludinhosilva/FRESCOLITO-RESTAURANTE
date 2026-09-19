@@ -1,0 +1,11 @@
+/* Reset y fondo SOLO para las páginas del panel (personal/admin/cocina/mesera/repartidor) */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; }
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #FAF7F2;
+  color: #3E2723;
+  -webkit-tap-highlight-color: transparent;
+}
