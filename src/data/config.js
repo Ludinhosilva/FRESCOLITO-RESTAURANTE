@@ -11,3 +11,8 @@ export const BUSINESS_HOURS = {
 
 export const SITE_NAME = 'FRESCOLITO RESTAURANTE'
 
+// App de pedidos y gestion (mismo backend Supabase)
+export const APP_URL = 'https://frescolito-app.vercel.app'
+export const PEDIR_URL = `${APP_URL}/#/pedir`
+export const LOGIN_URL = `${APP_URL}/#/login`
+

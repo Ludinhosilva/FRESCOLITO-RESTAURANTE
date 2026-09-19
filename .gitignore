@@ -24,3 +24,9 @@ dist-ssr
 *.sw?
 
 .vercel
+
+# App de gestion (repositorio separado: FRESCOLITO-APP)
+app/
+
+# APKs generados
+*.apk
