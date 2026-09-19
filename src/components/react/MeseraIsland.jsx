@@ -1,4 +1,4 @@
-﻿import Proveedores from './Proveedores.jsx'
+import Proveedores from './Proveedores.jsx'
 import GuardPersonal from './GuardPersonal.jsx'
 import BarraPersonal from './BarraPersonal.jsx'
 import { useEffect, useMemo, useState } from 'react'
@@ -8,9 +8,9 @@ import { useRealtime } from '../../hooks/useRealtime.js'
 import { calcularTotales, construirItems } from '../../lib/carrito.js'
 
 const METODOS = [
-  { id: 'efectivo', label: 'ðŸ’µ Efectivo' },
-  { id: 'yape', label: 'ðŸ“± Yape' },
-  { id: 'plin', label: 'ðŸ“± Plin' },
+  { id: 'efectivo', label: '💵 Efectivo' },
+  { id: 'yape', label: '📱 Yape' },
+  { id: 'plin', label: '📱 Plin' },
 ]
 
 function MeseraContenido() {
@@ -83,7 +83,7 @@ function MeseraContenido() {
         notas,
         items: itemsPedido.map((i) => ({ plato_id: i.plato.id, cantidad: i.cantidad })),
       })
-      setMensaje('Pedido enviado a cocina âœ…')
+      setMensaje('Pedido enviado a cocina ✅')
       setSeleccion({})
       setMesa(null)
       setParaLlevar(false)
@@ -160,7 +160,7 @@ function MeseraContenido() {
                   </div>
                 </div>
                 <div className="cant-controller">
-                  <button className="cant-btn" onClick={() => cambiarCantidad(plato.id, -1)}>âˆ’</button>
+                  <button className="cant-btn" onClick={() => cambiarCantidad(plato.id, -1)}>−</button>
                   <span style={{ fontWeight: 700, minWidth: 20, textAlign: 'center' }}>{cantidad}</span>
                   <button className="cant-btn" onClick={() => cambiarCantidad(plato.id, 1)}>+</button>
                 </div>
@@ -171,7 +171,7 @@ function MeseraContenido() {
       )}
 
       <div className="card">
-        <div className="card-title">MÃ©todo de pago</div>
+        <div className="card-title">Método de pago</div>
         <div className="pago-grid">
           {METODOS.map((m) => (
             <button
@@ -207,7 +207,7 @@ function MeseraContenido() {
 
       <div className="card">
         <div className="total-row"><span>Subtotal</span><span>S/ {subtotal.toFixed(2)}</span></div>
-        <div className="total-row"><span>ComisiÃ³n llevar</span><span>S/ {comision.toFixed(2)}</span></div>
+        <div className="total-row"><span>Comisión llevar</span><span>S/ {comision.toFixed(2)}</span></div>
         <div className="total-row final"><span>Total</span><span>S/ {total.toFixed(2)}</span></div>
         <button
           className="btn btn-block btn-verde"
@@ -223,7 +223,6 @@ function MeseraContenido() {
     </div>
   )
 }
-
 export default function MeseraIsland() {
   return (
     <Proveedores>

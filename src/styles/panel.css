@@ -336,3 +336,10 @@
   transition: all 0.3s ease;
 }
 .panel-root .verpedido-fab:hover { background: var(--amarillo); }
+
+/* Aviso de datos incompletos */
+.panel-root .cli-warn {
+  background: #FFF3E0; border: 1px solid #FFCC80; border-left: 4px solid var(--naranja);
+  color: #8a4b00; border-radius: 10px; padding: 12px 14px; font-size: 14px; font-weight: 600;
+  margin-bottom: 14px; display: flex; gap: 8px; align-items: flex-start;
+}

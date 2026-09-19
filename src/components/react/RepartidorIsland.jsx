@@ -1,4 +1,4 @@
-﻿import Proveedores from './Proveedores.jsx'
+import Proveedores from './Proveedores.jsx'
 import GuardPersonal from './GuardPersonal.jsx'
 import BarraPersonal from './BarraPersonal.jsx'
 import { useMemo, useState } from 'react'
@@ -40,7 +40,7 @@ function RepartidorContenido() {
   useRealtime('pedidos', (payload) => {
     if (payload.eventType === 'INSERT') {
       play({ frecuencia: 1046, duracion: 0.15 })
-      mostrarToast('Nuevo pedido de delivery ðŸ””')
+      mostrarToast('Nuevo pedido de delivery 🔔')
     }
     queryClient.invalidateQueries({ queryKey: ['pedidos-reparto'] })
   })
@@ -62,7 +62,7 @@ function RepartidorContenido() {
       await actualizarEstadoPedido(pedidoId, 'entregado')
       queryClient.invalidateQueries({ queryKey: ['pedidos-reparto'] })
       setCobrando(null)
-      mostrarToast('Cobro registrado y entregado âœ“')
+      mostrarToast('Cobro registrado y entregado ✓')
     } catch (e) {
       mostrarToast('Error: ' + (e.message || 'no se pudo'))
     }
@@ -71,7 +71,7 @@ function RepartidorContenido() {
   const enCamino = async (pedidoId) => {
     await actualizarEstadoPedido(pedidoId, 'en_camino')
     queryClient.invalidateQueries({ queryKey: ['pedidos-reparto'] })
-    mostrarToast('Pedido en camino ðŸ›µ')
+    mostrarToast('Pedido en camino 🛵')
   }
 
   return (
@@ -94,12 +94,12 @@ function RepartidorContenido() {
                 <span className="orden-numero">#{p.numero_orden}</span>
                 <span className="canal-chip canal-delivery">Delivery</span>
               </div>
-              <span className="orden-tiempo">{listo ? 'âœ… Listo' : p.estado.replace('_', ' ')}</span>
+              <span className="orden-tiempo">{listo ? '✅ Listo' : p.estado.replace('_', ' ')}</span>
             </div>
 
             <div className="orden-cliente">
-              <div><strong>{p.cliente_nombre}</strong> Â· {p.cliente_telefono}</div>
-              {p.cliente_direccion && <div>ðŸ“ {p.cliente_direccion}</div>}
+              <div><strong>{p.cliente_nombre}</strong> · {p.cliente_telefono}</div>
+              {p.cliente_direccion && <div>📍 {p.cliente_direccion}</div>}
             </div>
 
             {items.map((it) => (
@@ -134,7 +134,7 @@ function RepartidorContenido() {
             ) : (
               <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
                 {listo && p.estado !== 'en_camino' && (
-                  <button className="btn btn-sm btn-naranja" onClick={() => enCamino(p.id)}>En camino ðŸ›µ</button>
+                  <button className="btn btn-sm btn-naranja" onClick={() => enCamino(p.id)}>En camino 🛵</button>
                 )}
                 <button className="btn btn-sm btn-verde" onClick={() => abrirCobro(p)}>
                   Cobrar y entregar
@@ -149,7 +149,6 @@ function RepartidorContenido() {
     </div>
   )
 }
-
 export default function RepartidorIsland() {
   return (
     <Proveedores>

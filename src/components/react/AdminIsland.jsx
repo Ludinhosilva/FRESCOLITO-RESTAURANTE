@@ -1,4 +1,4 @@
-﻿import Proveedores from './Proveedores.jsx'
+import Proveedores from './Proveedores.jsx'
 import GuardPersonal from './GuardPersonal.jsx'
 import BarraPersonal from './BarraPersonal.jsx'
 import { useState } from 'react'
@@ -19,8 +19,8 @@ import {
 } from '../../lib/pedidos.js'
 import { useRealtime } from '../../hooks/useRealtime.js'
 
-const DIAS = ['Dom', 'Lun', 'Mar', 'MiÃ©', 'Jue', 'Vie', 'SÃ¡b']
-const CANAL_LABEL = { salon: 'SalÃ³n', delivery: 'Delivery', recojo: 'Recojo' }
+const DIAS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+const CANAL_LABEL = { salon: 'Salón', delivery: 'Delivery', recojo: 'Recojo' }
 const CANAL_CLASS = { salon: 'canal-salon', delivery: 'canal-delivery', recojo: 'canal-recojo' }
 const PAGO_LABEL = {
   pendiente: 'Pendiente',
@@ -123,7 +123,7 @@ function AdminContenido() {
 
   return (
     <div>
-      <div className="page-title">AdministraciÃ³n</div>
+      <div className="page-title">Administración</div>
 
       <div className="tabs-scroll">
         {TABS.map((t) => (
@@ -160,10 +160,10 @@ function AdminContenido() {
           </div>
 
           <div className="card">
-            <div className="card-title">Control de caja por mÃ©todo</div>
-            <div className="total-row"><span>ðŸ’µ Efectivo</span><span>S/ {Number(pm.efectivo ?? 0).toFixed(2)}</span></div>
-            <div className="total-row"><span>ðŸ“± Yape</span><span>S/ {Number(pm.yape ?? 0).toFixed(2)}</span></div>
-            <div className="total-row"><span>ðŸ“± Plin</span><span>S/ {Number(pm.plin ?? 0).toFixed(2)}</span></div>
+            <div className="card-title">Control de caja por método</div>
+            <div className="total-row"><span>💵 Efectivo</span><span>S/ {Number(pm.efectivo ?? 0).toFixed(2)}</span></div>
+            <div className="total-row"><span>📱 Yape</span><span>S/ {Number(pm.yape ?? 0).toFixed(2)}</span></div>
+            <div className="total-row"><span>📱 Plin</span><span>S/ {Number(pm.plin ?? 0).toFixed(2)}</span></div>
             <div className="total-row final"><span>Total</span><span>S/ {Number(ventas?.total_vendido ?? 0).toFixed(2)}</span></div>
           </div>
 
@@ -171,7 +171,7 @@ function AdminContenido() {
             <div className="card-title">Vendido por plato</div>
             {(ventas?.por_plato ?? []).map((p) => (
               <div key={p.plato_nombre} className="total-row">
-                <span>{p.plato_nombre} Ã— {p.cantidad}</span>
+                <span>{p.plato_nombre} × {p.cantidad}</span>
                 <span>S/ {Number(p.total).toFixed(2)}</span>
               </div>
             ))}
@@ -185,7 +185,7 @@ function AdminContenido() {
               })))
             }
           >
-            â¬‡ï¸ Exportar dÃ­a a Excel (CSV)
+            ⬇️ Exportar día a Excel (CSV)
           </button>
         </div>
       )}
@@ -215,13 +215,13 @@ function AdminContenido() {
 
                 {(p.cliente_nombre || p.mesas) && (
                   <div style={{ fontSize: 13, color: '#8D6E63', marginBottom: 6 }}>
-                    {p.mesas ? `Mesa ${p.mesas.numero}` : p.cliente_nombre} {p.cliente_telefono ? `Â· ${p.cliente_telefono}` : ''}
-                    {p.cliente_direccion ? ` Â· ðŸ“ ${p.cliente_direccion}` : ''}
+                    {p.mesas ? `Mesa ${p.mesas.numero}` : p.cliente_nombre} {p.cliente_telefono ? `· ${p.cliente_telefono}` : ''}
+                    {p.cliente_direccion ? ` · 📍 ${p.cliente_direccion}` : ''}
                   </div>
                 )}
 
                 <div style={{ fontSize: 12, color: '#8D6E63', marginBottom: 8 }}>
-                  {p.metodo_pago} Â· {p.referencia_pago ? `Op. ${p.referencia_pago}` : 'sin n.Âº op.'} Â· {p.estado.replace('_', ' ')}
+                  {p.metodo_pago} · {p.referencia_pago ? `Op. ${p.referencia_pago}` : 'sin n.º op.'} · {p.estado.replace('_', ' ')}
                 </div>
 
                 {items.map((it) => (
@@ -233,7 +233,7 @@ function AdminContenido() {
                 <div style={{ display: 'flex', gap: 8, marginTop: 10, flexWrap: 'wrap' }}>
                   {p.estado_pago === 'por_verificar' && (
                     <button className="btn btn-sm btn-verde" onClick={() => handleVerificar(p.id, 'pagado')}>
-                      âœ“ Confirmar pago
+                      ✓ Confirmar pago
                     </button>
                   )}
                   {p.estado !== 'cancelado' && (
@@ -267,7 +267,7 @@ function AdminContenido() {
           </div>
 
           <div className="card">
-            <div className="card-title">Por mÃ©todo</div>
+            <div className="card-title">Por método</div>
             {Object.entries(mes?.por_metodo || {}).map(([k, v]) => (
               <div key={k} className="total-row"><span>{k}</span><span>S/ {Number(v).toFixed(2)}</span></div>
             ))}
@@ -281,7 +281,7 @@ function AdminContenido() {
           </div>
 
           <div className="card">
-            <div className="card-title">Por dÃ­a</div>
+            <div className="card-title">Por día</div>
             {(mes?.por_dia ?? []).map((d) => (
               <div key={d.dia} className="total-row"><span>{d.dia} ({d.pedidos})</span><span>S/ {Number(d.total).toFixed(2)}</span></div>
             ))}
@@ -290,7 +290,7 @@ function AdminContenido() {
           <div className="card">
             <div className="card-title">Por plato</div>
             {(mes?.por_plato ?? []).map((p) => (
-              <div key={p.plato_nombre} className="total-row"><span>{p.plato_nombre} Ã— {p.cantidad}</span><span>S/ {Number(p.total).toFixed(2)}</span></div>
+              <div key={p.plato_nombre} className="total-row"><span>{p.plato_nombre} × {p.cantidad}</span><span>S/ {Number(p.total).toFixed(2)}</span></div>
             ))}
           </div>
 
@@ -302,7 +302,7 @@ function AdminContenido() {
               })))
             }
           >
-            â¬‡ï¸ Exportar mes a Excel (CSV)
+            ⬇️ Exportar mes a Excel (CSV)
           </button>
         </div>
       )}
@@ -316,7 +316,7 @@ function AdminContenido() {
             <div key={p.id} className="item-row">
               <div>
                 <div style={{ fontWeight: 700 }}>{p.nombre}</div>
-                <div style={{ fontSize: 12, color: '#8D6E63' }}>{p.categoria} Â· S/ {p.precio.toFixed(2)}</div>
+                <div style={{ fontSize: 12, color: '#8D6E63' }}>{p.categoria} · S/ {p.precio.toFixed(2)}</div>
               </div>
               <span className={'plato-stock' + (p.stock <= 0 ? ' sin' : '')}>
                 {p.stock <= 0 ? 'Sin stock' : `${p.stock} disp.`}
@@ -355,7 +355,7 @@ function HorarioEditor({ config, onSaved }) {
 
   return (
     <div className="card">
-      <div className="card-title">Horario de atenciÃ³n</div>
+      <div className="card-title">Horario de atención</div>
       <p style={{ fontSize: 13, color: '#8D6E63', marginBottom: 10 }}>
         Los pedidos de clientes solo se aceptan dentro de este horario.
       </p>
@@ -376,7 +376,6 @@ function HorarioEditor({ config, onSaved }) {
     </div>
   )
 }
-
 export default function AdminIsland() {
   return (
     <Proveedores>

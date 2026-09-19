@@ -76,6 +76,11 @@ function Contenido() {
   const total = subtotal + cargoEnvases + costoDelivery
   const cant = (id) => items.find((i) => i.plato.id === id)?.cantidad || 0
 
+  const campo = (k, v) => {
+    setForm((f) => ({ ...f, [k]: v }))
+    if (error) setError('')
+  }
+
   const irADatos = () => {
     if (items.length === 0) return
     setPaso('datos')
@@ -204,6 +209,7 @@ function Contenido() {
 
               {paso === 'datos' && (
                 <>
+                  {error && <div className="cli-warn">⚠️ {error}</div>}
                   {items.map(({ plato, cantidad }) => (
                     <div key={plato.id} className="cli-item">
                       <div>
@@ -228,12 +234,12 @@ function Contenido() {
                     </button>
                   </div>
 
-                  <div className="field" style={{ marginTop: 10 }}><label>Nombre</label><input value={form.nombre} onChange={(e) => setForm({ ...form, nombre: e.target.value })} /></div>
-                  <div className="field"><label>Teléfono</label><input value={form.telefono} onChange={(e) => setForm({ ...form, telefono: e.target.value })} inputMode="tel" /></div>
+                  <div className="field" style={{ marginTop: 10 }}><label>Nombre</label><input value={form.nombre} onChange={(e) => campo('nombre', e.target.value)} /></div>
+                  <div className="field"><label>Teléfono</label><input value={form.telefono} onChange={(e) => campo('telefono', e.target.value)} inputMode="tel" /></div>
                   {canal === 'delivery' && (
-                    <div className="field"><label>Dirección</label><input value={form.direccion} onChange={(e) => setForm({ ...form, direccion: e.target.value })} /></div>
+                    <div className="field"><label>Dirección</label><input value={form.direccion} onChange={(e) => campo('direccion', e.target.value)} /></div>
                   )}
-                  <div className="field"><label>Notas (opcional)</label><textarea rows={2} value={form.notas} onChange={(e) => setForm({ ...form, notas: e.target.value })} /></div>
+                  <div className="field"><label>Notas (opcional)</label><textarea rows={2} value={form.notas} onChange={(e) => campo('notas', e.target.value)} /></div>
 
                   <div className="total-row"><span>Subtotal</span><span>S/ {subtotal.toFixed(2)}</span></div>
                   {cargoEnvases > 0 && <div className="total-row"><span>Envases</span><span>S/ {cargoEnvases.toFixed(2)}</span></div>}
@@ -244,6 +250,7 @@ function Contenido() {
 
               {paso === 'pago' && (
                 <>
+                  {error && <div className="cli-warn">⚠️ {error}</div>}
                   <div className="cli-pago-opts">
                     <button className={'cli-pago-opt' + (metodo === 'yape' ? ' sel' : '')} onClick={() => setMetodo('yape')}>Yape</button>
                     <button className={'cli-pago-opt' + (metodo === 'plin' ? ' sel' : '')} onClick={() => setMetodo('plin')}>Plin</button>
@@ -290,8 +297,6 @@ function Contenido() {
                   )}
                 </>
               )}
-
-              {error && <p className="error-text" style={{ marginTop: 10 }}>{error}</p>}
             </div>
 
             <div className="pedir-foot">

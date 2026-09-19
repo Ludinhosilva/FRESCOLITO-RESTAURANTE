@@ -1,4 +1,4 @@
-﻿import Proveedores from './Proveedores.jsx'
+import Proveedores from './Proveedores.jsx'
 import GuardPersonal from './GuardPersonal.jsx'
 import BarraPersonal from './BarraPersonal.jsx'
 import { useMemo, useState } from 'react'
@@ -21,12 +21,12 @@ function tiempoDesde(iso) {
   return `${Math.floor(min / 60)}h`
 }
 
-const CANAL_LABEL = { salon: 'SalÃ³n', delivery: 'Delivery', recojo: 'Recojo' }
+const CANAL_LABEL = { salon: 'Salón', delivery: 'Delivery', recojo: 'Recojo' }
 const CANAL_CLASS = { salon: 'canal-salon', delivery: 'canal-delivery', recojo: 'canal-recojo' }
 
 const FILTROS = [
   { id: 'todos', label: 'Todos' },
-  { id: 'salon', label: 'SalÃ³n' },
+  { id: 'salon', label: 'Salón' },
   { id: 'delivery', label: 'Delivery' },
   { id: 'recojo', label: 'Recojo' },
 ]
@@ -57,7 +57,7 @@ function CocinaContenido() {
     if (payload.eventType === 'INSERT') {
       play({ frecuencia: 880, duracion: 0.15 })
       play({ frecuencia: 1320, duracion: 0.2 })
-      mostrarToast('Nuevo pedido recibido ðŸ””')
+      mostrarToast('Nuevo pedido recibido 🔔')
     }
     queryClient.invalidateQueries({ queryKey: ['pedidos-hoy'] })
   })
@@ -144,7 +144,7 @@ function CocinaContenido() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                     <span className="orden-numero">#{pedido.numero_orden}</span>
                     <span className={'canal-chip ' + (CANAL_CLASS[pedido.canal] || 'canal-salon')}>
-                      {CANAL_LABEL[pedido.canal] || 'SalÃ³n'}
+                      {CANAL_LABEL[pedido.canal] || 'Salón'}
                     </span>
                     {pedido.mesas && <span style={{ fontWeight: 700 }}>Mesa {pedido.mesas.numero}</span>}
                   </div>
@@ -153,8 +153,8 @@ function CocinaContenido() {
 
                 {(esDelivery || pedido.canal === 'recojo') && (
                   <div className="orden-cliente">
-                    <div><strong>{pedido.cliente_nombre}</strong> Â· {pedido.cliente_telefono}</div>
-                    {esDelivery && pedido.cliente_direccion && <div>ðŸ“ {pedido.cliente_direccion}</div>}
+                    <div><strong>{pedido.cliente_nombre}</strong> · {pedido.cliente_telefono}</div>
+                    {esDelivery && pedido.cliente_direccion && <div>📍 {pedido.cliente_direccion}</div>}
                   </div>
                 )}
 
@@ -180,13 +180,13 @@ function CocinaContenido() {
                 <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
                   {listo ? (
                     esDelivery ? (
-                      <span className="orden-espera-reparto">âœ… Listo â€” esperando repartidor</span>
+                      <span className="orden-espera-reparto">✅ Listo — esperando repartidor</span>
                     ) : (
                       <button
                         className="btn btn-sm btn-verde btn-block"
                         onClick={() => handleEstadoPedido(pedido.id, 'entregado')}
                       >
-                        Entregado âœ“
+                        Entregado ✓
                       </button>
                     )
                   ) : (
@@ -199,7 +199,7 @@ function CocinaContenido() {
                         )
                       }
                     >
-                      {pedido.estado === 'en_preparacion' ? 'En preparaciÃ³n' : 'Iniciar preparaciÃ³n'}
+                      {pedido.estado === 'en_preparacion' ? 'En preparación' : 'Iniciar preparación'}
                     </button>
                   )}
                 </div>
@@ -242,7 +242,6 @@ function CocinaContenido() {
     </div>
   )
 }
-
 export default function CocinaIsland() {
   return (
     <Proveedores>
