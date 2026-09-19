@@ -1,6 +1,4 @@
 ---
-import Navbar from '../components/Navbar.astro'
-import '../styles/global.css'
 import '../styles/panel-base.css'
 const { title = 'Frescolito' } = Astro.props
 ---
@@ -18,13 +16,6 @@ const { title = 'Frescolito' } = Astro.props
     <title>{title}</title>
   </head>
   <body>
-    <Navbar />
-    <div class="panel-top">
-      <slot />
-    </div>
+    <slot />
   </body>
 </html>
-
-<style>
-  .panel-top { padding-top: 70px; min-height: 100vh; }
-</style>

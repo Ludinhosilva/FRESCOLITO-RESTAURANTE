@@ -46,18 +46,26 @@ function Contenido() {
           ))}
         </div>
 
+        <div className="menu-leyenda">
+          <span><i className="menu-dot verde" /> Disponible</span>
+          <span><i className="menu-dot rojo" /> Agotado</span>
+        </div>
+
         <div className="menu-grid">
           {(categorias[catActiva] || []).map((p) => {
             const sinStock = !p.stock_disponible || p.stock <= 0
             return (
-              <div key={p.id} className="menu-item">
-                {p.imagen && (
-                  <div className="menu-item-img-wrap">
-                    <img src={p.imagen} alt={p.nombre} className="menu-item-img" loading="lazy" />
-                  </div>
-                )}
+              <div key={p.id} className={'menu-item' + (sinStock ? ' agotado' : '')}>
+                <div className="menu-item-img-wrap">
+                  {p.imagen
+                    ? <img src={p.imagen} alt={p.nombre} className="menu-item-img" loading="lazy" />
+                    : <div className="menu-item-img-ph">🍽️</div>}
+                </div>
                 <div className="menu-item-body">
-                  <h3 className="menu-item-name">{p.nombre}</h3>
+                  <h3 className="menu-item-name">
+                    <i className={'menu-dot ' + (sinStock ? 'rojo' : 'verde')} />
+                    {p.nombre}
+                  </h3>
                   {p.descripcion && <p className="menu-item-desc">{p.descripcion}</p>}
                 </div>
                 <div className="menu-item-footer">

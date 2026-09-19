@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import Proveedores from './Proveedores.jsx'
 import { useCarritoCliente } from '../../context/CarritoClienteContext.jsx'
 import {
@@ -11,7 +12,6 @@ import {
   obtenerConfig,
   obtenerUltimoPedido,
 } from '../../lib/pedidosCliente.js'
-import { useQuery } from '@tanstack/react-query'
 
 const ESTADOS = [
   { key: 'pendiente', label: 'Recibido', icon: '📥' },
@@ -131,15 +131,12 @@ function Contenido() {
 
   return (
     <>
-      <button className="pedir-fab" onClick={() => { setVisible(true); setPaso('menu') }}>
-        🛵 Pedir
-      </button>
-      {hayUltimo && (
-        <button className="pedir-fab-sec" onClick={verUltimo}>Ver mi pedido</button>
+      {hayUltimo && !visible && (
+        <button className="verpedido-fab" onClick={verUltimo}>Ver mi pedido</button>
       )}
 
       {visible && (
-        <div className="pedir-overlay">
+        <div className="pedir-overlay" onClick={(e) => e.target === e.currentTarget && setVisible(false)}>
           <div className="pedir-panel">
             <div className="pedir-head">
               <strong>
@@ -155,26 +152,47 @@ function Contenido() {
               {paso === 'menu' && (
                 <>
                   <div className={'cli-estado ' + (abierto ? 'abierto' : 'cerrado')}>
-                    {abierto ? '🟢 Abierto' : '🔴 Cerrado — vuelve en nuestro horario'}
+                    {abierto ? 'Abierto — estamos recibiendo pedidos' : 'Cerrado — vuelve en nuestro horario'}
                   </div>
+                  <div className="cli-leyenda">
+                    <span><i className="cli-dot verde" /> Disponible</span>
+                    <span><i className="cli-dot rojo" /> Agotado</span>
+                  </div>
+
                   {Object.entries(porCategoria).map(([cat, lista]) => (
                     <div key={cat}>
                       <div className="seccion-title">{cat}</div>
                       {lista.map((p) => {
                         const sinStock = !p.stock_disponible || p.stock <= 0
+                        const c = cant(p.id)
                         return (
                           <div key={p.id} className={'cli-plato' + (sinStock ? ' sinstock' : '')}>
-                            <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                              {p.imagen && <img src={p.imagen} alt="" style={{ width: 46, height: 46, objectFit: 'cover', borderRadius: 8 }} />}
-                              <div className="cli-plato-info">
-                                <div className="cli-plato-nombre">{p.nombre}</div>
+                            <div className="cli-plato-left">
+                              {p.imagen
+                                ? <img src={p.imagen} alt="" className="cli-plato-img" />
+                                : <div className="cli-plato-img ph" />}
+                              <div>
+                                <div className="cli-plato-nombre">
+                                  <i className={'cli-dot ' + (sinStock ? 'rojo' : 'verde')} />
+                                  {p.nombre}
+                                </div>
                                 <div className="cli-plato-precio">S/ {Number(p.precio).toFixed(2)}</div>
                               </div>
                             </div>
-                            {sinStock ? <span className="cli-plato-agotado">Agotado</span> : (
-                              <button className="cli-add" onClick={() => agregar(p)} disabled={cant(p.id) >= p.stock}>
-                                {cant(p.id) > 0 ? `+${cant(p.id)}` : '+'}
-                              </button>
+                            {sinStock ? (
+                              <span className="cli-plato-agotado">Agotado</span>
+                            ) : (
+                              <div className="cli-stepper">
+                                <button className="cli-step-btn" onClick={() => setCantidad(p.id, c - 1)} disabled={c <= 0}>−</button>
+                                <span className="cli-step-num">{c}</span>
+                                <button
+                                  className="cli-step-btn"
+                                  onClick={() => (c === 0 ? agregar(p) : setCantidad(p.id, c + 1))}
+                                  disabled={c >= p.stock}
+                                >
+                                  +
+                                </button>
+                              </div>
                             )}
                           </div>
                         )
@@ -203,10 +221,10 @@ function Contenido() {
 
                   <div className="cli-canal" style={{ marginTop: 12 }}>
                     <button className={'cli-canal-opt' + (canal === 'delivery' ? ' sel' : '')} onClick={() => setCanal('delivery')}>
-                      🛵 Delivery<small>+ S/ {Number(tarifas.delivery_por_plato).toFixed(2)} por plato</small>
+                      Delivery<small>+ S/ {Number(tarifas.delivery_por_plato).toFixed(2)} por plato</small>
                     </button>
                     <button className={'cli-canal-opt' + (canal === 'recojo' ? ' sel' : '')} onClick={() => setCanal('recojo')}>
-                      🏪 Recojo<small>+ S/ {Number(tarifas.envase_por_plato).toFixed(2)} por plato</small>
+                      Recojo en local<small>+ S/ {Number(tarifas.envase_por_plato).toFixed(2)} por plato</small>
                     </button>
                   </div>
 
@@ -227,9 +245,9 @@ function Contenido() {
               {paso === 'pago' && (
                 <>
                   <div className="cli-pago-opts">
-                    <button className={'cli-pago-opt' + (metodo === 'yape' ? ' sel' : '')} onClick={() => setMetodo('yape')}>📱 Yape</button>
-                    <button className={'cli-pago-opt' + (metodo === 'plin' ? ' sel' : '')} onClick={() => setMetodo('plin')}>📱 Plin</button>
-                    <button className={'cli-pago-opt' + (metodo === 'efectivo' ? ' sel' : '')} onClick={() => setMetodo('efectivo')}>💵 Efectivo</button>
+                    <button className={'cli-pago-opt' + (metodo === 'yape' ? ' sel' : '')} onClick={() => setMetodo('yape')}>Yape</button>
+                    <button className={'cli-pago-opt' + (metodo === 'plin' ? ' sel' : '')} onClick={() => setMetodo('plin')}>Plin</button>
+                    <button className={'cli-pago-opt' + (metodo === 'efectivo' ? ' sel' : '')} onClick={() => setMetodo('efectivo')}>Efectivo</button>
                   </div>
                   {(metodo === 'yape' || metodo === 'plin') && (
                     <div className="cli-qr">
@@ -296,7 +314,7 @@ function Contenido() {
                 </>
               )}
               {paso === 'seguimiento' && (
-                <button className="btn btn-block btn-outline" onClick={() => { setPaso('menu'); }}>Hacer otro pedido</button>
+                <button className="btn btn-block btn-outline" onClick={() => setPaso('menu')}>Hacer otro pedido</button>
               )}
             </div>
           </div>
