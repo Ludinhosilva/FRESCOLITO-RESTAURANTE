@@ -1,6 +1,8 @@
+import { useEffect } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider } from '../../context/AuthContext.jsx'
 import { CarritoClienteProvider } from '../../context/CarritoClienteContext.jsx'
+import { desbloquearAudio } from '../../lib/sonido.js'
 import '../../styles/panel.css'
 
 const queryClient = new QueryClient({
@@ -10,6 +12,18 @@ const queryClient = new QueryClient({
 })
 
 export default function Proveedores({ children }) {
+  useEffect(() => {
+    const h = () => desbloquearAudio()
+    window.addEventListener('pointerdown', h, { once: true })
+    window.addEventListener('touchstart', h, { once: true })
+    window.addEventListener('keydown', h, { once: true })
+    return () => {
+      window.removeEventListener('pointerdown', h)
+      window.removeEventListener('touchstart', h)
+      window.removeEventListener('keydown', h)
+    }
+  }, [])
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>

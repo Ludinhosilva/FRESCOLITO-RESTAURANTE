@@ -217,3 +217,29 @@ export async function subirImagenPlato(file) {
   const { data } = supabase.storage.from('platos').getPublicUrl(nombre)
   return data.publicUrl
 }
+
+// ===== Cobro de mesa (mesera/admin) =====
+export async function cobrarMesa(pedidoId, metodo, monto) {
+  const { error } = await supabase.rpc('cobrar_mesa', {
+    p_pedido_id: pedidoId,
+    p_metodo: metodo,
+    p_monto: monto,
+  })
+  if (error) throw error
+}
+
+// ===== Editar pedido (solo admin) =====
+export async function editarPedido(pedidoId, datos) {
+  const { error } = await supabase.rpc('editar_pedido', {
+    p_pedido_id: pedidoId,
+    p_items: datos.items,
+    p_metodo_pago: datos.metodoPago ?? null,
+    p_estado: datos.estado,
+    p_estado_pago: datos.estadoPago,
+    p_ajuste: datos.ajuste ?? 0,
+    p_ajuste_nota: datos.ajusteNota ?? null,
+    p_monto_cobrado: datos.montoCobrado ?? null,
+    p_notas: datos.notas ?? null,
+  })
+  if (error) throw error
+}

@@ -11,7 +11,7 @@ import {
   listarPlatos,
 } from '../../lib/pedidos.js'
 import { useRealtime } from '../../hooks/useRealtime.js'
-import { useSound } from '../../hooks/useSound.js'
+import { sonidoNuevoPedido } from '../../lib/sonido.js'
 
 function tiempoDesde(iso) {
   const seg = Math.floor((Date.now() - new Date(iso).getTime()) / 1000)
@@ -33,7 +33,6 @@ const FILTROS = [
 
 function CocinaContenido() {
   const queryClient = useQueryClient()
-  const play = useSound()
   const [tab, setTab] = useState('pedidos')
   const [filtro, setFiltro] = useState('todos')
   const [toast, setToast] = useState('')
@@ -55,9 +54,8 @@ function CocinaContenido() {
 
   useRealtime('pedidos', (payload) => {
     if (payload.eventType === 'INSERT') {
-      play({ frecuencia: 880, duracion: 0.15 })
-      play({ frecuencia: 1320, duracion: 0.2 })
-      mostrarToast('Nuevo pedido recibido 🔔')
+      sonidoNuevoPedido()
+      mostrarToast('Nuevo pedido recibido')
     }
     queryClient.invalidateQueries({ queryKey: ['pedidos-hoy'] })
   })

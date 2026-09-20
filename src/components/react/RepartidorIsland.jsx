@@ -9,7 +9,7 @@ import {
   registrarCobroPedido,
 } from '../../lib/pedidos.js'
 import { useRealtime } from '../../hooks/useRealtime.js'
-import { useSound } from '../../hooks/useSound.js'
+import { sonidoNuevoPedido } from '../../lib/sonido.js'
 
 const PAGO_LABEL = {
   pendiente: 'Pago pendiente',
@@ -20,7 +20,6 @@ const PAGO_LABEL = {
 
 function RepartidorContenido() {
   const queryClient = useQueryClient()
-  const play = useSound()
   const [toast, setToast] = useState('')
   const [cobrando, setCobrando] = useState(null)
   const [monto, setMonto] = useState('')
@@ -39,8 +38,8 @@ function RepartidorContenido() {
 
   useRealtime('pedidos', (payload) => {
     if (payload.eventType === 'INSERT') {
-      play({ frecuencia: 1046, duracion: 0.15 })
-      mostrarToast('Nuevo pedido de delivery 🔔')
+      sonidoNuevoPedido()
+      mostrarToast('Nuevo pedido de delivery')
     }
     queryClient.invalidateQueries({ queryKey: ['pedidos-reparto'] })
   })

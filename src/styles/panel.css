@@ -343,3 +343,15 @@
   color: #8a4b00; border-radius: 10px; padding: 12px 14px; font-size: 14px; font-weight: 600;
   margin-bottom: 14px; display: flex; gap: 8px; align-items: flex-start;
 }
+
+/* ===== Mesas abiertas (mesera / salón) ===== */
+.panel-root .mesa-abierta {
+  border: 1px solid var(--borde); border-radius: 12px; padding: 12px;
+  margin-bottom: 10px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;
+  background: #FFFDF8;
+}
+.panel-root .mesa-abierta-num { font-weight: 800; }
+.panel-root .mesa-abierta-items { font-size: 12px; color: var(--marron-medio); margin-top: 2px; }
+.panel-root .mesa-abierta-right { display: flex; align-items: center; gap: 10px; }
+.panel-root .mesa-abierta-total { font-family: var(--font-heading); font-weight: 700; font-size: 18px; }
+.panel-root .mesa-cobro { width: 100%; margin-top: 8px; border-top: 1px dashed var(--borde); padding-top: 10px; }

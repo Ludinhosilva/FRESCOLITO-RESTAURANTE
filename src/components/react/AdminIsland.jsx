@@ -1,6 +1,7 @@
 import Proveedores from './Proveedores.jsx'
 import GuardPersonal from './GuardPersonal.jsx'
 import BarraPersonal from './BarraPersonal.jsx'
+import EditarPedido from './EditarPedido.jsx'
 import { useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
@@ -65,6 +66,7 @@ function AdminContenido() {
   const [desde, setDesde] = useState(inicioMes)
   const [hasta, setHasta] = useState(hoy)
   const [toast, setToast] = useState('')
+  const [editando, setEditando] = useState(null)
 
   const mostrarToast = (m) => {
     setToast(m)
@@ -142,12 +144,20 @@ function AdminContenido() {
 
           <div className="kpi-grid">
             <div className="kpi">
-              <div className="kpi-label">Total vendido</div>
-              <div className="kpi-value">S/ {Number(ventas?.total_vendido ?? 0).toFixed(2)}</div>
+              <div className="kpi-label">Cobrado</div>
+              <div className="kpi-value">S/ {Number(ventas?.cobrado ?? 0).toFixed(2)}</div>
             </div>
-            <div className="kpi">
+            <div className="kpi small">
+              <div className="kpi-label">Cuentas abiertas</div>
+              <div className="kpi-value" style={{ fontSize: 18 }}>S/ {Number(ventas?.cuentas_abiertas ?? 0).toFixed(2)}</div>
+            </div>
+            <div className="kpi small">
+              <div className="kpi-label">Total del día</div>
+              <div className="kpi-value" style={{ fontSize: 18 }}>S/ {Number(ventas?.total_vendido ?? 0).toFixed(2)}</div>
+            </div>
+            <div className="kpi small">
               <div className="kpi-label">Pedidos</div>
-              <div className="kpi-value">{ventas?.num_pedidos ?? 0}</div>
+              <div className="kpi-value" style={{ fontSize: 18 }}>{ventas?.num_pedidos ?? 0}</div>
             </div>
             <div className="kpi small">
               <div className="kpi-label">Efectivo</div>
@@ -160,11 +170,12 @@ function AdminContenido() {
           </div>
 
           <div className="card">
-            <div className="card-title">Control de caja por método</div>
+            <div className="card-title">Caja (cobrado) por método</div>
             <div className="total-row"><span>💵 Efectivo</span><span>S/ {Number(pm.efectivo ?? 0).toFixed(2)}</span></div>
             <div className="total-row"><span>📱 Yape</span><span>S/ {Number(pm.yape ?? 0).toFixed(2)}</span></div>
             <div className="total-row"><span>📱 Plin</span><span>S/ {Number(pm.plin ?? 0).toFixed(2)}</span></div>
-            <div className="total-row final"><span>Total</span><span>S/ {Number(ventas?.total_vendido ?? 0).toFixed(2)}</span></div>
+            <div className="total-row final"><span>Cobrado</span><span>S/ {Number(ventas?.cobrado ?? 0).toFixed(2)}</span></div>
+            <div className="total-row" style={{ color: '#EF6C00' }}><span>Cuentas abiertas (salón)</span><span>S/ {Number(ventas?.cuentas_abiertas ?? 0).toFixed(2)}</span></div>
           </div>
 
           <div className="card">
@@ -221,7 +232,8 @@ function AdminContenido() {
                 )}
 
                 <div style={{ fontSize: 12, color: '#8D6E63', marginBottom: 8 }}>
-                  {p.metodo_pago} · {p.referencia_pago ? `Op. ${p.referencia_pago}` : 'sin n.º op.'} · {p.estado.replace('_', ' ')}
+                  {p.metodo_pago || 'Sin método'} · {p.referencia_pago ? `Op. ${p.referencia_pago}` : 'sin n.º op.'} · {p.estado.replace('_', ' ')}
+                  {Number(p.ajuste) !== 0 ? ` · ajuste S/ ${Number(p.ajuste).toFixed(2)}` : ''}
                 </div>
 
                 {items.map((it) => (
@@ -236,6 +248,7 @@ function AdminContenido() {
                       ✓ Confirmar pago
                     </button>
                   )}
+                  <button className="btn btn-sm btn-outline" onClick={() => setEditando(p)}>Editar</button>
                   {p.estado !== 'cancelado' && (
                     <button className="btn btn-sm btn-rojo" onClick={() => handleCancelar(p.id)}>
                       Cancelar pedido
@@ -245,6 +258,19 @@ function AdminContenido() {
               </div>
             )
           })}
+
+          {editando && (
+            <EditarPedido
+              pedido={editando}
+              platos={platos}
+              onClose={() => setEditando(null)}
+              onSaved={() => {
+                queryClient.invalidateQueries({ queryKey: ['pedidos-admin'] })
+                setEditando(null)
+                mostrarToast('Pedido actualizado')
+              }}
+            />
+          )}
         </div>
       )}
 
@@ -257,17 +283,25 @@ function AdminContenido() {
 
           <div className="kpi-grid">
             <div className="kpi">
-              <div className="kpi-label">Total del periodo</div>
-              <div className="kpi-value">S/ {Number(mes?.total_vendido ?? 0).toFixed(2)}</div>
+              <div className="kpi-label">Cobrado</div>
+              <div className="kpi-value">S/ {Number(mes?.cobrado ?? 0).toFixed(2)}</div>
             </div>
-            <div className="kpi">
+            <div className="kpi small">
+              <div className="kpi-label">Cuentas abiertas</div>
+              <div className="kpi-value" style={{ fontSize: 18 }}>S/ {Number(mes?.cuentas_abiertas ?? 0).toFixed(2)}</div>
+            </div>
+            <div className="kpi small">
+              <div className="kpi-label">Total del periodo</div>
+              <div className="kpi-value" style={{ fontSize: 18 }}>S/ {Number(mes?.total_vendido ?? 0).toFixed(2)}</div>
+            </div>
+            <div className="kpi small">
               <div className="kpi-label">Pedidos</div>
-              <div className="kpi-value">{mes?.num_pedidos ?? 0}</div>
+              <div className="kpi-value" style={{ fontSize: 18 }}>{mes?.num_pedidos ?? 0}</div>
             </div>
           </div>
 
           <div className="card">
-            <div className="card-title">Por método</div>
+            <div className="card-title">Por método (cobrado)</div>
             {Object.entries(mes?.por_metodo || {}).map(([k, v]) => (
               <div key={k} className="total-row"><span>{k}</span><span>S/ {Number(v).toFixed(2)}</span></div>
             ))}
