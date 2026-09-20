@@ -1,13 +1,13 @@
-import { describe, it, expect } from 'vitest'
+﻿import { describe, it, expect } from 'vitest'
 import { WHATSAPP_NUMBER, BUSINESS_HOURS, SITE_NAME } from '../src/data/config'
 
 describe('Project Config', () => {
-  it('WHATSAPP_NUMBER debe ser el número correcto', () => {
-    expect(WHATSAPP_NUMBER).toBe('51927367844')
+  it('WHATSAPP_NUMBER debe ser el nÃºmero correcto', () => {
+    expect(WHATSAPP_NUMBER).toBe('51916207362')
     expect(WHATSAPP_NUMBER).toMatch(/^\d+$/)
   })
 
-  it('BUSINESS_HOURS debe tener días laborables', () => {
+  it('BUSINESS_HOURS debe tener dÃ­as laborables', () => {
     expect(BUSINESS_HOURS.days).toEqual([1, 2, 3, 4, 5])
   })
 

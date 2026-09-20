@@ -6,19 +6,33 @@ import Hero from '../components/Hero.astro'
 <BaseLayout title="FRESCOLITO RESTAURANTE | Iquitos - Perú" effect="stripes">
   <Hero />
 
-  <section class="section reviews-section">
+  <section class="section reviews-section" id="reviews-section">
     <div class="container">
-      <h2 class="section-title" data-reveal>RESEÑAS</h2>
-      <div
-        class="elfsight-app-cb8923b5-4bee-48d1-b32a-7f61b710d270"
-        data-elfsight-app-lazy
-        data-reveal
-      ></div>
+      <h2 class="section-title">RESEÑAS</h2>
+      <div class="elfsight-app-cb8923b5-4bee-48d1-b32a-7f61b710d270" id="elfsight-resenas"></div>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .section-title { text-align: center; margin-bottom: var(--space-lg); }
+  .section-title { text-align: center; margin-bottom: var(--space-md); }
   .reviews-section { background: var(--color-bg); padding: var(--space-lg) 0; }
 </style>
+
+<script>
+  // Evita el espacio en blanco si el widget de reseñas no carga:
+  // tras unos segundos, si el widget sigue vacío, se oculta la sección.
+  function colapsarResenasSiVacio() {
+    const widget = document.getElementById('elfsight-resenas')
+    const section = document.getElementById('reviews-section')
+    if (!widget || !section) return
+    const vacio = widget.children.length === 0 || widget.getBoundingClientRect().height < 40
+    if (vacio) section.style.display = 'none'
+  }
+  window.addEventListener('load', () => {
+    setTimeout(colapsarResenasSiVacio, 3500)
+  })
+  document.addEventListener('astro:page-load', () => {
+    setTimeout(colapsarResenasSiVacio, 3500)
+  })
+</script>

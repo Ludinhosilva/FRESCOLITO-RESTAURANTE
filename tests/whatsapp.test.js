@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+﻿import { describe, it, expect } from 'vitest'
 import { orderMessage, openWhatsApp } from '../src/utils/whatsapp'
 
 describe('WhatsApp Order Message', () => {
@@ -20,13 +20,13 @@ describe('WhatsApp Order Message', () => {
   })
 
   it('debe manejar precios con decimales correctamente', () => {
-    const msg = decodeURIComponent(orderMessage('Chicharrón de Pescado', 15.50))
+    const msg = decodeURIComponent(orderMessage('ChicharrÃ³n de Pescado', 15.50))
     expect(msg).toContain('S/ 15.50')
   })
 
   it('debe escapar caracteres especiales', () => {
-    const msg = decodeURIComponent(orderMessage('Menú Infantil', 12.00))
-    expect(msg).toContain('Menú Infantil')
+    const msg = decodeURIComponent(orderMessage('MenÃº Infantil', 12.00))
+    expect(msg).toContain('MenÃº Infantil')
   })
 
   it('openWhatsApp debe construir la URL correcta', () => {
@@ -35,7 +35,7 @@ describe('WhatsApp Order Message', () => {
     window.open = (url) => { openedUrl = url }
     openWhatsApp('test-message')
     window.open = originalOpen
-    expect(openedUrl).toContain('https://wa.me/51927367844')
+    expect(openedUrl).toContain('https://wa.me/51916207362')
     expect(openedUrl).toContain('test-message')
   })
 })

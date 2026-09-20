@@ -291,6 +291,9 @@ function Contenido() {
                         {pedido.items?.map((it, i) => (<div key={i} className="cli-item-simple">{it.cantidad}× {it.plato}</div>))}
                         <div className="total-row final"><span>Total</span><span>S/ {Number(pedido.total).toFixed(2)}</span></div>
                       </div>
+                      <button className="btn btn-block btn-outline" style={{ marginTop: 12 }} onClick={() => import('../../lib/boleta.js').then((m) => m.generarBoletaPDF(pedido))}>
+                        Descargar boleta
+                      </button>
                     </>
                   ) : (
                     <div className="centered">Buscando tu pedido...</div>

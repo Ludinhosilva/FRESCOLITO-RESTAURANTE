@@ -249,6 +249,7 @@ function AdminContenido() {
                     </button>
                   )}
                   <button className="btn btn-sm btn-outline" onClick={() => setEditando(p)}>Editar</button>
+                  <button className="btn btn-sm btn-outline" onClick={() => import('../../lib/boleta.js').then((m) => m.generarBoletaPDF(p))}>Boleta</button>
                   {p.estado !== 'cancelado' && (
                     <button className="btn btn-sm btn-rojo" onClick={() => handleCancelar(p.id)}>
                       Cancelar pedido
