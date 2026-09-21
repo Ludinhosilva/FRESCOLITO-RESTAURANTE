@@ -243,3 +243,9 @@ export async function editarPedido(pedidoId, datos) {
   })
   if (error) throw error
 }
+
+// ===== Eliminar plato (admin) =====
+export async function eliminarPlato(platoId) {
+  const { error } = await supabase.rpc('eliminar_plato', { p_plato_id: platoId })
+  if (error) throw error
+}

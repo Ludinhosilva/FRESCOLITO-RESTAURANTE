@@ -7,11 +7,13 @@ import {
   actualizarEstadoItem,
   actualizarEstadoPedido,
   actualizarStock,
+  cancelarPedido,
   listarPedidosDelDia,
   listarPlatos,
 } from '../../lib/pedidos.js'
 import { useRealtime } from '../../hooks/useRealtime.js'
 import { sonidoNuevoPedido } from '../../lib/sonido.js'
+import ConfirmDialog from './ConfirmDialog.jsx'
 
 function tiempoDesde(iso) {
   const seg = Math.floor((Date.now() - new Date(iso).getTime()) / 1000)
@@ -36,6 +38,7 @@ function CocinaContenido() {
   const [tab, setTab] = useState('pedidos')
   const [filtro, setFiltro] = useState('todos')
   const [toast, setToast] = useState('')
+  const [cancelando, setCancelando] = useState(null)
 
   const { data: pedidos = [] } = useQuery({
     queryKey: ['pedidos-hoy'],
@@ -79,6 +82,17 @@ function CocinaContenido() {
   const handleEstadoPedido = async (pedidoId, estado) => {
     await actualizarEstadoPedido(pedidoId, estado)
     queryClient.invalidateQueries({ queryKey: ['pedidos-hoy'] })
+  }
+
+  const handleCancelar = async (pedido) => {
+    try {
+      await cancelarPedido(pedido.id)
+      queryClient.invalidateQueries({ queryKey: ['pedidos-hoy'] })
+      setCancelando(null)
+      mostrarToast('Pedido cancelado')
+    } catch (e) {
+      mostrarToast('Error: ' + (e.message || 'no se pudo cancelar'))
+    }
   }
 
   const handleStock = async (platoId, valor) => {
@@ -175,7 +189,7 @@ function CocinaContenido() {
                   </div>
                 ))}
 
-                <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+                <div style={{ display: 'flex', gap: 8, marginTop: 10, flexWrap: 'wrap' }}>
                   {listo ? (
                     esDelivery ? (
                       <span className="orden-espera-reparto">✅ Listo — esperando repartidor</span>
@@ -200,6 +214,7 @@ function CocinaContenido() {
                       {pedido.estado === 'en_preparacion' ? 'En preparación' : 'Iniciar preparación'}
                     </button>
                   )}
+                  <button className="btn btn-sm btn-rojo" onClick={() => setCancelando(pedido)}>Cancelar</button>
                 </div>
               </div>
             )
@@ -234,6 +249,19 @@ function CocinaContenido() {
             </div>
           ))}
         </div>
+      )}
+
+      {cancelando && (
+        <ConfirmDialog
+          titulo="Cancelar pedido"
+          peligro
+          confirmLabel="Sí, cancelar"
+          onCancel={() => setCancelando(null)}
+          onConfirm={() => handleCancelar(cancelando)}
+        >
+          <p>¿Cancelar el pedido <strong>#{cancelando.numero_orden}</strong>?</p>
+          <p className="cli-legal">Se devolverá el stock de los platos.</p>
+        </ConfirmDialog>
       )}
 
       {toast && <div className="toast">{toast}</div>}

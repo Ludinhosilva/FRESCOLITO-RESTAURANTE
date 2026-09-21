@@ -9,6 +9,7 @@ import {
   actualizarPlato,
   cancelarPedido,
   crearPlato,
+  eliminarPlato,
   listarPedidosDiaAdmin,
   listarPlatos,
   listarPlatosTodos,
@@ -488,6 +489,18 @@ function PlatosEditor() {
     }
   }
 
+  const eliminar = async (p) => {
+    if (!window.confirm(`¿Eliminar definitivamente "${p.nombre}"? Esta acción no se puede deshacer.`)) return
+    try {
+      await eliminarPlato(p.id)
+      queryClient.invalidateQueries({ queryKey: ['platos-todos'] })
+      queryClient.invalidateQueries({ queryKey: ['platos-publico'] })
+      setToast('Plato eliminado')
+    } catch (err) {
+      setToast('Error: ' + err.message)
+    }
+  }
+
   return (
     <div>
       <div className="card">
@@ -531,9 +544,10 @@ function PlatosEditor() {
                 <div style={{ fontSize: 12, color: '#8D6E63' }}>{p.categoria} · S/ {Number(p.precio).toFixed(2)} · stock {p.stock}</div>
               </div>
             </div>
-            <div style={{ display: 'flex', gap: 6 }}>
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
               <button className="btn btn-sm btn-outline" onClick={() => editar(p)}>Editar</button>
-              <button className={'btn btn-sm ' + (p.activo ? 'btn-rojo' : 'btn-verde')} onClick={() => alternarActivo(p)}>{p.activo ? 'Ocultar' : 'Activar'}</button>
+              <button className={'btn btn-sm ' + (p.activo ? 'btn-naranja' : 'btn-verde')} onClick={() => alternarActivo(p)}>{p.activo ? 'Ocultar' : 'Activar'}</button>
+              <button className="btn btn-sm btn-rojo" onClick={() => eliminar(p)}>Eliminar</button>
             </div>
           </div>
         ))}

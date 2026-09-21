@@ -3,9 +3,10 @@ import GuardPersonal from './GuardPersonal.jsx'
 import BarraPersonal from './BarraPersonal.jsx'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { cobrarMesa, crearPedido, listarMesas, listarPedidosDelDia, listarPlatos } from '../../lib/pedidos.js'
+import { cobrarMesa, cancelarPedido, crearPedido, listarMesas, listarPedidosDelDia, listarPlatos } from '../../lib/pedidos.js'
 import { useRealtime } from '../../hooks/useRealtime.js'
 import { sonidoListo } from '../../lib/sonido.js'
+import ConfirmDialog from './ConfirmDialog.jsx'
 
 const METODOS = [
   { id: 'efectivo', label: 'Efectivo' },
@@ -31,6 +32,8 @@ function MeseraContenido() {
   const [cobrando, setCobrando] = useState(null)
   const [cobroMetodo, setCobroMetodo] = useState('efectivo')
   const [cobroMonto, setCobroMonto] = useState('')
+  const [confirmando, setConfirmando] = useState(false)
+  const [cancelando, setCancelando] = useState(null)
   const notificados = useRef(new Set())
 
   const { data: platos = [] } = useQuery({ queryKey: ['platos'], queryFn: listarPlatos })
@@ -104,6 +107,29 @@ function MeseraContenido() {
     setSeleccion({})
     setNotas('')
     setMesa(null)
+  }
+
+  const quitarPlato = (id) => setSeleccion((prev) => {
+    const n = { ...prev }
+    delete n[id]
+    return n
+  })
+
+  const abrirConfirmacion = () => {
+    if (itemsPedido.length === 0) return setMensaje('Agrega al menos un plato')
+    if (seccion === 'salon' && !mesa) return setMensaje('Selecciona la mesa')
+    setConfirmando(true)
+  }
+
+  const cancelarMesa = async (p) => {
+    try {
+      await cancelarPedido(p.id)
+      queryClient.invalidateQueries({ queryKey: ['pedidos-hoy'] })
+      setCancelando(null)
+      setMensaje('Pedido cancelado')
+    } catch (err) {
+      setMensaje('Error: ' + (err.message || 'no se pudo cancelar'))
+    }
   }
 
   const enviar = async () => {
@@ -255,6 +281,7 @@ function MeseraContenido() {
                     <button className="cant-btn" onClick={() => cambiar(plato, -1)}>−</button>
                     <span className="cli-item-cant">{cantidad}</span>
                     <button className="cant-btn" onClick={() => cambiar(plato, 1)} disabled={cantidad >= plato.stock}>+</button>
+                    <button className="cli-item-quitar" onClick={() => quitarPlato(plato.id)}>✕</button>
                   </div>
                 </div>
               ))}
@@ -264,8 +291,8 @@ function MeseraContenido() {
               {seccion === 'salon' && (
                 <p className="cli-legal">El cobro se hace cuando la mesa termine (sección Salón → Cobrar).</p>
               )}
-              <button className="btn btn-block btn-verde" onClick={enviar} disabled={enviando} style={{ marginTop: 10 }}>
-                {enviando ? 'Enviando...' : 'Enviar a cocina'}
+              <button className="btn btn-block btn-verde" onClick={abrirConfirmacion} disabled={enviando} style={{ marginTop: 10 }}>
+                Revisar y enviar
               </button>
             </div>
           )}
@@ -284,7 +311,10 @@ function MeseraContenido() {
                   <div className="mesa-abierta-right">
                     <span className="mesa-abierta-total">S/ {Number(p.total).toFixed(2)}</span>
                     {cobrando === p.id ? null : (
-                      <button className="btn btn-sm" onClick={() => abrirCobro(p)}>Cobrar</button>
+                      <>
+                        <button className="btn btn-sm" onClick={() => abrirCobro(p)}>Cobrar</button>
+                        <button className="btn btn-sm btn-rojo" onClick={() => setCancelando(p)}>Cancelar</button>
+                      </>
                     )}
                   </div>
                   {cobrando === p.id && (
@@ -330,6 +360,38 @@ function MeseraContenido() {
             </div>
           ))}
         </div>
+      )}
+
+      {confirmando && (
+        <ConfirmDialog
+          titulo={seccion === 'llevar' ? 'Confirmar pedido para llevar' : `Confirmar pedido — Mesa ${mesa ?? ''}`}
+          onCancel={() => setConfirmando(false)}
+          onConfirm={async () => { setConfirmando(false); await enviar() }}
+          confirmLabel="Confirmar y enviar"
+          ocupado={enviando}
+        >
+          {itemsPedido.map(({ plato, cantidad }) => (
+            <div key={plato.id} className="cli-item-simple">{cantidad}× {plato.nombre} — S/ {(plato.precio * cantidad).toFixed(2)}</div>
+          ))}
+          <div className="total-row" style={{ marginTop: 8 }}><span>Subtotal</span><span>S/ {subtotal.toFixed(2)}</span></div>
+          {cargoEnvases > 0 && <div className="total-row"><span>Para llevar (S/1 x {unidades})</span><span>S/ {cargoEnvases.toFixed(2)}</span></div>}
+          <div className="total-row final"><span>Total</span><span>S/ {total.toFixed(2)}</span></div>
+          {seccion === 'llevar' && <p className="cli-legal">Pago: {metodo}</p>}
+          {notas ? <p className="cli-legal">Nota: {notas}</p> : null}
+        </ConfirmDialog>
+      )}
+
+      {cancelando && (
+        <ConfirmDialog
+          titulo="Cancelar pedido"
+          peligro
+          confirmLabel="Sí, cancelar"
+          onCancel={() => setCancelando(null)}
+          onConfirm={() => cancelarMesa(cancelando)}
+        >
+          <p>¿Cancelar el pedido <strong>#{cancelando.numero_orden}</strong> de {cancelando.mesas ? `Mesa ${cancelando.mesas.numero}` : 'mostrador'}?</p>
+          <p className="cli-legal">Se devolverá el stock de los platos.</p>
+        </ConfirmDialog>
       )}
 
       {mensaje && <div className="toast">{mensaje}</div>}
