@@ -1,4 +1,21 @@
 import { supabase } from '../lib/supabaseClient'
+import type { VentasResumen, Monitoreo } from './tipos'
+
+// Fecha de "hoy" en la zona horaria de Lima (YYYY-MM-DD).
+export function fechaHoyLima() {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Lima' }).format(new Date())
+}
+
+// Mes actual en Lima (YYYY-MM).
+export function mesActualLima() {
+  return fechaHoyLima().slice(0, 7)
+}
+
+// Primer dia del mes actual en Lima (YYYY-MM-DD).
+export function inicioMesLima() {
+  return mesActualLima() + '-01'
+}
+
 
 /**
  * Crea un pedido via RPC (funcion de Supabase).
@@ -46,7 +63,7 @@ export async function listarMesas() {
 
 /** Lista los pedidos del dia (cocina/admin). */
 export async function listarPedidosDelDia() {
-  const hoy = new Date().toISOString().slice(0, 10)
+  const hoy = fechaHoyLima()
   const { data, error } = await supabase
     .from('pedidos')
     .select('*, pedido_items(*), mesas(numero)')
@@ -59,10 +76,10 @@ export async function listarPedidosDelDia() {
 /** Obtiene ventas del dia (solo admin). */
 export async function ventasDelDia(dia) {
   const { data, error } = await supabase.rpc('ventas_del_dia', {
-    p_dia: dia || new Date().toISOString().slice(0, 10),
+    p_dia: dia || fechaHoyLima(),
   })
   if (error) throw error
-  return data
+  return data as unknown as VentasResumen
 }
 
 /** Actualiza el stock de un plato (cocina/admin). */
@@ -152,7 +169,7 @@ export async function cancelarPedido(pedidoId) {
 export async function obtenerConfiguracion() {
   const { data, error } = await supabase.from('configuracion').select('clave, valor')
   if (error) throw error
-  const map = {}
+  const map: Record<string, any> = {}
   for (const row of data) map[row.clave] = row.valor
   return map
 }
@@ -173,7 +190,7 @@ export async function ventasRango(desde, hasta) {
     p_hasta: hasta,
   })
   if (error) throw error
-  return data
+  return data as unknown as VentasResumen
 }
 
 /** Lista TODOS los pedidos de un dia (admin; incluye cancelados). */
@@ -254,5 +271,5 @@ export async function eliminarPlato(platoId) {
 export async function obtenerMonitoreo() {
   const { data, error } = await supabase.rpc('monitoreo')
   if (error) throw error
-  return data
+  return data as unknown as Monitoreo
 }

@@ -3,7 +3,7 @@ import { useState } from 'react'
 const initialForm = { name: '', email: '', phone: '', message: '' }
 
 function validate(form) {
-  const errors = {}
+  const errors: Record<string, string> = {}
   if (!form.name.trim()) errors.name = 'El nombre es obligatorio'
   if (!form.email.trim()) errors.email = 'El email es obligatorio'
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errors.email = 'Email inválido'
@@ -15,7 +15,7 @@ function validate(form) {
 
 export default function ContactForm() {
   const [form, setForm] = useState(initialForm)
-  const [errors, setErrors] = useState({})
+  const [errors, setErrors] = useState<Record<string, string>>({})
   const [submitted, setSubmitted] = useState(false)
 
   function handleChange(e) {

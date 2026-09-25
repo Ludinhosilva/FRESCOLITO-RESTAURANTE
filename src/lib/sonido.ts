@@ -5,7 +5,7 @@ export function audioCtx() {
   if (typeof window === 'undefined') return null
   if (!ctx) {
     try {
-      const A = window.AudioContext || window.webkitAudioContext
+      const A = window.AudioContext || (window as any).webkitAudioContext
       if (A) ctx = new A()
     } catch {
       ctx = null

@@ -76,7 +76,7 @@ function animateMenu() {
     })
   }
 
-  const items = gsap.utils.toArray('.menu-item')
+  const items = gsap.utils.toArray<HTMLElement>('.menu-item')
   items.forEach((el, i) => {
     gsap.from(el, {
       scrollTrigger: {
@@ -150,7 +150,7 @@ function animateNosotros() {
 }
 
 function animateGaleria() {
-  const galleryItems = gsap.utils.toArray('.gal-item')
+  const galleryItems = gsap.utils.toArray<HTMLElement>('.gal-item')
   galleryItems.forEach((el, i) => {
     gsap.from(el, {
       scrollTrigger: {

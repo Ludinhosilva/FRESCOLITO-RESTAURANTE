@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { editarPedido } from '../../lib/pedidos.js'
+import { editarPedido } from '../../lib/pedidos.ts'
 
 const METODOS = [
   { id: 'efectivo', label: 'Efectivo' },

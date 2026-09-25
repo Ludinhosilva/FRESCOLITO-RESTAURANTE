@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useAuth } from '../../context/AuthContext.jsx'
+import { useAuth } from '../../context/AuthContext.tsx'
 
 export default function GuardPersonal({ roles, children }) {
   const { session, rol, loading } = useAuth()

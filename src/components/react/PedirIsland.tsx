@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import Proveedores from './Proveedores.jsx'
-import { useCarritoCliente } from '../../context/CarritoClienteContext.jsx'
+import Proveedores from './Proveedores.tsx'
+import { useCarritoCliente } from '../../context/CarritoClienteContext.tsx'
 import {
   adjuntarReferencia,
   consultarPedidoCliente,
@@ -11,7 +11,7 @@ import {
   listarPlatosPublico,
   obtenerConfig,
   obtenerUltimoPedido,
-} from '../../lib/pedidosCliente.js'
+} from '../../lib/pedidosCliente.ts'
 
 const ESTADOS = [
   { key: 'pendiente', label: 'Recibido', icon: '📥' },
@@ -63,7 +63,7 @@ function Contenido() {
   }, [])
 
   const porCategoria = useMemo(() => {
-    const map = {}
+    const map: Record<string, any[]> = {}
     for (const p of platos) {
       if (!map[p.categoria]) map[p.categoria] = []
       map[p.categoria].push(p)

@@ -1,15 +1,15 @@
-import Proveedores from './Proveedores.jsx'
-import GuardPersonal from './GuardPersonal.jsx'
-import BarraPersonal from './BarraPersonal.jsx'
+import Proveedores from './Proveedores.tsx'
+import GuardPersonal from './GuardPersonal.tsx'
+import BarraPersonal from './BarraPersonal.tsx'
 import { useMemo, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   actualizarEstadoPedido,
   listarPedidosDelDia,
   registrarCobroPedido,
-} from '../../lib/pedidos.js'
-import { useRealtime } from '../../hooks/useRealtime.js'
-import { sonidoNuevoPedido } from '../../lib/sonido.js'
+} from '../../lib/pedidos.ts'
+import { useRealtime } from '../../hooks/useRealtime.ts'
+import { sonidoNuevoPedido } from '../../lib/sonido.ts'
 
 const PAGO_LABEL = {
   pendiente: 'Pago pendiente',

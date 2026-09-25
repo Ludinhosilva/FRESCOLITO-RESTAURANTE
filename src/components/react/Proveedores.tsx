@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { AuthProvider } from '../../context/AuthContext.jsx'
-import { CarritoClienteProvider } from '../../context/CarritoClienteContext.jsx'
-import { desbloquearAudio } from '../../lib/sonido.js'
+import { AuthProvider } from '../../context/AuthContext.tsx'
+import { CarritoClienteProvider } from '../../context/CarritoClienteContext.tsx'
+import { desbloquearAudio } from '../../lib/sonido.ts'
 import '../../styles/panel.css'
 
 const queryClient = new QueryClient({

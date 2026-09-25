@@ -1,5 +1,5 @@
-import { useAuth } from '../../context/AuthContext.jsx'
-import ShinyText from './bits/ShinyText.jsx'
+import { useAuth } from '../../context/AuthContext.tsx'
+import ShinyText from './bits/ShinyText.tsx'
 
 const NAV = {
   admin: [

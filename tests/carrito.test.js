@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { calcularTotales, construirItems, COMISION_PARA_LLEVAR } from '../src/lib/carrito.js'
+import { calcularTotales, construirItems, COMISION_PARA_LLEVAR } from '../src/lib/carrito.ts'
 
 const platos = [
   { id: 1, nombre: 'Ceviche Simple 1', precio: 10 },

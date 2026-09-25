@@ -25,9 +25,9 @@ async function cargarLogo() {
     const res = await fetch(RESTAURANTE.logo)
     if (!res.ok) return null
     const blob = await res.blob()
-    return await new Promise((resolve) => {
+    return await new Promise<string | null>((resolve) => {
       const reader = new FileReader()
-      reader.onloadend = () => resolve(reader.result)
+      reader.onloadend = () => resolve(typeof reader.result === 'string' ? reader.result : null)
       reader.onerror = () => resolve(null)
       reader.readAsDataURL(blob)
     })
@@ -136,7 +136,7 @@ export async function generarBoletaPDF(pedido) {
     margin: { left: 14, right: 14 },
   })
 
-  let ty = doc.lastAutoTable.finalY + 8
+  let ty = (doc as any).lastAutoTable.finalY + 8
   const rightX = ancho - 14
   const linea = (label, val, bold = false) => {
     doc.setFont('helvetica', bold ? 'bold' : 'normal')

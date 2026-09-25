@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import Proveedores from './Proveedores.jsx'
-import { listarPlatosPublico } from '../../lib/pedidosCliente.js'
+import Proveedores from './Proveedores.tsx'
+import { listarPlatosPublico } from '../../lib/pedidosCliente.ts'
 
 function Contenido() {
   const { data: platos = [], isLoading } = useQuery({
@@ -11,7 +11,7 @@ function Contenido() {
   const [activa, setActiva] = useState(null)
 
   const categorias = useMemo(() => {
-    const map = {}
+    const map: Record<string, any[]> = {}
     for (const p of platos) {
       if (!map[p.categoria]) map[p.categoria] = []
       map[p.categoria].push(p)

@@ -1,6 +1,6 @@
-import Proveedores from './Proveedores.jsx'
-import GuardPersonal from './GuardPersonal.jsx'
-import BarraPersonal from './BarraPersonal.jsx'
+import Proveedores from './Proveedores.tsx'
+import GuardPersonal from './GuardPersonal.tsx'
+import BarraPersonal from './BarraPersonal.tsx'
 import { useMemo, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
@@ -10,10 +10,10 @@ import {
   cancelarPedido,
   listarPedidosDelDia,
   listarPlatos,
-} from '../../lib/pedidos.js'
-import { useRealtime } from '../../hooks/useRealtime.js'
-import { sonidoNuevoPedido } from '../../lib/sonido.js'
-import ConfirmDialog from './ConfirmDialog.jsx'
+} from '../../lib/pedidos.ts'
+import { useRealtime } from '../../hooks/useRealtime.ts'
+import { sonidoNuevoPedido } from '../../lib/sonido.ts'
+import ConfirmDialog from './ConfirmDialog.tsx'
 
 function tiempoDesde(iso) {
   const seg = Math.floor((Date.now() - new Date(iso).getTime()) / 1000)
@@ -107,7 +107,7 @@ function CocinaContenido() {
   }
 
   const porCategoria = useMemo(() => {
-    const map = {}
+    const map: Record<string, any[]> = {}
     for (const p of platos) {
       if (!map[p.categoria]) map[p.categoria] = []
       map[p.categoria].push(p)

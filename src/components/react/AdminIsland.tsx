@@ -1,7 +1,7 @@
-import Proveedores from './Proveedores.jsx'
-import GuardPersonal from './GuardPersonal.jsx'
-import BarraPersonal from './BarraPersonal.jsx'
-import EditarPedido from './EditarPedido.jsx'
+import Proveedores from './Proveedores.tsx'
+import GuardPersonal from './GuardPersonal.tsx'
+import BarraPersonal from './BarraPersonal.tsx'
+import EditarPedido from './EditarPedido.tsx'
 
 const UsoPanel = lazy(() => import('./UsoPanel.jsx'))
 import { useState, lazy, Suspense } from 'react'
@@ -12,6 +12,8 @@ import {
   cancelarPedido,
   crearPlato,
   eliminarPlato,
+  fechaHoyLima,
+  inicioMesLima,
   listarPedidosDiaAdmin,
   listarPlatos,
   listarPlatosTodos,
@@ -20,8 +22,8 @@ import {
   ventasDelDia,
   ventasRango,
   verificarPagoPedido,
-} from '../../lib/pedidos.js'
-import { useRealtime } from '../../hooks/useRealtime.js'
+} from '../../lib/pedidos.ts'
+import { useRealtime } from '../../hooks/useRealtime.ts'
 
 const DIAS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
 const CANAL_LABEL = { salon: 'Salón', delivery: 'Delivery', recojo: 'Recojo' }
@@ -56,11 +58,8 @@ function descargarCSV(nombre, filas) {
   URL.revokeObjectURL(url)
 }
 
-const hoy = () => new Date().toISOString().slice(0, 10)
-const inicioMes = () => {
-  const d = new Date()
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`
-}
+const hoy = fechaHoyLima
+const inicioMes = inicioMesLima
 
 function AdminContenido() {
   const queryClient = useQueryClient()
@@ -81,13 +80,13 @@ function AdminContenido() {
     queryClient.invalidateQueries({ queryKey: ['ventas'] })
   })
 
-  const { data: ventas } = useQuery({ queryKey: ['ventas', fecha], queryFn: () => ventasDelDia(fecha) })
-  const { data: mes } = useQuery({
+  const { data: ventas, isLoading: cargandoVentas, isError: errorVentas } = useQuery({ queryKey: ['ventas', fecha], queryFn: () => ventasDelDia(fecha) })
+  const { data: mes, isLoading: cargandoMes } = useQuery({
     queryKey: ['ventas-rango', desde, hasta],
     queryFn: () => ventasRango(desde, hasta),
     enabled: tab === 'mes',
   })
-  const { data: pedidos = [] } = useQuery({
+  const { data: pedidos = [], isLoading: cargandoPedidos, isError: errorPedidos } = useQuery({
     queryKey: ['pedidos-admin', fecha],
     queryFn: () => listarPedidosDiaAdmin(fecha),
   })
@@ -147,6 +146,11 @@ function AdminContenido() {
             <input type="date" value={fecha} onChange={(e) => setFecha(e.target.value)} />
           </div>
 
+          {cargandoVentas && <div className="card centered">Cargando ventas…</div>}
+          {errorVentas && <div className="card centered" style={{ color: '#C62828' }}>No se pudieron cargar las ventas. Revisa tu conexión.</div>}
+
+          {!cargandoVentas && !errorVentas && (
+          <>
           <div className="kpi-grid">
             <div className="kpi">
               <div className="kpi-label">Cobrado</div>
@@ -191,6 +195,9 @@ function AdminContenido() {
                 <span>S/ {Number(p.total).toFixed(2)}</span>
               </div>
             ))}
+            {(ventas?.por_plato ?? []).length === 0 && (
+              <div className="centered" style={{ minHeight: 40 }}>Aún no hay ventas este día</div>
+            )}
           </div>
 
           <button
@@ -203,6 +210,8 @@ function AdminContenido() {
           >
             ⬇️ Exportar día a Excel (CSV)
           </button>
+          </>
+          )}
         </div>
       )}
 
@@ -212,6 +221,9 @@ function AdminContenido() {
             <label>Fecha</label>
             <input type="date" value={fecha} onChange={(e) => setFecha(e.target.value)} />
           </div>
+
+          {cargandoPedidos && <div className="card centered">Cargando pedidos…</div>}
+          {errorPedidos && <div className="card centered" style={{ color: '#C62828' }}>No se pudieron cargar los pedidos. Revisa tu conexión.</div>}
 
           {porVerificar.length > 0 && (
             <div className="verificar-block">
@@ -305,6 +317,8 @@ function AdminContenido() {
             <div className="field"><label>Desde</label><input type="date" value={desde} onChange={(e) => setDesde(e.target.value)} /></div>
             <div className="field"><label>Hasta</label><input type="date" value={hasta} onChange={(e) => setHasta(e.target.value)} /></div>
           </div>
+
+          {cargandoMes && <div className="card centered">Cargando reporte…</div>}
 
           <div className="kpi-grid">
             <div className="kpi">

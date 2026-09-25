@@ -1,10 +1,11 @@
 import { supabase } from './supabaseClient'
+import type { PedidoCliente, CrearPedidoResultado } from './tipos'
 
 /** Lee la configuracion publica (horario, tarifas, pagos). */
 export async function obtenerConfig() {
   const { data, error } = await supabase.from('configuracion').select('clave, valor')
   if (error) throw error
-  const map = {}
+  const map: Record<string, any> = {}
   for (const row of data) map[row.clave] = row.valor
   return map
 }
@@ -41,7 +42,7 @@ export async function crearPedidoCliente({
     p_items: items,
   })
   if (error) throw error
-  return data
+  return data as unknown as CrearPedidoResultado
 }
 
 /** Adjunta el N.º de operacion Yape/Plin a un pedido por su codigo. */
@@ -59,7 +60,7 @@ export async function consultarPedidoCliente(codigo) {
     p_codigo: codigo,
   })
   if (error) throw error
-  return data
+  return data as unknown as PedidoCliente | null
 }
 
 /** true si el horario incluye un dia/hora dados (dow 0=Dom, hhmm en minutos). */

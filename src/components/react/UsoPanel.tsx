@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
-import { obtenerMonitoreo } from '../../lib/pedidos.js'
-import AnimatedCounter from './bits/AnimatedCounter.jsx'
-import BarChart from './bits/BarChart.jsx'
-import Gauge from './bits/Gauge.jsx'
+import { obtenerMonitoreo } from '../../lib/pedidos.ts'
+import AnimatedCounter from './bits/AnimatedCounter.tsx'
+import BarChart from './bits/BarChart.tsx'
+import Gauge from './bits/Gauge.tsx'
 
 const LIMITE_MB = 500
 

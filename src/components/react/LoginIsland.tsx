@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import Proveedores from './Proveedores.jsx'
-import { useAuth } from '../../context/AuthContext.jsx'
+import Proveedores from './Proveedores.tsx'
+import { useAuth } from '../../context/AuthContext.tsx'
 
 const DESTINO = { admin: '/admin', cocina: '/cocina', repartidor: '/repartidor', mesera: '/mesera' }
 

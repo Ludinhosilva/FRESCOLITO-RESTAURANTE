@@ -1,12 +1,12 @@
-import Proveedores from './Proveedores.jsx'
-import GuardPersonal from './GuardPersonal.jsx'
-import BarraPersonal from './BarraPersonal.jsx'
+import Proveedores from './Proveedores.tsx'
+import GuardPersonal from './GuardPersonal.tsx'
+import BarraPersonal from './BarraPersonal.tsx'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { cobrarMesa, cancelarPedido, crearPedido, listarMesas, listarPedidosDelDia, listarPlatos } from '../../lib/pedidos.js'
-import { useRealtime } from '../../hooks/useRealtime.js'
-import { sonidoListo } from '../../lib/sonido.js'
-import ConfirmDialog from './ConfirmDialog.jsx'
+import { cobrarMesa, cancelarPedido, crearPedido, listarMesas, listarPedidosDelDia, listarPlatos } from '../../lib/pedidos.ts'
+import { useRealtime } from '../../hooks/useRealtime.ts'
+import { sonidoListo } from '../../lib/sonido.ts'
+import ConfirmDialog from './ConfirmDialog.tsx'
 
 const METODOS = [
   { id: 'efectivo', label: 'Efectivo' },
@@ -24,7 +24,7 @@ function MeseraContenido() {
   const queryClient = useQueryClient()
   const [seccion, setSeccion] = useState('llevar')
   const [mesa, setMesa] = useState(null)
-  const [seleccion, setSeleccion] = useState({})
+  const [seleccion, setSeleccion] = useState<Record<string, number>>({})
   const [metodo, setMetodo] = useState('efectivo')
   const [notas, setNotas] = useState('')
   const [enviando, setEnviando] = useState(false)
@@ -70,7 +70,7 @@ function MeseraContenido() {
   }, [mensaje])
 
   const porCategoria = useMemo(() => {
-    const map = {}
+    const map: Record<string, any[]> = {}
     for (const p of platos) {
       if (!map[p.categoria]) map[p.categoria] = []
       map[p.categoria].push(p)

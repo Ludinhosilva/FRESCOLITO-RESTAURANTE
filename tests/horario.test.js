@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { horarioIncluye } from '../src/lib/pedidosCliente.js'
+import { horarioIncluye } from '../src/lib/pedidosCliente.ts'
 
 const horario = { dias: [3, 4], apertura: '11:30', cierre: '15:20' }
 

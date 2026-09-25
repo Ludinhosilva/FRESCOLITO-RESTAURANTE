@@ -6,7 +6,7 @@ export default function initScrollReveal() {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add('revealed')
-          if (entry.target.dataset.countUp) startCountUp(entry.target)
+          if ((entry.target as HTMLElement).dataset.countUp) startCountUp(entry.target as HTMLElement)
           observer.unobserve(entry.target)
         }
       })
@@ -19,7 +19,7 @@ export default function initScrollReveal() {
     document.querySelectorAll(sel).forEach(el => observer.observe(el))
   })
 
-  function startCountUp(el) {
+  function startCountUp(el: HTMLElement) {
     const target = parseInt(el.dataset.countUp)
     if (isNaN(target)) return
     let current = 0
@@ -27,7 +27,7 @@ export default function initScrollReveal() {
     const timer = setInterval(() => {
       current += step
       if (current >= target) { current = target; clearInterval(timer) }
-      el.textContent = current
+      el.textContent = String(current)
     }, 30)
   }
 

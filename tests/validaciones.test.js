@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { validarReserva } from '../src/lib/validaciones.js'
+import { validarReserva } from '../src/lib/validaciones.ts'
 
 const hoy = '2026-09-10'
 
