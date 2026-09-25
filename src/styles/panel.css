@@ -182,11 +182,11 @@
 .panel-root .filtro-chip.active { background: var(--amarillo); border-color: var(--amarillo); }
 
 /* ===== Chips de canal / pago ===== */
-.panel-root .canal-chip { font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 50px; text-transform: uppercase; letter-spacing: 0.3px; }
+.panel-root .canal-chip { font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.3px; }
 .panel-root .canal-salon { background: #E3F2FD; color: #1565C0; }
 .panel-root .canal-delivery { background: #FFF3E0; color: var(--naranja); }
 .panel-root .canal-recojo { background: #F3E5F5; color: #6A1B9A; }
-.panel-root .pago-chip { font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 50px; }
+.panel-root .pago-chip { font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 6px; }
 .panel-root .pago-pendiente { background: #ECEFF1; color: #546E7A; }
 .panel-root .pago-porverificar { background: #FFF3E0; color: var(--naranja); }
 .panel-root .pago-pagado { background: #E8F5E9; color: var(--verde); }
@@ -354,3 +354,53 @@
 .panel-root .mesa-abierta-right { display: flex; align-items: center; gap: 10px; }
 .panel-root .mesa-abierta-total { font-family: var(--font-heading); font-weight: 700; font-size: 18px; }
 .panel-root .mesa-cobro { width: 100%; margin-top: 8px; border-top: 1px dashed var(--borde); padding-top: 10px; }
+
+/* ===== Bloque "Por verificar" (admin) ===== */
+.panel-root .verificar-block {
+  background: #FFF7E0; border: 1px solid #FFE0A3; border-left: 5px solid var(--naranja);
+  border-radius: 12px; padding: 14px; margin-bottom: 14px;
+}
+.panel-root .verificar-title { font-weight: 800; color: var(--naranja); margin-bottom: 10px; font-family: var(--font-heading); font-size: 1.1rem; }
+.panel-root .verificar-item {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+  background: #fff; border-radius: 10px; padding: 10px 12px; margin-bottom: 8px;
+}
+.panel-root .verificar-main { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-weight: 600; }
+.panel-root .verificar-monto { font-family: var(--font-heading); font-weight: 700; }
+.panel-root .verificar-ref { font-size: 12px; color: var(--marron-medio); margin-top: 2px; }
+
+/* ===== Texto brillante (ReactBits style) ===== */
+.panel-root .shiny-text {
+  background: linear-gradient(90deg, #3E2723 0%, #3E2723 35%, #FDB913 50%, #3E2723 65%, #3E2723 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: panel-shine linear infinite;
+}
+@keyframes panel-shine {
+  from { background-position: 200% center; }
+  to { background-position: -200% center; }
+}
+
+/* ===== Grafico de barras (propio) ===== */
+.panel-root .barchart { display: flex; align-items: flex-end; gap: 10px; padding: 8px 4px 0; }
+.panel-root .barchart-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; min-width: 0; }
+.panel-root .barchart-value { font-size: 12px; font-weight: 800; color: var(--marron-oscuro); margin-bottom: 4px; }
+.panel-root .barchart-track { flex: 1; width: 100%; max-width: 46px; display: flex; align-items: flex-end; }
+.panel-root .barchart-bar {
+  width: 100%; border-radius: 8px 8px 0 0;
+  background: linear-gradient(180deg, #FDB913, #F39C12);
+  box-shadow: 0 4px 12px rgba(243, 156, 18, 0.35);
+  transform-origin: bottom;
+  animation: barGrow 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+@keyframes barGrow { from { transform: scaleY(0); opacity: 0.3; } to { transform: scaleY(1); opacity: 1; } }
+.panel-root .barchart-label { font-size: 11px; color: var(--marron-medio); margin-top: 6px; white-space: nowrap; }
+
+/* ===== Medidor circular (propio) ===== */
+.panel-root .gauge { display: inline-block; }
+.panel-root .gauge-track { stroke: #F1E9DC; }
+.panel-root .gauge-fill { transition: stroke-dasharray 1s ease; }
+.panel-root .gauge-text { font-family: var(--font-heading); font-size: 30px; font-weight: 800; fill: var(--marron-oscuro); }
+.panel-root .gauge-sub { font-family: var(--font-body); font-size: 12px; fill: var(--marron-medio); }

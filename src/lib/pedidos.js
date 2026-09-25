@@ -249,3 +249,10 @@ export async function eliminarPlato(platoId) {
   const { error } = await supabase.rpc('eliminar_plato', { p_plato_id: platoId })
   if (error) throw error
 }
+
+// ===== Monitoreo de uso (admin) =====
+export async function obtenerMonitoreo() {
+  const { data, error } = await supabase.rpc('monitoreo')
+  if (error) throw error
+  return data
+}

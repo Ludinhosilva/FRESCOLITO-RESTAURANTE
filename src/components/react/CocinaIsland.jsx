@@ -96,8 +96,12 @@ function CocinaContenido() {
   }
 
   const handleStock = async (platoId, valor) => {
-    const stock = Math.max(0, Number(valor) || 0)
-    await actualizarStock(platoId, stock, stock > 0)
+    const n = Number(valor)
+    if (isNaN(n) || n < 0 || n > 99) {
+      mostrarToast('El stock debe estar entre 0 y 99')
+      return
+    }
+    await actualizarStock(platoId, n, n > 0)
     queryClient.invalidateQueries({ queryKey: ['platos-cocina'] })
     mostrarToast('Stock actualizado')
   }
@@ -239,6 +243,8 @@ function CocinaContenido() {
                         className="stock-input"
                         type="number"
                         min="0"
+                        max="99"
+                        step="1"
                         value={p.stock}
                         onChange={(e) => handleStock(p.id, e.target.value)}
                       />

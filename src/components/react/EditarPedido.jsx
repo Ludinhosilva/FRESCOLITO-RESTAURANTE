@@ -50,7 +50,8 @@ export default function EditarPedido({ pedido, platos, onClose, onSaved }) {
   const totalItems = useMemo(() => items.length, [items])
 
   const setCantidad = (platoId, cantidad) => {
-    setItems((prev) => prev.map((i) => (i.plato_id === platoId ? { ...i, cantidad } : i)))
+    const c = Math.max(1, Math.min(99, cantidad))
+    setItems((prev) => prev.map((i) => (i.plato_id === platoId ? { ...i, cantidad: c } : i)))
   }
   const quitar = (platoId) => setItems((prev) => prev.filter((i) => i.plato_id !== platoId))
   const agregar = () => {
@@ -64,7 +65,12 @@ export default function EditarPedido({ pedido, platos, onClose, onSaved }) {
   const guardar = async () => {
     setErr('')
     if (items.length === 0) return setErr('El pedido debe tener al menos un plato')
-    if (!items.every((i) => i.cantidad > 0)) return setErr('Hay cantidades inválidas')
+    if (!items.every((i) => i.cantidad > 0 && i.cantidad <= 99)) return setErr('Las cantidades deben estar entre 1 y 99')
+    const aj = Number(ajuste) || 0
+    if (aj < -999 || aj > 999) return setErr('El ajuste debe estar entre -999 y 999')
+    if (montoCobrado !== '' && (Number(montoCobrado) < 0 || Number(montoCobrado) > 9999)) {
+      return setErr('El monto cobrado debe estar entre 0 y 9999')
+    }
     setGuardando(true)
     try {
       await editarPedido(pedido.id, {
@@ -104,7 +110,7 @@ export default function EditarPedido({ pedido, platos, onClose, onSaved }) {
               <div className="cant-controller">
                 <button className="cant-btn" onClick={() => setCantidad(i.plato_id, i.cantidad - 1)}>−</button>
                 <span className="cli-item-cant">{i.cantidad}</span>
-                <button className="cant-btn" onClick={() => setCantidad(i.plato_id, i.cantidad + 1)}>+</button>
+                <button className="cant-btn" onClick={() => setCantidad(i.plato_id, i.cantidad + 1)} disabled={i.cantidad >= 99}>+</button>
                 <button className="cli-item-quitar" onClick={() => quitar(i.plato_id)}>✕</button>
               </div>
             </div>
@@ -146,11 +152,11 @@ export default function EditarPedido({ pedido, platos, onClose, onSaved }) {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
             <div className="field">
               <label>Ajuste / descuento (S/, usa − para descontar)</label>
-              <input type="number" step="0.10" value={ajuste} onChange={(e) => setAjuste(e.target.value)} />
+              <input type="number" min="-999" max="999" step="0.10" inputMode="decimal" value={ajuste} onChange={(e) => setAjuste(e.target.value)} />
             </div>
             <div className="field">
               <label>Monto cobrado (S/)</label>
-              <input type="number" step="0.10" value={montoCobrado} onChange={(e) => setMontoCobrado(e.target.value)} placeholder="—" />
+              <input type="number" min="0" max="9999" step="0.10" inputMode="decimal" value={montoCobrado} onChange={(e) => setMontoCobrado(e.target.value)} placeholder="—" />
             </div>
           </div>
           <div className="field">

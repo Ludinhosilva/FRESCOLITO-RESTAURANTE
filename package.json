@@ -11,6 +11,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "check": "tsc --noEmit",
+    "types": "node scripts/gen-types.mjs",
     "optimize:images": "node scripts/optimize-images.js",
     "qr": "node scripts/generate-qr.js"
   },
@@ -41,6 +43,7 @@
     "jsdom": "^29.1.1",
     "qrcode": "^1.5.4",
     "sharp": "^0.35.1",
+    "typescript": "^7.0.2",
     "vite": "^8.0.12",
     "vitest": "^4.1.8"
   }

@@ -161,8 +161,10 @@ function MeseraContenido() {
   }
 
   const confirmarCobro = async (p) => {
+    const monto = Number(cobroMonto)
+    if (isNaN(monto) || monto < 0 || monto > 9999) return setMensaje('El monto debe estar entre 0 y 9999')
     try {
-      await cobrarMesa(p.id, cobroMetodo, Number(cobroMonto) || Number(p.total))
+      await cobrarMesa(p.id, cobroMetodo, monto || Number(p.total))
       queryClient.invalidateQueries({ queryKey: ['pedidos-hoy'] })
       setCobrando(null)
       setMensaje('Cobro registrado ✓')
@@ -328,7 +330,7 @@ function MeseraContenido() {
                       </div>
                       <div className="field" style={{ marginTop: 8 }}>
                         <label>Monto a cobrar</label>
-                        <input type="number" step="0.10" value={cobroMonto} onChange={(e) => setCobroMonto(e.target.value)} />
+                        <input type="number" min="0" max="9999" step="0.10" inputMode="decimal" value={cobroMonto} onChange={(e) => setCobroMonto(e.target.value)} />
                       </div>
                       <div style={{ display: 'flex', gap: 8 }}>
                         <button className="btn btn-sm btn-verde" onClick={() => confirmarCobro(p)}>Confirmar cobro</button>

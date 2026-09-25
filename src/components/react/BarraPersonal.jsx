@@ -1,4 +1,5 @@
 import { useAuth } from '../../context/AuthContext.jsx'
+import ShinyText from './bits/ShinyText.jsx'
 
 const NAV = {
   admin: [
@@ -29,7 +30,7 @@ export default function BarraPersonal({ children }) {
       <header className="topbar">
         <a className="topbar-brand" href="/">
           <img className="logo-dot" src="/imagenes/frescolito.jpeg" alt="Frescolito" />
-          <span className="topbar-title">Frescolito</span>
+          <ShinyText className="topbar-title">Frescolito</ShinyText>
         </a>
         <div className="topbar-right">
           <span className="badge-rol">{rol}</span>

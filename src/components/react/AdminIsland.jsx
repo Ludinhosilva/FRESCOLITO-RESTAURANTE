@@ -2,7 +2,9 @@ import Proveedores from './Proveedores.jsx'
 import GuardPersonal from './GuardPersonal.jsx'
 import BarraPersonal from './BarraPersonal.jsx'
 import EditarPedido from './EditarPedido.jsx'
-import { useState } from 'react'
+
+const UsoPanel = lazy(() => import('./UsoPanel.jsx'))
+import { useState, lazy, Suspense } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   actualizarConfig,
@@ -94,6 +96,7 @@ function AdminContenido() {
 
   const pm = ventas?.por_metodo || {}
   const totalDigital = (pm.yape ?? 0) + (pm.plin ?? 0)
+  const porVerificar = pedidos.filter((p) => p.estado_pago === 'por_verificar' && p.estado !== 'cancelado')
 
   const handleVerificar = async (pedidoId, estado) => {
     try {
@@ -116,9 +119,10 @@ function AdminContenido() {
   }
 
   const TABS = [
-    { id: 'dia', label: 'Día' },
+    { id: 'dia', label: 'Resumen' },
     { id: 'pedidos', label: 'Pedidos' },
     { id: 'mes', label: 'Mes' },
+    { id: 'uso', label: 'Uso' },
     { id: 'platos', label: 'Platos' },
     { id: 'inventario', label: 'Inventario' },
     { id: 'horario', label: 'Horario' },
@@ -208,6 +212,25 @@ function AdminContenido() {
             <label>Fecha</label>
             <input type="date" value={fecha} onChange={(e) => setFecha(e.target.value)} />
           </div>
+
+          {porVerificar.length > 0 && (
+            <div className="verificar-block">
+              <div className="verificar-title">Pagos por verificar ({porVerificar.length})</div>
+              {porVerificar.map((p) => (
+                <div key={p.id} className="verificar-item">
+                  <div>
+                    <div className="verificar-main">
+                      <strong>#{p.numero_orden}</strong>
+                      <span>{p.cliente_nombre || (p.mesas ? `Mesa ${p.mesas.numero}` : '—')}</span>
+                      <span className="verificar-monto">S/ {Number(p.total).toFixed(2)}</span>
+                    </div>
+                    <div className="verificar-ref">{p.metodo_pago} · Op. {p.referencia_pago || '—'}</div>
+                  </div>
+                  <button className="btn btn-sm btn-verde" onClick={() => handleVerificar(p.id, 'pagado')}>Confirmar pago</button>
+                </div>
+              ))}
+            </div>
+          )}
 
           {pedidos.length === 0 && <div className="card centered">No hay pedidos</div>}
 
@@ -343,6 +366,12 @@ function AdminContenido() {
         </div>
       )}
 
+      {tab === 'uso' && (
+        <Suspense fallback={<div className="card centered">Cargando monitoreo...</div>}>
+          <UsoPanel />
+        </Suspense>
+      )}
+
       {tab === 'platos' && <PlatosEditor />}
 
       {tab === 'inventario' && (
@@ -455,11 +484,14 @@ function PlatosEditor() {
 
   const guardar = async () => {
     if (!form.nombre || form.precio === '') return setToast('Nombre y precio son obligatorios')
+    const precio = Number(form.precio)
     const stock = Number(form.stock) || 0
+    if (isNaN(precio) || precio < 0 || precio > 999.99) return setToast('El precio debe estar entre 0 y 999.99')
+    if (isNaN(stock) || stock < 0 || stock > 99) return setToast('El stock debe estar entre 0 y 99')
     const payload = {
       nombre: form.nombre.trim(),
       categoria: form.categoria,
-      precio: Number(form.precio) || 0,
+      precio,
       stock,
       descripcion: form.descripcion.trim() || null,
       imagen: form.imagen || null,
@@ -513,8 +545,8 @@ function PlatosEditor() {
           </select>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-          <div className="field"><label>Precio (S/)</label><input type="number" step="0.10" value={form.precio} onChange={(e) => set('precio', e.target.value)} /></div>
-          <div className="field"><label>Stock</label><input type="number" value={form.stock} onChange={(e) => set('stock', e.target.value)} /></div>
+          <div className="field"><label>Precio (S/)</label><input type="number" min="0" max="999.99" step="0.10" inputMode="decimal" value={form.precio} onChange={(e) => set('precio', e.target.value)} /></div>
+          <div className="field"><label>Stock</label><input type="number" min="0" max="99" step="1" inputMode="numeric" value={form.stock} onChange={(e) => set('stock', e.target.value)} /></div>
         </div>
         <div className="field"><label>Descripción</label><textarea rows={2} value={form.descripcion} onChange={(e) => set('descripcion', e.target.value)} /></div>
         <div className="field"><label>Foto</label><input type="file" accept="image/*" onChange={subir} />{subiendo && <span style={{ marginLeft: 8, fontSize: 12 }}>subiendo...</span>}</div>

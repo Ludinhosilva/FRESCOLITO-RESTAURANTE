@@ -56,8 +56,10 @@ function RepartidorContenido() {
   }
 
   const confirmarCobro = async (pedidoId) => {
+    const m = Number(monto)
+    if (isNaN(m) || m < 0 || m > 9999) return mostrarToast('El monto debe estar entre 0 y 9999')
     try {
-      await registrarCobroPedido(pedidoId, Number(monto) || 0, metodo)
+      await registrarCobroPedido(pedidoId, m, metodo)
       await actualizarEstadoPedido(pedidoId, 'entregado')
       queryClient.invalidateQueries({ queryKey: ['pedidos-reparto'] })
       setCobrando(null)
@@ -116,7 +118,7 @@ function RepartidorContenido() {
               <div className="cobro-box">
                 <div className="field">
                   <label>Monto cobrado</label>
-                  <input type="number" step="0.10" value={monto} onChange={(e) => setMonto(e.target.value)} />
+                  <input type="number" min="0" max="9999" step="0.10" inputMode="decimal" value={monto} onChange={(e) => setMonto(e.target.value)} />
                 </div>
                 <div className="pago-grid">
                   {['efectivo', 'yape', 'plin'].map((m) => (
