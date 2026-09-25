@@ -115,7 +115,7 @@ export default function ContactForm() {
           gap: var(--space-xl);
         }
         .contact-form { max-width: 500px; }
-        .contact-form-title { margin-bottom: var(--space-lg); }
+        .contact-form-title { font-family: var(--font-script); font-weight: 400; margin-bottom: var(--space-lg); }
         .contact-success {
           background: #d4edda; color: #155724;
           padding: var(--space-md); border-radius: var(--radius);
@@ -138,7 +138,7 @@ export default function ContactForm() {
           color: #dc3545; font-size: 0.85rem;
           margin-top: 0.25rem; display: block;
         }
-        .contact-info h2 { margin-bottom: var(--space-lg); }
+        .contact-info h2 { font-family: var(--font-script); font-weight: 400; margin-bottom: var(--space-lg); }
         .info-block { margin-bottom: var(--space-md); }
         .info-block h3 { font-size: 1rem; color: var(--color-mid); }
         .info-block a { color: var(--color-primary-hover); font-weight: 700; }
