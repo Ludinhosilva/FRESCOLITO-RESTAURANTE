@@ -63,32 +63,7 @@ export async function consultarPedidoCliente(codigo) {
   return data as unknown as PedidoCliente | null
 }
 
-/** true si el horario incluye un dia/hora dados (dow 0=Dom, hhmm en minutos). */
-export function horarioIncluye(horario, dow, hhmm) {
-  if (!horario) return true
-  const dias = horario.dias || []
-  const [ah, am] = (horario.apertura || '00:00').split(':').map(Number)
-  const [ch, cm] = (horario.cierre || '23:59').split(':').map(Number)
-  const apertura = ah * 60 + am
-  const cierre = ch * 60 + cm
-
-  // Abierto 24 horas los dias seleccionados.
-  if (cierre === apertura) return dias.includes(dow)
-
-  // Horario normal: abre y cierra el mismo dia.
-  if (cierre > apertura) return dias.includes(dow) && hhmm >= apertura && hhmm <= cierre
-
-  // Cruza medianoche: el turno empieza hoy y termina de madrugada al dia siguiente.
-  if (hhmm >= apertura) return dias.includes(dow)
-  if (hhmm <= cierre) return dias.includes((dow + 6) % 7)
-  return false
-}
-
-/** true si el horario configurado incluye el momento actual (hora Lima). */
-export function estaAbierto(horario, ahora = new Date()) {
-  const lima = new Date(ahora.toLocaleString('en-US', { timeZone: 'America/Lima' }))
-  return horarioIncluye(horario, lima.getDay(), lima.getHours() * 60 + lima.getMinutes())
-}
+export { horarioIncluye, estaAbierto } from './horario'
 
 /** Guarda el codigo del ultimo pedido del cliente (para volver a verlo). */
 const ULTIMO_KEY = 'frescolito_ultimo_pedido'

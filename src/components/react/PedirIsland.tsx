@@ -6,12 +6,12 @@ import {
   adjuntarReferencia,
   consultarPedidoCliente,
   crearPedidoCliente,
-  estaAbierto,
   guardarUltimoPedido,
   listarPlatosPublico,
   obtenerConfig,
   obtenerUltimoPedido,
 } from '../../lib/pedidosCliente.ts'
+import { estaAbierto, horarioConDias } from '../../lib/horario.ts'
 
 const ESTADOS = [
   { key: 'pendiente', label: 'Recibido', icon: '📥' },
@@ -43,7 +43,7 @@ function Contenido() {
   const { data: platos = [] } = useQuery({ queryKey: ['platos-publico'], queryFn: listarPlatosPublico })
   const { data: config } = useQuery({ queryKey: ['config-publica'], queryFn: obtenerConfig })
   const tarifas = config?.tarifas || { delivery_por_plato: 2, envase_por_plato: 1 }
-  const abierto = estaAbierto(config?.horario)
+  const abierto = config?.horario ? estaAbierto(horarioConDias(config.horario.dias)) : true
 
   const { data: pedido } = useQuery({
     queryKey: ['pedido-cliente', codigo],

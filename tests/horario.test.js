@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { horarioIncluye } from '../src/lib/pedidosCliente.ts'
+import { horarioIncluye, horarioConDias, formatearHoras, etiquetaDias } from '../src/lib/horario.ts'
 
 const horario = { dias: [3, 4], apertura: '11:30', cierre: '15:20' }
 
@@ -71,5 +71,37 @@ describe('horarioIncluye - 24 horas', () => {
 
   it('false en un dia no habilitado', () => {
     expect(horarioIncluye(siempre, 0, 12 * 60)).toBe(false)
+  })
+})
+
+describe('horario - horas fijas y etiquetas', () => {
+  it('formatearHoras devuelve 11:00 AM – 3:30 PM', () => {
+    expect(formatearHoras()).toBe('11:00 AM – 3:30 PM')
+  })
+
+  it('horarioConDias usa las horas fijas 11:00-15:30', () => {
+    expect(horarioConDias([1, 2, 3])).toEqual({ dias: [1, 2, 3], apertura: '11:00', cierre: '15:30' })
+  })
+
+  it('el horario fijo esta abierto a las 13:00 y cerrado a las 16:00', () => {
+    const h = horarioConDias([1, 2, 3, 4, 5])
+    expect(horarioIncluye(h, 3, 13 * 60)).toBe(true)
+    expect(horarioIncluye(h, 3, 16 * 60)).toBe(false)
+  })
+
+  it('etiquetaDias: Lunes a Viernes', () => {
+    expect(etiquetaDias([1, 2, 3, 4, 5])).toBe('Lunes a Viernes')
+  })
+
+  it('etiquetaDias: todos los dias', () => {
+    expect(etiquetaDias([0, 1, 2, 3, 4, 5, 6])).toBe('Todos los días')
+  })
+
+  it('etiquetaDias: dias sueltos', () => {
+    expect(etiquetaDias([0, 4, 6])).toBe('Dom, Jue, Sáb')
+  })
+
+  it('etiquetaDias: vacio', () => {
+    expect(etiquetaDias([])).toBe('Cerrado')
   })
 })

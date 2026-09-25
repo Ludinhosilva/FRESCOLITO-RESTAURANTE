@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useHorario } from '../../hooks/useHorario.ts'
 
 const initialForm = { name: '', email: '', phone: '', message: '' }
 
@@ -14,6 +15,7 @@ function validate(form) {
 }
 
 export default function ContactForm() {
+  const { diasLabel, horas } = useHorario()
   const [form, setForm] = useState(initialForm)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [submitted, setSubmitted] = useState(false)
@@ -88,7 +90,7 @@ export default function ContactForm() {
               <p><a href="https://wa.me/51927367844" target="_blank">+51 927 367 844</a></p>
             </div>
             <div className="info-block">
-              <h3>Horarios</h3><p>Lunes a Viernes: 11:30 AM - 3:15 PM</p>
+              <h3>Horarios</h3><p>{diasLabel}: {horas}</p>
             </div>
             <div className="contact-map">
               <iframe

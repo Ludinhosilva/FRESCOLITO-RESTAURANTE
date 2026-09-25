@@ -1,7 +1,7 @@
 ---
 import Navbar from '../components/Navbar.astro'
 import Footer from '../components/Footer.astro'
-import BusinessHours from '../components/BusinessHours.astro'
+import HorarioBadge from '../components/react/HorarioBadge.tsx'
 import WhatsAppFAB from '../components/WhatsAppFAB.astro'
 import PedirIsland from '../components/react/PedirIsland.tsx'
 import '../styles/global.css'
@@ -34,11 +34,11 @@ const { title = 'FRESCOLITO RESTAURANTE', description = 'Cocina regional peruana
       {
         "@context": "https://schema.org",
         "@type": "Restaurant",
-        "@id": "https://frescolito-restaurante.vercel.app",
+        "@id": "https://frescolito.com",
         "name": "FRESCOLITO RESTAURANTE",
         "description": "Cocina regional peruana en Iquitos. Ceviches, chicharrones, arroz con mariscos y más.",
         "image": "/imagenes/frescolito.jpeg",
-        "url": "https://frescolito-restaurante.vercel.app",
+        "url": "https://frescolito.com",
         "telephone": "+51916207362",
         "address": {
           "@type": "PostalAddress",
@@ -53,12 +53,12 @@ const { title = 'FRESCOLITO RESTAURANTE', description = 'Cocina regional peruana
         "openingHoursSpecification": {
           "@type": "OpeningHoursSpecification",
           "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
-          "opens": "11:30",
-          "closes": "15:15"
+          "opens": "11:00",
+          "closes": "15:30"
         },
         "servesCuisine": "Peruvian",
         "priceRange": "S/10 - S/40",
-        "menu": "https://frescolito-restaurante.vercel.app/menu"
+        "menu": "https://frescolito.com/menu"
       }
     </script>
     <title>{title}</title>
@@ -67,7 +67,7 @@ const { title = 'FRESCOLITO RESTAURANTE', description = 'Cocina regional peruana
     <Preloader effect={effect} />
     <Navbar />
     <slot />
-    <BusinessHours />
+    <HorarioBadge client:load />
     <WhatsAppFAB />
     <PedirIsland client:idle />
     <Footer />
