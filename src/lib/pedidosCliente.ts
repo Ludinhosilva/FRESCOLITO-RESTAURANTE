@@ -67,10 +67,21 @@ export async function consultarPedidoCliente(codigo) {
 export function horarioIncluye(horario, dow, hhmm) {
   if (!horario) return true
   const dias = horario.dias || []
-  if (!dias.includes(dow)) return false
   const [ah, am] = (horario.apertura || '00:00').split(':').map(Number)
   const [ch, cm] = (horario.cierre || '23:59').split(':').map(Number)
-  return hhmm >= ah * 60 + am && hhmm <= ch * 60 + cm
+  const apertura = ah * 60 + am
+  const cierre = ch * 60 + cm
+
+  // Abierto 24 horas los dias seleccionados.
+  if (cierre === apertura) return dias.includes(dow)
+
+  // Horario normal: abre y cierra el mismo dia.
+  if (cierre > apertura) return dias.includes(dow) && hhmm >= apertura && hhmm <= cierre
+
+  // Cruza medianoche: el turno empieza hoy y termina de madrugada al dia siguiente.
+  if (hhmm >= apertura) return dias.includes(dow)
+  if (hhmm <= cierre) return dias.includes((dow + 6) % 7)
+  return false
 }
 
 /** true si el horario configurado incluye el momento actual (hora Lima). */

@@ -23,6 +23,7 @@ import {
   ventasRango,
   verificarPagoPedido,
 } from '../../lib/pedidos.ts'
+import { estaAbierto } from '../../lib/pedidosCliente.ts'
 import { useRealtime } from '../../hooks/useRealtime.ts'
 
 const DIAS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
@@ -413,16 +414,26 @@ function AdminContenido() {
 }
 
 function HorarioEditor({ config, onSaved }) {
-  const h = config?.horario || { dias: [3, 4], apertura: '11:30', cierre: '15:20' }
+  const h = config?.horario || { dias: [1, 2, 3, 4, 5], apertura: '11:30', cierre: '15:15' }
   const [dias, setDias] = useState(h.dias || [])
   const [apertura, setApertura] = useState(h.apertura || '11:30')
-  const [cierre, setCierre] = useState(h.cierre || '15:20')
+  const [cierre, setCierre] = useState(h.cierre || '15:15')
   const [guardando, setGuardando] = useState(false)
+  const [error, setError] = useState('')
 
   const toggleDia = (i) => setDias((d) => (d.includes(i) ? d.filter((x) => x !== i) : [...d, i].sort()))
 
+  const aMin = (t) => {
+    const [hh, mm] = (t || '0:0').split(':').map(Number)
+    return hh * 60 + mm
+  }
+  const cruzaMedianoche = aMin(cierre) < aMin(apertura)
+  const es24h = aMin(cierre) === aMin(apertura)
+  const abiertoAhora = estaAbierto({ dias, apertura, cierre })
+
   const guardar = async () => {
-    if (dias.length === 0) return
+    if (dias.length === 0) { setError('Selecciona al menos un día.'); return }
+    setError('')
     setGuardando(true)
     try {
       await actualizarConfig('horario', { dias, apertura, cierre })
@@ -449,6 +460,15 @@ function HorarioEditor({ config, onSaved }) {
         <div className="field"><label>Apertura</label><input type="time" value={apertura} onChange={(e) => setApertura(e.target.value)} /></div>
         <div className="field"><label>Cierre</label><input type="time" value={cierre} onChange={(e) => setCierre(e.target.value)} /></div>
       </div>
+
+      {es24h && <p style={{ fontSize: 12, color: '#2E7D32', marginTop: 8 }}>Abierto 24 horas los días seleccionados.</p>}
+      {cruzaMedianoche && !es24h && <p style={{ fontSize: 12, color: '#EF6C00', marginTop: 8 }}>Cierra de madrugada: el cierre corresponde al día siguiente (ej. abre 11:30 y cierra 04:15 del día siguiente).</p>}
+      {error && <p style={{ fontSize: 12, color: '#C62828', marginTop: 8 }}>{error}</p>}
+
+      <p style={{ fontSize: 12, color: '#8D6E63', marginTop: 8 }}>
+        Ahora mismo: <strong style={{ color: abiertoAhora ? '#2E7D32' : '#C62828' }}>{abiertoAhora ? 'Abierto' : 'Cerrado'}</strong>
+      </p>
+
       <button className="btn btn-block" onClick={guardar} disabled={guardando}>
         {guardando ? 'Guardando...' : 'Guardar horario'}
       </button>
