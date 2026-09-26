@@ -109,34 +109,6 @@ export async function actualizarEstadoItem(itemId, estado) {
   if (error) throw error
 }
 
-/** Crea una reserva. */
-export async function crearReserva({ nombre, telefono, mesaId, fecha, hora, personas }) {
-  const { data, error } = await supabase
-    .from('reservas')
-    .insert({
-      nombre_cliente: nombre,
-      telefono: telefono || null,
-      mesa_id: mesaId,
-      fecha,
-      hora,
-      personas,
-    })
-    .select()
-    .single()
-  if (error) throw error
-  return data
-}
-
-/** Lista reservas (admin). */
-export async function listarReservas() {
-  const { data, error } = await supabase
-    .from('reservas')
-    .select('*')
-    .order('fecha', { ascending: true })
-    .order('hora', { ascending: true })
-  if (error) throw error
-  return data
-}
 // ===== Pedidos de clientes: gestion =====
 
 /** Verifica/actualiza el pago de un pedido (solo admin). */

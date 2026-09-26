@@ -27,6 +27,7 @@ const year = new Date().getFullYear()
       <h4 class="footer-title">Contacto</h4>
       <p class="footer-text">
         Iquitos, Perú<br/>
+        <a href="mailto:contacto@frescolito.com" class="footer-mail">contacto@frescolito.com</a><br/>
         <a href="https://wa.me/51916207362" target="_blank" class="footer-wa">+51 916 207 362</a>
       </p>
     </div>
@@ -46,7 +47,12 @@ const year = new Date().getFullYear()
     </div>
   </div>
   <div class="footer-bottom">
-    &copy; {year} FRESCOLITO RESTAURANTE. Todos los derechos reservados.
+    <div class="footer-legal">
+      <a href="/politica-de-privacidad">Política de privacidad</a>
+      <span>·</span>
+      <a href="/libro-de-reclamaciones">Libro de Reclamaciones</a>
+    </div>
+    <p>&copy; {year} FRESCOLITO RESTAURANTE. Todos los derechos reservados.</p>
     <a href="/personal" class="footer-login">Acceso personal</a>
   </div>
 </footer>
@@ -72,6 +78,15 @@ const year = new Date().getFullYear()
   .footer-links a { color: var(--color-light); transition: color 0.3s; }
   .footer-links a:hover { color: var(--color-primary); }
   .footer-wa { color: var(--color-primary) !important; font-weight: 700; }
+  .footer-mail { color: var(--color-light); transition: color 0.3s; }
+  .footer-mail:hover { color: var(--color-primary); }
+  .footer-legal {
+    display: flex; gap: 0.5rem; justify-content: center; align-items: center;
+    margin-bottom: 0.6rem; flex-wrap: wrap;
+  }
+  .footer-legal a { color: var(--color-light); text-decoration: underline; }
+  .footer-legal a:hover { color: var(--color-primary); }
+  .footer-legal span { color: var(--color-mid); }
   .footer-social {
     display: flex; gap: 0.75rem; margin-top: 0.5rem;
   }

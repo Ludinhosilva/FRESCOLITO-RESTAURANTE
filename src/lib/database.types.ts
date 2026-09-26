@@ -1,5 +1,5 @@
 // Tipos generados desde Supabase (no editar a mano).
-// Regenerar: ver README.
+// Regenerar con: npm run types
 
 export type Json =
   | string
@@ -322,6 +322,45 @@ export type Database = {
           precio?: number
           stock?: number
           stock_disponible?: boolean
+        }
+        Relationships: []
+      }
+      reclamaciones: {
+        Row: {
+          creado_en: string
+          detalle: string
+          dni: string
+          domicilio: string | null
+          email: string
+          id: number
+          nombre: string
+          pedido: string | null
+          telefono: string | null
+          tipo: string
+        }
+        Insert: {
+          creado_en?: string
+          detalle: string
+          dni: string
+          domicilio?: string | null
+          email: string
+          id?: never
+          nombre: string
+          pedido?: string | null
+          telefono?: string | null
+          tipo: string
+        }
+        Update: {
+          creado_en?: string
+          detalle?: string
+          dni?: string
+          domicilio?: string | null
+          email?: string
+          id?: never
+          nombre?: string
+          pedido?: string | null
+          telefono?: string | null
+          tipo?: string
         }
         Relationships: []
       }

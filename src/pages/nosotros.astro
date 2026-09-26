@@ -1,90 +1,287 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
+import HorarioTexto from '../components/react/HorarioTexto.tsx'
+
+const historia = [
+  { year: '2014', texto: 'Nace Frescolito en el corazón de Iquitos, con las recetas de casa y el sueño de una familia por compartir lo mejor de nuestra cocina.' },
+  { year: '2016', texto: 'Ampliamos la carta y el salón. La familia de clientes creció y Frescolito se volvió un punto de encuentro en la ciudad.' },
+  { year: '2019', texto: 'Renovamos la cocina y sumamos nuevos platos regionales, siempre con insumos frescos de la Amazonía.' },
+  { year: '2022', texto: 'Llegamos a más hogares de Iquitos con nuestro servicio de delivery, llevando la sazón hasta la puerta de tu casa.' },
+  { year: '2024', texto: 'Habilitamos el pedido en línea y modernizamos el servicio para atenderte más rápido y mejor.' },
+  { year: 'Hoy', texto: 'Seguimos sirviendo con la misma pasión del primer día, cuidando cada detalle para que tu experiencia sea inolvidable.' },
+]
+
+const marquee = ['SABORES DE LA AMAZONÍA', 'Frescura de la selva en tu mesa']
 ---
 
-<BaseLayout title="Nosotros | FRESCOLITO RESTAURANTE" description="Conoce la historia de FRESCOLITO, cocina regional peruana en Iquitos." effect="fade">
+<BaseLayout
+  title="Nosotros | FRESCOLITO RESTAURANTE"
+  description="Conoce la historia de Frescolito, cocina regional peruana en Iquitos. Más de una década sirviendo lo mejor de la Amazonía."
+  effect="fade"
+>
   <main style="padding-top:70px">
-    <section class="abt">
-      <div class="container">
-        <div class="abt-grid">
-          <div class="abt-img">
-            <img src="/imagenes/galeria/EQUIPO.webp" alt="Equipo FRESCOLITO" loading="eager" />
-          </div>
-          <div class="abt-text">
-            <span class="abt-label">Sobre FRESCOLITO</span>
-            <h2>Nuestra Historia</h2>
-            <p>FRESCOLITO nació en Iquitos, en el corazón de la Amazonía peruana, con la visión de compartir los sabores auténticos de nuestra región. Cada plato es una celebración de la riqueza gastronómica de la selva peruana.</p>
-            <p>Utilizamos ingredientes frescos y recetas tradicionales transmitidas de generación en generación, combinando técnicas clásicas con un toque moderno.</p>
-          </div>
+    <!-- 1. Intro / legado -->
+    <section class="nst-intro">
+      <div class="container nst-intro-grid">
+        <div class="nst-intro-text" data-reveal>
+          <span class="nst-label">Desde 2014</span>
+          <h1 class="nst-title">Nuestro legado</h1>
+          <p>
+            Desde 2014, Frescolito nació en el corazón de Iquitos con una idea sencilla: compartir lo mejor
+            de la cocina amazónica y marina, preparada al momento y con ingredientes frescos de la región.
+            Más de una década después, seguimos sirviendo con la misma sazón, el mismo cariño y el mismo
+            compromiso de siempre.
+          </p>
+        </div>
+        <div class="nst-intro-img" data-reveal-scale>
+          <img class="nst-parallax" src="/imagenes/galeria/MesaRepresentativa.webp" alt="Frescolito" />
         </div>
       </div>
     </section>
 
-    <section class="abt abt-alt">
-      <div class="container">
-        <div class="abt-grid abt-grid-rev">
-          <div class="abt-text">
-            <span class="abt-label">Nuestra trayectoria</span>
-            <h2>El comienzo de FRESCOLITO</h2>
-            <p>FRESCOLITO comenzó como un sueño familiar en Iquitos, con la misión de llevar los auténticos sabores amazónicos a cada mesa. Desde nuestros inicios, nos comprometimos a usar ingredientes frescos de la región y recetas tradicionales.</p>
-            <p>Hoy, seguimos sirviendo con la misma pasión y dedicación, ofreciendo una experiencia gastronómica única en la selva peruana.</p>
-          </div>
-          <div class="abt-img">
-            <img src="/imagenes/galeria/MesaRepresentativa.webp" alt="Ambiente FRESCOLITO" loading="lazy" />
-          </div>
+    <!-- 2. Propósito -->
+    <section class="nst-proposito">
+      <div class="container nst-grid">
+        <div class="nst-img" data-reveal-left>
+          <img class="nst-parallax" src="/imagenes/galeria/Cilindro.webp" alt="Cocina Frescolito" />
+        </div>
+        <div class="nst-text" data-reveal-right>
+          <span class="nst-label">Lo que nos mueve</span>
+          <h2 class="nst-h2">Nuestro propósito</h2>
+          <p>
+            Queremos ser un referente de la buena comida en la Amazonía peruana, manteniendo la calidad de
+            nuestros platos, un servicio cercano y un ambiente cálido donde cada visitante se sienta como en casa.
+          </p>
+          <p>
+            Cuidamos cada detalle, desde la selección de los insumos hasta la presentación de cada plato,
+            porque creemos que comer bien es una experiencia que se comparte.
+          </p>
         </div>
       </div>
     </section>
 
+    <!-- 3. Misión / Visión -->
+    <section class="nst-mv">
+      <div class="container nst-mv-grid">
+        <article class="nst-mv-card">
+          <h3>Misión</h3>
+          <p>
+            Ofrecer platos frescos y sabrosos de la cocina amazónica y marina, preparados al momento con
+            ingredientes de la región, brindando un servicio atento y una experiencia acogedora a cada cliente.
+          </p>
+        </article>
+        <article class="nst-mv-card">
+          <h3>Visión</h3>
+          <p>
+            Ser reconocidos como el restaurante favorito de Iquitos y un referente de la gastronomía amazónica
+            del Perú, destacados por nuestra sazón, nuestra calidad y el trato familiar que nos caracteriza.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 4. Marquee -->
+    <section class="nst-marquee" aria-hidden="true">
+      <div class="nst-marquee-track">
+        {[0, 1].map((k) => (
+          <div class="nst-marquee-group" key={k}>
+            {marquee.map((t, i) => (
+              <span class="nst-marquee-item" key={i}>
+                <span class="nst-marquee-text">{t}</span>
+                <span class="nst-marquee-dot"></span>
+              </span>
+            ))}
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- 5. Historia -->
+    <section class="nst-historia">
+      <div class="container">
+        <div class="nst-head" data-reveal>
+          <span class="nst-label">Nuestra trayectoria</span>
+          <h2 class="nst-h2">Nuestra historia</h2>
+        </div>
+        <div class="nst-timeline">
+          {historia.map((h) => (
+            <article class="nst-tl-item">
+              <span class="nst-year">{h.year}</span>
+              <p>{h.texto}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Visítanos -->
+    <section class="nst-visitanos">
+      <div class="container nst-visit-grid">
+        <div class="nst-visit-info" data-reveal-left>
+          <span class="nst-label">Te esperamos</span>
+          <h2 class="nst-h2">Visítanos</h2>
+          <p class="nst-visit-line"><strong>Iquitos, Perú</strong></p>
+          <p class="nst-visit-line">Horario: <HorarioTexto client:idle /></p>
+          <a href="https://wa.me/51916207362?text=Hola%20Frescolito%2C%20quisiera%20hacer%20un%20pedido" target="_blank" rel="noopener" class="btn btn-primary">
+            Pedir por WhatsApp
+          </a>
+        </div>
+        <div class="nst-visit-map" data-reveal-right>
+          <iframe
+            src="https://www.google.com/maps?q=-3.7621462,-73.2700371&z=16&output=embed"
+            width="100%"
+            height="100%"
+            style="border:0"
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Ubicación Frescolito Restaurante"
+          ></iframe>
+        </div>
+      </div>
+    </section>
   </main>
 </BaseLayout>
 
 <style>
-  .abt { padding: var(--space-xl) 0; }
-  .abt-alt { background: var(--color-light); }
-  .abt-label {
-    display: inline-block; font-size: 0.8rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 2px;
-    color: var(--color-primary-hover); margin-bottom: var(--space-sm);
+  /* ===== Base ===== */
+  .nst-label {
+    display: inline-block; font-family: var(--font-body);
+    font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.22em; color: var(--color-primary-hover);
+    margin-bottom: var(--space-sm);
   }
-  .abt-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
+  .nst-title {
+    font-family: var(--font-script); font-weight: 400;
+    font-size: clamp(2.75rem, 6vw, 4.5rem);
+    color: var(--color-dark); line-height: 1.05;
+    margin-bottom: var(--space-md);
+  }
+  .nst-h2 {
+    font-family: var(--font-script); font-weight: 400;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    color: var(--color-dark); line-height: 1.1;
+    margin-bottom: var(--space-md);
+  }
+
+  /* ===== 1. Intro ===== */
+  .nst-intro { padding: var(--space-xl) 0; }
+  .nst-intro-grid {
+    display: grid; grid-template-columns: 1fr 0.9fr;
     gap: var(--space-xl); align-items: center;
   }
-  .abt-grid-rev .abt-text { order: 1; }
-  .abt-grid-rev .abt-img { order: 2; }
-  .abt-text h2 { margin-bottom: var(--space-md); }
-  .abt-text h2 {
-    font-family: var(--font-script); font-weight: 400;
-    background: linear-gradient(90deg,
-      var(--color-dark) 0%, var(--color-dark) 20%,
-      var(--color-primary-hover) 50%, var(--color-dark) 80%
-    );
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: abt-shine 6s ease-in-out infinite;
+  .nst-intro-text p {
+    color: var(--color-mid); line-height: 1.9; font-size: 1.05rem;
   }
-  @keyframes abt-shine {
-    from { background-position: 200% center; }
-    to { background-position: -200% center; }
-  }
-  .abt-text p {
-    color: var(--color-mid); line-height: 1.8; margin-bottom: var(--space-md);
-  }
-  .abt-img {
+  .nst-intro-img {
     border-radius: var(--radius); overflow: hidden;
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-lg); aspect-ratio: 4 / 3; position: relative;
   }
-  .abt-img img {
-    width: 100%; display: block;
+  .nst-intro-img img { position: absolute; top: -8%; left: 0; width: 100%; height: 116%; object-fit: cover; }
+
+  /* ===== 2. Propósito ===== */
+  .nst-proposito { padding: var(--space-xl) 0; background: #FBF6EE; }
+  .nst-grid {
+    display: grid; grid-template-columns: 0.9fr 1.1fr;
+    gap: var(--space-xl); align-items: center;
+  }
+  .nst-img {
+    border-radius: var(--radius); overflow: hidden;
+    box-shadow: var(--shadow-lg); aspect-ratio: 4 / 3; position: relative;
+  }
+  .nst-img img { position: absolute; top: -8%; left: 0; width: 100%; height: 116%; object-fit: cover; }
+  .nst-text p { color: var(--color-mid); line-height: 1.9; margin-bottom: var(--space-md); }
+
+  /* ===== 3. Misión / Visión ===== */
+  .nst-mv { padding: var(--space-xl) 0; }
+  .nst-mv-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg);
+  }
+  .nst-mv-card {
+    background: var(--color-bg); border: 1px solid var(--color-light);
+    border-radius: var(--radius); padding: var(--space-lg);
+    box-shadow: var(--shadow-sm); border-top: 4px solid var(--color-primary);
+  }
+  .nst-mv-card h3 {
+    font-family: var(--font-heading); font-weight: 700;
+    font-size: 1.5rem; color: var(--color-dark); margin-bottom: var(--space-sm);
+  }
+  .nst-mv-card p { color: var(--color-mid); line-height: 1.9; }
+
+  /* ===== 4. Marquee ===== */
+  .nst-marquee {
+    overflow: hidden; background: var(--color-dark);
+    padding: 1.1rem 0; border-top: 3px solid var(--color-primary);
+    border-bottom: 3px solid var(--color-primary);
+  }
+  .nst-marquee-track { display: flex; width: max-content; animation: nst-marquee 28s linear infinite; }
+  .nst-marquee-group { display: flex; align-items: center; }
+  .nst-marquee-item { display: inline-flex; align-items: center; }
+  .nst-marquee-text {
+    font-family: var(--font-heading); font-weight: 700; font-style: italic;
+    font-size: clamp(1.1rem, 2.4vw, 1.75rem); color: var(--color-bg);
+    white-space: nowrap; padding: 0 1.25rem;
+  }
+  .nst-marquee-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--color-primary); flex-shrink: 0;
+  }
+  @keyframes nst-marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nst-marquee-track { animation: none; }
   }
 
-  @media (max-width: 768px) {
-    .abt-grid, .abt-grid-rev { grid-template-columns: 1fr; }
-    .abt-grid-rev .abt-text { order: 0; }
-    .abt-grid-rev .abt-img { order: 0; }
+  /* ===== 5. Historia ===== */
+  .nst-historia { padding: var(--space-xl) 0; background: #FBF6EE; }
+  .nst-head { text-align: center; margin-bottom: var(--space-xl); }
+  .nst-timeline {
+    display: flex; gap: var(--space-md); overflow-x: auto;
+    scroll-snap-type: x mandatory; padding-bottom: var(--space-md);
+    -webkit-overflow-scrolling: touch;
+  }
+  .nst-timeline::-webkit-scrollbar { height: 8px; }
+  .nst-timeline::-webkit-scrollbar-thumb { background: var(--color-light); border-radius: 50px; }
+  .nst-tl-item {
+    scroll-snap-align: start; flex: 0 0 320px;
+    background: var(--color-bg); border: 1px solid var(--color-light);
+    border-radius: var(--radius); padding: var(--space-lg);
+    box-shadow: var(--shadow-sm); position: relative;
+  }
+  .nst-tl-item::before {
+    content: ''; position: absolute; top: 0; left: var(--space-lg);
+    width: 44px; height: 4px; background: var(--color-primary); border-radius: 0 0 4px 4px;
+  }
+  .nst-year {
+    display: block; font-family: var(--font-heading); font-weight: 900;
+    font-size: 2.25rem; color: var(--color-primary-hover);
+    margin-bottom: var(--space-sm); line-height: 1;
+  }
+  .nst-tl-item p { color: var(--color-mid); line-height: 1.8; font-size: 0.95rem; }
+
+  /* ===== 6. Visítanos ===== */
+  .nst-visitanos { padding: var(--space-xl) 0; }
+  .nst-visit-grid {
+    display: grid; grid-template-columns: 0.9fr 1.1fr;
+    gap: var(--space-xl); align-items: center;
+  }
+  .nst-visit-line { color: var(--color-mid); line-height: 2; font-size: 1.05rem; }
+  .nst-visit-info .btn { margin-top: var(--space-md); }
+  .nst-visit-map {
+    border-radius: var(--radius); overflow: hidden;
+    box-shadow: var(--shadow-lg); height: 360px;
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 860px) {
+    .nst-intro-grid, .nst-grid, .nst-visit-grid, .nst-mv-grid {
+      grid-template-columns: 1fr;
+    }
+    .nst-grid .nst-img { order: 2; }
+    .nst-grid .nst-text { order: 1; }
+    .nst-tl-item { flex: 0 0 78vw; }
+    .nst-visit-map { height: 300px; }
   }
 </style>
-

@@ -94,59 +94,56 @@ function animateMenu() {
 }
 
 function animateNosotros() {
-  const firstSection = document.querySelector('.abt:not(.abt-alt)')
-  if (firstSection) {
-    const firstImg = firstSection.querySelector('.abt-img')
-    const firstText = firstSection.querySelector('.abt-text')
+  // Parallax suave en las imagenes.
+  gsap.utils.toArray<HTMLElement>('.nst-parallax').forEach((img) => {
+    gsap.fromTo(
+      img,
+      { yPercent: -7 },
+      {
+        yPercent: 7,
+        ease: 'none',
+        scrollTrigger: { trigger: img, start: 'top bottom', end: 'bottom top', scrub: true },
+      }
+    )
+  })
 
-    if (firstImg) {
-      gsap.from(firstImg, {
-        scrollTrigger: { trigger: firstSection, start: 'top bottom-=60px' },
-        opacity: 0,
-        x: -80,
-        duration: 0.8,
-        ease: 'power3.out',
-      })
-    }
-
-    if (firstText) {
-      gsap.from(firstText, {
-        scrollTrigger: { trigger: firstSection, start: 'top bottom-=40px' },
-        opacity: 0,
-        x: 40,
-        duration: 0.8,
-        delay: 0.15,
-        ease: 'power3.out',
-      })
-    }
+  // Stagger en las tarjetas de Mision / Vision.
+  const cards = gsap.utils.toArray<HTMLElement>('.nst-mv-card')
+  if (cards.length) {
+    gsap.from(cards, {
+      scrollTrigger: { trigger: '.nst-mv', start: 'top bottom-=60px' },
+      opacity: 0,
+      y: 40,
+      duration: 0.7,
+      stagger: 0.15,
+      ease: 'power3.out',
+    })
   }
 
-  const secondSection = document.querySelector('.abt-alt')
-  if (secondSection) {
-    const secondImg = secondSection.querySelector('.abt-img')
-    const secondText = secondSection.querySelector('.abt-text')
-
-    if (secondImg) {
-      gsap.from(secondImg, {
-        scrollTrigger: { trigger: secondSection, start: 'top bottom-=60px' },
-        opacity: 0,
-        x: 60,
-        duration: 0.8,
-        ease: 'power3.out',
-      })
-    }
-
-    if (secondText) {
-      gsap.from(secondText, {
-        scrollTrigger: { trigger: secondSection, start: 'top bottom-=40px' },
-        opacity: 0,
-        x: -40,
-        duration: 0.8,
-        delay: 0.15,
-        ease: 'power3.out',
-      })
-    }
+  // Stagger en la linea de tiempo.
+  const items = gsap.utils.toArray<HTMLElement>('.nst-tl-item')
+  if (items.length) {
+    gsap.from(items, {
+      scrollTrigger: { trigger: '.nst-timeline', start: 'top bottom-=60px' },
+      opacity: 0,
+      x: 40,
+      duration: 0.6,
+      stagger: 0.12,
+      ease: 'power3.out',
+    })
   }
+
+  // Blur-in.
+  gsap.utils.toArray<HTMLElement>('.nst-blur').forEach((el) => {
+    gsap.from(el, {
+      scrollTrigger: { trigger: el, start: 'top bottom-=60px' },
+      opacity: 0,
+      filter: 'blur(12px)',
+      y: 24,
+      duration: 0.9,
+      ease: 'power2.out',
+    })
+  })
 }
 
 function animateGaleria() {

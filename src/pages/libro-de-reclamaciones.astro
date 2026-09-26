@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import ReclamacionForm from '../components/react/ReclamacionForm.tsx'
+---
+
+<BaseLayout
+  title="Libro de Reclamaciones | FRESCOLITO RESTAURANTE"
+  description="Libro de Reclamaciones Virtual de Frescolito Restaurante."
+  effect="fade"
+>
+  <main class="legal-page" style="padding-top:70px">
+    <div class="container legal">
+      <span class="legal-label">Legal</span>
+      <h1 class="legal-title">Libro de Reclamaciones</h1>
+
+      <p>
+        De conformidad con el Código de Protección y Defensa del Consumidor (Ley N.º 29571) y su reglamento,
+        <strong>Frescolito Restaurante</strong> pone a tu disposición su <strong>Libro de Reclamaciones Virtual</strong>.
+      </p>
+      <p>
+        Completa el formulario para registrar tu <strong>reclamo</strong> (disconformidad con el producto o servicio)
+        o <strong>queja</strong> (malestar con la atención recibida). Recibirás una constancia con tu número de registro.
+      </p>
+
+      <div class="legal-form">
+        <ReclamacionForm client:load />
+      </div>
+
+      <p class="legal-note">
+        También puedes escribirnos a <a href="mailto:contacto@frescolito.com">contacto@frescolito.com</a>.
+      </p>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .legal-page { padding-bottom: var(--space-xl); }
+  .legal { max-width: 820px; padding-top: var(--space-xl); }
+  .legal-label {
+    display: inline-block; font-family: var(--font-body); font-size: 0.75rem;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.22em;
+    color: var(--color-primary-hover); margin-bottom: var(--space-sm);
+  }
+  .legal-title {
+    font-family: var(--font-script); font-weight: 400;
+    font-size: clamp(2.25rem, 5vw, 3.25rem); color: var(--color-dark); margin-bottom: var(--space-md);
+  }
+  .legal p { color: var(--color-mid); line-height: 1.9; margin-bottom: var(--space-md); }
+  .legal a { color: var(--color-primary-hover); font-weight: 600; }
+  .legal-form { margin: var(--space-lg) 0; }
+  .legal-note { font-size: 0.9rem; }
+</style>
