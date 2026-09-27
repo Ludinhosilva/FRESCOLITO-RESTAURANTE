@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { X } from 'lucide-react'
 
-export default function Sheet({ title, onClose, children, footer, maxWidth = null }) {
+export default function Sheet({ title, onClose, children, footer, maxWidth = null, bodyRef = null }) {
   const ref = useRef(null)
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function Sheet({ title, onClose, children, footer, maxWidth = nul
             <X />
           </button>
         </div>
-        <div className="sheet-body">{children}</div>
+        <div className="sheet-body" ref={bodyRef}>{children}</div>
         {footer && <div className="sheet-foot">{footer}</div>}
       </div>
     </div>

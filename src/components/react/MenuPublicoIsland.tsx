@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import Proveedores from './Proveedores.tsx'
 import { listarPlatosPublico } from '../../lib/pedidosCliente.ts'
@@ -8,7 +8,6 @@ function Contenido() {
     queryKey: ['platos-publico'],
     queryFn: listarPlatosPublico,
   })
-  const [activa, setActiva] = useState(null)
 
   const categorias = useMemo(() => {
     const map: Record<string, any[]> = {}
@@ -20,7 +19,6 @@ function Contenido() {
   }, [platos])
 
   const nombres = Object.keys(categorias)
-  const catActiva = activa || nombres[0]
 
   if (isLoading) {
     return (
@@ -53,53 +51,45 @@ function Contenido() {
   return (
     <div className="menu-section">
       <div className="container">
-        <div className="menu-pills">
-          {nombres.map((cat) => (
-            <button
-              key={cat}
-              className={'menu-pill' + (cat === catActiva ? ' active' : '')}
-              onClick={() => setActiva(cat)}
-            >
-              {cat}
-              <span className="pill-count">{categorias[cat].length}</span>
-            </button>
-          ))}
-        </div>
-
         <div className="menu-leyenda">
           <span><i className="menu-dot verde" /> Disponible</span>
           <span><i className="menu-dot rojo" /> Agotado</span>
         </div>
 
-        <div className="menu-grid">
-          {(categorias[catActiva] || []).map((p) => {
-            const sinStock = !p.stock_disponible || p.stock <= 0
-            return (
-              <div key={p.id} className={'menu-item' + (sinStock ? ' agotado' : '')}>
-                <div className="menu-item-img-wrap">
-                  {p.imagen
-                    ? <img src={p.imagen} alt={p.nombre} className="menu-item-img" loading="lazy" />
-                    : <div className="menu-item-img-ph">🍽️</div>}
-                </div>
-                <div className="menu-item-body">
-                  <h3 className="menu-item-name">
-                    <i className={'menu-dot ' + (sinStock ? 'rojo' : 'verde')} />
-                    {p.nombre}
-                  </h3>
-                  {p.descripcion && <p className="menu-item-desc">{p.descripcion}</p>}
-                </div>
-                <div className="menu-item-footer">
-                  <div className="menu-price-block">
-                    <span className="menu-item-price">S/ {Number(p.precio).toFixed(2)}</span>
+        {nombres.map((cat) => (
+          <section key={cat} className="menu-cat">
+            <h2 className="menu-cat-title">{cat}</h2>
+            <div className="menu-grid">
+              {categorias[cat].map((p) => {
+                const sinStock = !p.stock_disponible || p.stock <= 0
+                return (
+                  <div key={p.id} className={'menu-item' + (sinStock ? ' agotado' : '')}>
+                    <div className="menu-item-img-wrap">
+                      {p.imagen
+                        ? <img src={p.imagen} alt={p.nombre} className="menu-item-img" loading="lazy" />
+                        : <div className="menu-item-img-ph">🍽️</div>}
+                    </div>
+                    <div className="menu-item-body">
+                      <h3 className="menu-item-name">
+                        <i className={'menu-dot ' + (sinStock ? 'rojo' : 'verde')} />
+                        {p.nombre}
+                      </h3>
+                      {p.descripcion && <p className="menu-item-desc">{p.descripcion}</p>}
+                    </div>
+                    <div className="menu-item-footer">
+                      <div className="menu-price-block">
+                        <span className="menu-item-price">S/ {Number(p.precio).toFixed(2)}</span>
+                      </div>
+                      <button className="btn btn-primary menu-order-btn" data-pedir disabled={sinStock}>
+                        {sinStock ? 'Agotado' : 'Ordenar'}
+                      </button>
+                    </div>
                   </div>
-                  <button className="btn btn-primary menu-order-btn" data-pedir disabled={sinStock}>
-                    {sinStock ? 'Agotado' : 'Ordenar'}
-                  </button>
-                </div>
-              </div>
-            )
-          })}
-        </div>
+                )
+              })}
+            </div>
+          </section>
+        ))}
       </div>
     </div>
   )

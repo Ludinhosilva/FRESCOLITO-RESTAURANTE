@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import Proveedores from './Proveedores.tsx'
+import Sheet from './ui/Sheet.tsx'
 import { useCarritoCliente } from '../../context/CarritoClienteContext.tsx'
 import {
   adjuntarReferencia,
@@ -12,20 +13,8 @@ import {
   obtenerUltimoPedido,
 } from '../../lib/pedidosCliente.ts'
 import { estaAbierto, horarioConDias } from '../../lib/horario.ts'
-
-const ESTADOS = [
-  { key: 'pendiente', label: 'Recibido', icon: '📥' },
-  { key: 'en_preparacion', label: 'Preparando', icon: '👨‍🍳' },
-  { key: 'listo', label: 'Listo', icon: '✅' },
-  { key: 'en_camino', label: 'En camino', icon: '🛵' },
-  { key: 'entregado', label: 'Entregado', icon: '🎉' },
-]
-const PAGO_LABEL = {
-  por_verificar: 'Pago por verificar',
-  pagado: 'Pagado',
-  contra_entrega: 'Contra entrega',
-  pendiente: 'Pago pendiente',
-}
+import { ESTADOS_PEDIDO, PAGO_LABEL } from '../../lib/dominio.ts'
+import { Plus, Minus, Utensils, ArrowRight, ArrowLeft, Download } from 'lucide-react'
 
 function Contenido() {
   const { items, agregar, setCantidad, quitar, limpiar, subtotal, unidades } = useCarritoCliente()
@@ -39,8 +28,12 @@ function Contenido() {
   const [enviando, setEnviando] = useState(false)
   const [codigo, setCodigo] = useState(() => obtenerUltimoPedido())
   const [hayUltimo, setHayUltimo] = useState(() => !!obtenerUltimoPedido())
+  const [catActiva, setCatActiva] = useState(null)
 
-  const { data: platos = [] } = useQuery({ queryKey: ['platos-publico'], queryFn: listarPlatosPublico })
+  const bodyRef = useRef(null)
+  const sectionRefs = useRef({})
+
+  const { data: platos = [], isLoading } = useQuery({ queryKey: ['platos-publico'], queryFn: listarPlatosPublico })
   const { data: config } = useQuery({ queryKey: ['config-publica'], queryFn: obtenerConfig })
   const tarifas = config?.tarifas || { delivery_por_plato: 2, envase_por_plato: 1 }
   const abierto = config?.horario ? estaAbierto(horarioConDias(config.horario.dias)) : true
@@ -70,6 +63,33 @@ function Contenido() {
     }
     return map
   }, [platos])
+
+  const nombres = Object.keys(porCategoria)
+
+  // Scroll-spy de categorías
+  useEffect(() => {
+    if (paso !== 'menu' || !visible) return
+    const body = bodyRef.current
+    if (!body) return
+    const onScroll = () => {
+      const top = body.getBoundingClientRect().top
+      let current = nombres[0]
+      for (const cat of nombres) {
+        const el = sectionRefs.current[cat]
+        if (el && el.getBoundingClientRect().top - top <= 70) current = cat
+      }
+      setCatActiva(current)
+    }
+    onScroll()
+    body.addEventListener('scroll', onScroll, { passive: true })
+    return () => body.removeEventListener('scroll', onScroll)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paso, visible, nombres.join('|')])
+
+  const irACategoria = (cat) => {
+    sectionRefs.current[cat]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    setCatActiva(cat)
+  }
 
   const cargoEnvases = canal === 'recojo' ? unidades * Number(tarifas.envase_por_plato) : 0
   const costoDelivery = canal === 'delivery' ? unidades * Number(tarifas.delivery_por_plato) : 0
@@ -132,7 +152,77 @@ function Contenido() {
     setVisible(true)
   }
 
-  const pasoActual = pedido ? ESTADOS.findIndex((e) => e.key === pedido.estado) : -1
+  const pasoActual = pedido ? ESTADOS_PEDIDO.findIndex((e) => e.key === pedido.estado) : -1
+
+  const titulo = paso === 'menu' ? 'Nuestro menú' : paso === 'pago' ? 'Pago' : 'Tu pedido'
+
+  const renderPlato = (p) => {
+    const sinStock = !p.stock_disponible || p.stock <= 0
+    const c = cant(p.id)
+    return (
+      <div key={p.id} className={'cli-dish' + (sinStock ? ' sinstock' : '')}>
+        <div className="cli-dish-thumb">
+          {p.imagen
+            ? <img src={p.imagen} alt={p.nombre} className="cli-dish-img" loading="lazy" />
+            : <div className="cli-dish-ph"><Utensils /></div>}
+          {sinStock && <span className="cli-dish-badge">Agotado</span>}
+        </div>
+        <div className="cli-dish-info">
+          <div className="cli-dish-name">{p.nombre}</div>
+          {p.descripcion && <div className="cli-dish-desc">{p.descripcion}</div>}
+          <div className="cli-dish-price">S/ {Number(p.precio).toFixed(2)}</div>
+        </div>
+        {!sinStock && (c === 0 ? (
+          <button className="cli-add-btn" aria-label={`Agregar ${p.nombre}`} onClick={() => agregar(p)}>
+            <Plus />
+          </button>
+        ) : (
+          <div className="cli-stepper">
+            <button className="cli-step-btn" aria-label={`Quitar ${p.nombre}`} onClick={() => setCantidad(p.id, c - 1)}>
+              <Minus />
+            </button>
+            <span className="cli-step-num">{c}</span>
+            <button className="cli-step-btn" aria-label={`Agregar ${p.nombre}`} onClick={() => setCantidad(p.id, c + 1)} disabled={c >= p.stock}>
+              <Plus />
+            </button>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  const footer = (() => {
+    if (paso === 'menu') {
+      return (
+        <>
+          <div className="pedir-foot-info">
+            <small>{unidades} plato(s)</small>
+            <strong>S/ {subtotal.toFixed(2)}</strong>
+          </div>
+          <button className="btn" disabled={unidades === 0 || !abierto} onClick={irADatos}>
+            Continuar <ArrowRight />
+          </button>
+        </>
+      )
+    }
+    if (paso === 'datos') {
+      return (
+        <>
+          <button className="btn btn-outline" onClick={() => setPaso('menu')}><ArrowLeft /> Menú</button>
+          <button className="btn grow" onClick={irAPago}>Ir a pagar <ArrowRight /></button>
+        </>
+      )
+    }
+    if (paso === 'pago') {
+      return (
+        <>
+          <button className="btn btn-outline" onClick={() => setPaso('datos')}><ArrowLeft /> Atrás</button>
+          <button className="btn btn-verde grow" onClick={confirmar} disabled={enviando}>{enviando ? 'Enviando...' : 'Confirmar pedido'}</button>
+        </>
+      )
+    }
+    return <button className="btn btn-block btn-outline" onClick={() => setPaso('menu')}>Hacer otro pedido</button>
+  })()
 
   return (
     <>
@@ -141,192 +231,144 @@ function Contenido() {
       )}
 
       {visible && (
-        <div className="pedir-overlay" onClick={(e) => e.target === e.currentTarget && setVisible(false)}>
-          <div className="pedir-panel">
-            <div className="pedir-head">
-              <strong>
-                {paso === 'menu' && 'Nuestro menú'}
-                {paso === 'datos' && 'Tu pedido'}
-                {paso === 'pago' && 'Pago'}
-                {paso === 'seguimiento' && 'Tu pedido'}
-              </strong>
-              <button className="pedir-close" onClick={() => setVisible(false)}>✕</button>
-            </div>
+        <Sheet title={titulo} onClose={() => setVisible(false)} bodyRef={bodyRef} footer={footer}>
+          {paso === 'menu' && (
+            <>
+              <div className={'cli-estado ' + (abierto ? 'abierto' : 'cerrado')}>
+                {abierto ? 'Abierto — estamos recibiendo pedidos' : 'Cerrado — vuelve en nuestro horario'}
+              </div>
 
-            <div className="pedir-body">
-              {paso === 'menu' && (
+              {isLoading ? (
                 <>
-                  <div className={'cli-estado ' + (abierto ? 'abierto' : 'cerrado')}>
-                    {abierto ? 'Abierto — estamos recibiendo pedidos' : 'Cerrado — vuelve en nuestro horario'}
-                  </div>
-                  <div className="cli-leyenda">
-                    <span><i className="cli-dot verde" /> Disponible</span>
-                    <span><i className="cli-dot rojo" /> Agotado</span>
-                  </div>
-
-                  {Object.entries(porCategoria).map(([cat, lista]) => (
-                    <div key={cat}>
-                      <div className="seccion-title">{cat}</div>
-                      {lista.map((p) => {
-                        const sinStock = !p.stock_disponible || p.stock <= 0
-                        const c = cant(p.id)
-                        return (
-                          <div key={p.id} className={'cli-plato' + (sinStock ? ' sinstock' : '')}>
-                            <div className="cli-plato-left">
-                              {p.imagen
-                                ? <img src={p.imagen} alt="" className="cli-plato-img" />
-                                : <div className="cli-plato-img ph" />}
-                              <div>
-                                <div className="cli-plato-nombre">
-                                  <i className={'cli-dot ' + (sinStock ? 'rojo' : 'verde')} />
-                                  {p.nombre}
-                                </div>
-                                <div className="cli-plato-precio">S/ {Number(p.precio).toFixed(2)}</div>
-                              </div>
-                            </div>
-                            {sinStock ? (
-                              <span className="cli-plato-agotado">Agotado</span>
-                            ) : (
-                              <div className="cli-stepper">
-                                <button className="cli-step-btn" onClick={() => setCantidad(p.id, c - 1)} disabled={c <= 0}>−</button>
-                                <span className="cli-step-num">{c}</span>
-                                <button
-                                  className="cli-step-btn"
-                                  onClick={() => (c === 0 ? agregar(p) : setCantidad(p.id, c + 1))}
-                                  disabled={c >= p.stock}
-                                >
-                                  +
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                        )
-                      })}
-                    </div>
-                  ))}
+                  <div className="skeleton" style={{ height: 76, marginBottom: 8 }} />
+                  <div className="skeleton" style={{ height: 76, marginBottom: 8 }} />
+                  <div className="skeleton" style={{ height: 76 }} />
                 </>
-              )}
-
-              {paso === 'datos' && (
+              ) : nombres.length === 0 ? (
+                <div className="cli-vacio">Estamos actualizando nuestra carta. Vuelve pronto.</div>
+              ) : (
                 <>
-                  {error && <div className="cli-warn">⚠️ {error}</div>}
-                  {items.map(({ plato, cantidad }) => (
-                    <div key={plato.id} className="cli-item">
-                      <div>
-                        <div className="cli-item-nombre">{plato.nombre}</div>
-                        <div className="cli-item-precio">S/ {(plato.precio * cantidad).toFixed(2)}</div>
-                      </div>
-                      <div className="cant-controller">
-                        <button className="cant-btn" onClick={() => setCantidad(plato.id, cantidad - 1)}>−</button>
-                        <span className="cli-item-cant">{cantidad}</span>
-                        <button className="cant-btn" onClick={() => setCantidad(plato.id, cantidad + 1)} disabled={cantidad >= plato.stock}>+</button>
-                        <button className="cli-item-quitar" onClick={() => quitar(plato.id)}>✕</button>
-                      </div>
-                    </div>
-                  ))}
-
-                  <div className="cli-canal" style={{ marginTop: 12 }}>
-                    <button className={'cli-canal-opt' + (canal === 'delivery' ? ' sel' : '')} onClick={() => setCanal('delivery')}>
-                      Delivery<small>+ S/ {Number(tarifas.delivery_por_plato).toFixed(2)} por plato</small>
-                    </button>
-                    <button className={'cli-canal-opt' + (canal === 'recojo' ? ' sel' : '')} onClick={() => setCanal('recojo')}>
-                      Recojo en local<small>+ S/ {Number(tarifas.envase_por_plato).toFixed(2)} por plato</small>
-                    </button>
-                  </div>
-
-                  <div className="field" style={{ marginTop: 10 }}><label>Nombre</label><input value={form.nombre} onChange={(e) => campo('nombre', e.target.value)} /></div>
-                  <div className="field"><label>Teléfono</label><input value={form.telefono} onChange={(e) => campo('telefono', e.target.value)} inputMode="tel" /></div>
-                  {canal === 'delivery' && (
-                    <div className="field"><label>Dirección</label><input value={form.direccion} onChange={(e) => campo('direccion', e.target.value)} /></div>
-                  )}
-                  <div className="field"><label>Notas (opcional)</label><textarea rows={2} value={form.notas} onChange={(e) => campo('notas', e.target.value)} /></div>
-
-                  <div className="total-row"><span>Subtotal</span><span>S/ {subtotal.toFixed(2)}</span></div>
-                  {cargoEnvases > 0 && <div className="total-row"><span>Envases</span><span>S/ {cargoEnvases.toFixed(2)}</span></div>}
-                  {costoDelivery > 0 && <div className="total-row"><span>Delivery</span><span>S/ {costoDelivery.toFixed(2)}</span></div>}
-                  <div className="total-row final"><span>Total</span><span>S/ {total.toFixed(2)}</span></div>
-                </>
-              )}
-
-              {paso === 'pago' && (
-                <>
-                  {error && <div className="cli-warn">⚠️ {error}</div>}
-                  <div className="cli-pago-opts">
-                    <button className={'cli-pago-opt' + (metodo === 'yape' ? ' sel' : '')} onClick={() => setMetodo('yape')}>Yape</button>
-                    <button className={'cli-pago-opt' + (metodo === 'plin' ? ' sel' : '')} onClick={() => setMetodo('plin')}>Plin</button>
-                    <button className={'cli-pago-opt' + (metodo === 'efectivo' ? ' sel' : '')} onClick={() => setMetodo('efectivo')}>Efectivo</button>
-                  </div>
-                  {(metodo === 'yape' || metodo === 'plin') && (
-                    <div className="cli-qr">
-                      {config?.pagos?.qr_url
-                        ? <img src={config.pagos.qr_url} alt="QR" className="cli-qr-img" />
-                        : <div className="cli-qr-placeholder">QR de {metodo === 'yape' ? 'Yape' : 'Plin'}</div>}
-                      <p className="cli-qr-num">Número: <strong>{metodo === 'yape' ? (config?.pagos?.yape || '—') : (config?.pagos?.plin || '—')}</strong></p>
-                      <div className="field"><label>N.º de operación</label><input value={referencia} onChange={(e) => setReferencia(e.target.value)} /></div>
-                    </div>
-                  )}
-                  {metodo === 'efectivo' && <p className="cli-efectivo">Pagas en efectivo {canal === 'delivery' ? 'al recibir (contra entrega)' : 'al recoger'}.</p>}
-                  <div className="total-row final"><span>Total a pagar</span><span>S/ {total.toFixed(2)}</span></div>
-                </>
-              )}
-
-              {paso === 'seguimiento' && (
-                <>
-                  <div className="cli-codigo">Código: <strong>{codigo}</strong></div>
-                  {pedido ? (
-                    <>
-                      <div className="cli-pago-chip" style={{ background: '#8D6E63', display: 'inline-block', marginBottom: 10 }}>{PAGO_LABEL[pedido.estado_pago] || 'Pago'}</div>
-                      <div className="cli-timeline">
-                        {ESTADOS.map((e, i) => {
-                          if (e.key === 'en_camino' && pedido.canal !== 'delivery') return null
-                          return (
-                            <div key={e.key} className={'cli-paso' + (i <= pasoActual ? ' activo' : '')}>
-                              <span className="cli-paso-icon">{e.icon}</span>
-                              <span className="cli-paso-label">{e.label}</span>
-                            </div>
-                          )
-                        })}
-                      </div>
-                      <div style={{ marginTop: 12 }}>
-                        {pedido.items?.map((it, i) => (<div key={i} className="cli-item-simple">{it.cantidad}× {it.plato}</div>))}
-                        <div className="total-row final"><span>Total</span><span>S/ {Number(pedido.total).toFixed(2)}</span></div>
-                      </div>
-                      <button className="btn btn-block btn-outline" style={{ marginTop: 12 }} onClick={() => import('../../lib/boleta.js').then((m) => m.generarBoletaPDF(pedido))}>
-                        Descargar boleta
+                  <div className="cli-cat-tabs">
+                    {nombres.map((cat) => (
+                      <button
+                        key={cat}
+                        className={'filtro-chip' + (cat === (catActiva || nombres[0]) ? ' active' : '')}
+                        onClick={() => irACategoria(cat)}
+                      >
+                        {cat}
                       </button>
-                    </>
-                  ) : (
-                    <div className="centered">Buscando tu pedido...</div>
-                  )}
-                </>
-              )}
-            </div>
+                    ))}
+                  </div>
 
-            <div className="pedir-foot">
-              {paso === 'menu' && (
-                <>
-                  <div className="pedir-foot-info"><small>{unidades} plato(s)</small><strong>S/ {subtotal.toFixed(2)}</strong></div>
-                  <button className="btn" disabled={unidades === 0 || !abierto} onClick={irADatos}>Continuar →</button>
+                  {nombres.map((cat) => (
+                    <section
+                      key={cat}
+                      className="cli-cat"
+                      ref={(el) => { sectionRefs.current[cat] = el }}
+                    >
+                      <div className="seccion-title">{cat}</div>
+                      {porCategoria[cat].map(renderPlato)}
+                    </section>
+                  ))}
                 </>
               )}
-              {paso === 'datos' && (
+            </>
+          )}
+
+          {paso === 'datos' && (
+            <>
+              {error && <div className="cli-warn">⚠️ {error}</div>}
+              {items.map(({ plato, cantidad }) => (
+                <div key={plato.id} className="cli-item">
+                  <div>
+                    <div className="cli-item-nombre">{plato.nombre}</div>
+                    <div className="cli-item-precio">S/ {(plato.precio * cantidad).toFixed(2)}</div>
+                  </div>
+                  <div className="cant-controller">
+                    <button className="cant-btn" aria-label={`Quitar ${plato.nombre}`} onClick={() => setCantidad(plato.id, cantidad - 1)}><Minus /></button>
+                    <span className="cli-item-cant">{cantidad}</span>
+                    <button className="cant-btn" aria-label={`Agregar ${plato.nombre}`} onClick={() => setCantidad(plato.id, cantidad + 1)} disabled={cantidad >= plato.stock}><Plus /></button>
+                    <button className="cli-item-quitar" aria-label={`Eliminar ${plato.nombre}`} onClick={() => quitar(plato.id)}>✕</button>
+                  </div>
+                </div>
+              ))}
+
+              <div className="cli-canal mt-3">
+                <button className={'cli-canal-opt' + (canal === 'delivery' ? ' sel' : '')} onClick={() => setCanal('delivery')}>
+                  Delivery<small>+ S/ {Number(tarifas.delivery_por_plato).toFixed(2)} por plato</small>
+                </button>
+                <button className={'cli-canal-opt' + (canal === 'recojo' ? ' sel' : '')} onClick={() => setCanal('recojo')}>
+                  Recojo en local<small>+ S/ {Number(tarifas.envase_por_plato).toFixed(2)} por plato</small>
+                </button>
+              </div>
+
+              <div className="field mt-3"><label htmlFor="c-nombre">Nombre</label><input id="c-nombre" value={form.nombre} onChange={(e) => campo('nombre', e.target.value)} /></div>
+              <div className="field"><label htmlFor="c-tel">Teléfono</label><input id="c-tel" value={form.telefono} onChange={(e) => campo('telefono', e.target.value)} inputMode="tel" /></div>
+              {canal === 'delivery' && (
+                <div className="field"><label htmlFor="c-dir">Dirección</label><input id="c-dir" value={form.direccion} onChange={(e) => campo('direccion', e.target.value)} /></div>
+              )}
+              <div className="field"><label htmlFor="c-notas">Notas (opcional)</label><textarea id="c-notas" rows={2} value={form.notas} onChange={(e) => campo('notas', e.target.value)} /></div>
+
+              <div className="total-row"><span>Subtotal</span><span>S/ {subtotal.toFixed(2)}</span></div>
+              {cargoEnvases > 0 && <div className="total-row"><span>Envases</span><span>S/ {cargoEnvases.toFixed(2)}</span></div>}
+              {costoDelivery > 0 && <div className="total-row"><span>Delivery</span><span>S/ {costoDelivery.toFixed(2)}</span></div>}
+              <div className="total-row final"><span>Total</span><span>S/ {total.toFixed(2)}</span></div>
+            </>
+          )}
+
+          {paso === 'pago' && (
+            <>
+              {error && <div className="cli-warn">⚠️ {error}</div>}
+              <div className="cli-pago-opts">
+                <button className={'cli-pago-opt' + (metodo === 'yape' ? ' sel' : '')} onClick={() => setMetodo('yape')}>Yape</button>
+                <button className={'cli-pago-opt' + (metodo === 'plin' ? ' sel' : '')} onClick={() => setMetodo('plin')}>Plin</button>
+                <button className={'cli-pago-opt' + (metodo === 'efectivo' ? ' sel' : '')} onClick={() => setMetodo('efectivo')}>Efectivo</button>
+              </div>
+              {(metodo === 'yape' || metodo === 'plin') && (
+                <div className="cli-qr">
+                  {config?.pagos?.qr_url
+                    ? <img src={config.pagos.qr_url} alt="QR" className="cli-qr-img" />
+                    : <div className="cli-qr-placeholder">QR de {metodo === 'yape' ? 'Yape' : 'Plin'}</div>}
+                  <p className="cli-qr-num">Número: <strong>{metodo === 'yape' ? (config?.pagos?.yape || '—') : (config?.pagos?.plin || '—')}</strong></p>
+                  <div className="field"><label htmlFor="c-ref">N.º de operación</label><input id="c-ref" value={referencia} onChange={(e) => setReferencia(e.target.value)} /></div>
+                </div>
+              )}
+              {metodo === 'efectivo' && <p className="cli-efectivo">Pagas en efectivo {canal === 'delivery' ? 'al recibir (contra entrega)' : 'al recoger'}.</p>}
+              <div className="total-row final"><span>Total a pagar</span><span>S/ {total.toFixed(2)}</span></div>
+            </>
+          )}
+
+          {paso === 'seguimiento' && (
+            <>
+              <div className="cli-codigo">Código: <strong>{codigo}</strong></div>
+              {pedido ? (
                 <>
-                  <button className="btn btn-outline" onClick={() => setPaso('menu')}>← Menú</button>
-                  <button className="btn" onClick={irAPago}>Ir a pagar →</button>
+                  <div className="cli-pago-chip" style={{ background: 'var(--ink-600)' }}>{PAGO_LABEL[pedido.estado_pago] || 'Pago'}</div>
+                  <div className="cli-timeline">
+                    {ESTADOS_PEDIDO.map((e, i) => {
+                      if (e.key === 'en_camino' && pedido.canal !== 'delivery') return null
+                      return (
+                        <div key={e.key} className={'cli-paso' + (i <= pasoActual ? ' activo' : '')}>
+                          <span className="cli-paso-icon">{e.icon}</span>
+                          <span className="cli-paso-label">{e.label}</span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                  <div className="mt-3">
+                    {pedido.items?.map((it, i) => (<div key={i} className="cli-item-simple">{it.cantidad}× {it.plato}</div>))}
+                    <div className="total-row final"><span>Total</span><span>S/ {Number(pedido.total).toFixed(2)}</span></div>
+                  </div>
+                  <button className="btn btn-block btn-outline mt-3" onClick={() => import('../../lib/boleta.js').then((m) => m.generarBoletaPDF(pedido))}>
+                    <Download /> Descargar boleta
+                  </button>
                 </>
+              ) : (
+                <div className="centered">Buscando tu pedido...</div>
               )}
-              {paso === 'pago' && (
-                <>
-                  <button className="btn btn-outline" onClick={() => setPaso('datos')}>← Atrás</button>
-                  <button className="btn btn-verde" onClick={confirmar} disabled={enviando}>{enviando ? 'Enviando...' : 'Confirmar pedido'}</button>
-                </>
-              )}
-              {paso === 'seguimiento' && (
-                <button className="btn btn-block btn-outline" onClick={() => setPaso('menu')}>Hacer otro pedido</button>
-              )}
-            </div>
-          </div>
-        </div>
+            </>
+          )}
+        </Sheet>
       )}
     </>
   )

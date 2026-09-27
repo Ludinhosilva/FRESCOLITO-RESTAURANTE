@@ -55,6 +55,7 @@
   --touch: 48px;
 
   --font-heading: 'Playfair Display', Georgia, serif;
+  --font-script: 'Satisfy', 'Playfair Display', cursive;
   --font-body: 'Poppins', 'Work Sans', system-ui, sans-serif;
 
   font-family: var(--font-body);
@@ -94,7 +95,7 @@
 }
 .panel-root .topbar-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; min-width: 0; }
 .panel-root .logo-dot { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid var(--brand); display: block; flex-shrink: 0; }
-.panel-root .topbar-title { font-family: var(--font-heading); font-weight: 700; font-size: 1.2rem; color: var(--ink-900); white-space: nowrap; }
+.panel-root .topbar-title { font-family: var(--font-script); font-weight: 400; font-size: 1.5rem; color: var(--ink-900); white-space: nowrap; }
 .panel-root .topbar-right { display: flex; align-items: center; gap: var(--space-2); min-width: 0; }
 .panel-root .badge-rol {
   text-transform: uppercase; font-size: 10px; font-weight: 700; letter-spacing: 0.6px;
@@ -380,12 +381,12 @@
   width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--brand);
   display: block; margin: 0 auto 14px; box-shadow: 0 0 22px rgba(245, 179, 1, 0.3);
 }
-.panel-root .login-title { font-family: var(--font-heading); text-align: center; font-size: 2rem; font-weight: 700; color: var(--ink-900); margin-bottom: 2px; }
+.panel-root .login-title { font-family: var(--font-script); text-align: center; font-size: 2.6rem; font-weight: 400; color: var(--ink-900); margin-bottom: 2px; }
 .panel-root .login-sub { text-align: center; color: var(--ink-600); font-size: 13px; margin-bottom: 22px; letter-spacing: 0.5px; }
 
 /* ===== Misc ===== */
 .panel-root .centered { display: grid; place-items: center; min-height: 40vh; color: var(--ink-600); text-align: center; padding: 24px; }
-.panel-root .page-title { font-family: var(--font-body); font-size: 1.6rem; font-weight: 800; margin-bottom: var(--space-4); color: var(--ink-900); letter-spacing: -0.4px; }
+.panel-root .page-title { font-family: var(--font-script); font-size: 2.1rem; font-weight: 400; margin-bottom: var(--space-3); color: var(--ink-900); letter-spacing: 0; }
 .panel-root .seccion-title { font-size: 12px; font-weight: 700; margin: 16px 0 10px; color: var(--ink-400); text-transform: uppercase; letter-spacing: 1px; }
 .panel-root .toast {
   position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
@@ -441,6 +442,59 @@
   .panel-root .sheet-overlay { align-items: center; padding: 24px; }
   .panel-root .sheet { border-radius: var(--r-lg); max-height: min(760px, 82vh); animation: pFade 0.2s; }
 }
+
+/* Asa de arrastre del sheet (solo móvil) */
+.panel-root .sheet::before {
+  content: ''; flex: 0 0 auto; width: 44px; height: 5px;
+  border-radius: 3px; background: var(--ink-300); margin: 8px auto 0;
+}
+@media (min-width: 640px) { .panel-root .sheet::before { display: none; } }
+
+/* ===== Pedido cliente: fila de plato rediseñada ===== */
+.panel-root .cli-cat-tabs {
+  position: sticky; top: 0; z-index: 6;
+  display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 10px;
+  background: var(--bg); scrollbar-width: none;
+}
+.panel-root .cli-cat-tabs::-webkit-scrollbar { display: none; }
+.panel-root .cli-dish {
+  display: flex; gap: 12px; align-items: center;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-md); padding: 10px 12px; margin-bottom: 8px;
+}
+.panel-root .cli-dish.sinstock { opacity: 0.6; }
+.panel-root .cli-cat { scroll-margin-top: 58px; }
+.panel-root .cli-dish-thumb { position: relative; flex-shrink: 0; }
+.panel-root .cli-dish-img { width: 64px; height: 64px; border-radius: var(--r-sm); object-fit: cover; display: block; }
+.panel-root .cli-dish-ph {
+  width: 64px; height: 64px; border-radius: var(--r-sm); display: grid; place-items: center;
+  background: linear-gradient(135deg, #FDF3DC, #F7E4B0); color: var(--brand-hover);
+}
+.panel-root .cli-dish-ph svg { width: 26px; height: 26px; }
+.panel-root .cli-dish-badge {
+  position: absolute; inset: 0; border-radius: var(--r-sm);
+  background: rgba(28, 25, 23, 0.55); color: #fff; display: grid; place-items: center;
+  font-size: 9.5px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase;
+}
+.panel-root .cli-dish-info { flex: 1; min-width: 0; }
+.panel-root .cli-dish-name {
+  font-weight: 600; font-size: 15px; line-height: 1.25; color: var(--ink-900);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.panel-root .cli-dish-desc {
+  font-size: 12px; color: var(--ink-600); margin-top: 2px;
+  display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;
+}
+.panel-root .cli-dish-price { font-weight: 700; font-size: 14px; color: var(--ink-900); margin-top: 4px; }
+.panel-root .cli-add-btn {
+  width: 40px; height: 40px; flex-shrink: 0; border: none; border-radius: var(--r-md);
+  background: var(--brand); color: var(--ink-900); display: grid; place-items: center;
+  cursor: pointer; transition: background 0.15s ease, transform 0.1s ease;
+}
+.panel-root .cli-add-btn svg { width: 20px; height: 20px; }
+.panel-root .cli-add-btn:hover { background: var(--brand-hover); }
+.panel-root .cli-add-btn:active { transform: scale(0.94); }
+.panel-root .cli-add-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* ============================================================
    Pedido del cliente (overlay) — se mantiene, restyle con tokens

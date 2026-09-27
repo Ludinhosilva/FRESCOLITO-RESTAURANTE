@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Pencil, Eye, EyeOff, Trash2, ImagePlus } from 'lucide-react'
+import { Pencil, Eye, EyeOff, Trash2, ImagePlus, Plus } from 'lucide-react'
 import { actualizarPlato, crearPlato, eliminarPlato, listarPlatos, listarPlatosTodos, subirImagenPlato } from '../../../lib/pedidos.ts'
 import { useToast } from '../ui/Toast.tsx'
 import ConfirmDialog from '../ConfirmDialog.tsx'
+import Sheet from '../ui/Sheet.tsx'
 
 const VACIO = { id: null, nombre: '', categoria: 'Platos Marinos', precio: '', stock: '', descripcion: '', imagen: '', activo: true, incluye_refresco: false }
 
@@ -12,20 +13,35 @@ function PlatosEditor() {
   const toast = useToast()
   const { data: platos = [] } = useQuery({ queryKey: ['platos-todos'], queryFn: listarPlatosTodos })
   const [form, setForm] = useState(VACIO)
+  const [sheetAbierto, setSheetAbierto] = useState(false)
   const [subiendo, setSubiendo] = useState(false)
   const [eliminando, setEliminando] = useState(null)
   const [eliminandoBusy, setEliminandoBusy] = useState(false)
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }))
-  const reset = () => setForm(VACIO)
-  const editar = (p) => setForm({
-    id: p.id, nombre: p.nombre, categoria: p.categoria, precio: p.precio, stock: p.stock,
-    descripcion: p.descripcion || '', imagen: p.imagen || '', activo: p.activo, incluye_refresco: p.incluye_refresco,
-  })
+
+  const abrirNuevo = () => {
+    setForm(VACIO)
+    setSheetAbierto(true)
+  }
+
+  const abrirEditar = (p) => {
+    setForm({
+      id: p.id, nombre: p.nombre, categoria: p.categoria, precio: p.precio, stock: p.stock,
+      descripcion: p.descripcion || '', imagen: p.imagen || '', activo: p.activo, incluye_refresco: p.incluye_refresco,
+    })
+    setSheetAbierto(true)
+  }
+
+  const cerrar = () => {
+    setSheetAbierto(false)
+    setForm(VACIO)
+  }
 
   const invalidar = () => {
     queryClient.invalidateQueries({ queryKey: ['platos-todos'] })
     queryClient.invalidateQueries({ queryKey: ['platos-publico'] })
+    queryClient.invalidateQueries({ queryKey: ['platos-admin'] })
   }
 
   const subir = async (e) => {
@@ -64,7 +80,7 @@ function PlatosEditor() {
       else await crearPlato(payload)
       invalidar()
       toast(form.id ? 'Plato actualizado' : 'Plato agregado')
-      reset()
+      cerrar()
     } catch (err) {
       toast('Error: ' + err.message, 'error')
     }
@@ -95,33 +111,9 @@ function PlatosEditor() {
 
   return (
     <div>
-      <div className="card">
-        <div className="card-title">{form.id ? 'Editar plato' : 'Agregar plato'}</div>
-        <div className="field"><label htmlFor="pl-nombre">Nombre</label><input id="pl-nombre" value={form.nombre} onChange={(e) => set('nombre', e.target.value)} /></div>
-        <div className="field"><label htmlFor="pl-cat">Categoría</label>
-          <select id="pl-cat" value={form.categoria} onChange={(e) => set('categoria', e.target.value)}>
-            <option>Platos Marinos</option>
-            <option>A la Carta</option>
-          </select>
-        </div>
-        <div className="grid-2">
-          <div className="field"><label htmlFor="pl-precio">Precio (S/)</label><input id="pl-precio" type="number" min="0" max="999.99" step="0.10" inputMode="decimal" value={form.precio} onChange={(e) => set('precio', e.target.value)} /></div>
-          <div className="field"><label htmlFor="pl-stock">Stock</label><input id="pl-stock" type="number" min="0" max="99" step="1" inputMode="numeric" value={form.stock} onChange={(e) => set('stock', e.target.value)} /></div>
-        </div>
-        <div className="field"><label htmlFor="pl-desc">Descripción</label><textarea id="pl-desc" rows={2} value={form.descripcion} onChange={(e) => set('descripcion', e.target.value)} /></div>
-        <div className="field">
-          <label htmlFor="pl-foto">Foto</label>
-          <input id="pl-foto" type="file" accept="image/*" onChange={subir} />
-          {subiendo && <span className="text-xs muted" style={{ marginLeft: 8 }}>subiendo...</span>}
-        </div>
-        {form.imagen && <img src={form.imagen} alt="" style={{ width: 90, height: 90, objectFit: 'cover', borderRadius: 10, marginBottom: 10 }} />}
-        <label className="row mb-2"><input type="checkbox" checked={form.incluye_refresco} onChange={(e) => set('incluye_refresco', e.target.checked)} /> Incluye refresco</label>
-        <label className="row mb-3"><input type="checkbox" checked={form.activo} onChange={(e) => set('activo', e.target.checked)} /> Activo (visible en el menú)</label>
-        <div className="row">
-          <button className="btn" onClick={guardar}>{form.id ? 'Guardar cambios' : 'Agregar plato'}</button>
-          {form.id && <button className="btn btn-outline" onClick={reset}>Cancelar</button>}
-        </div>
-      </div>
+      <button className="btn btn-block mb-3" onClick={abrirNuevo}>
+        <Plus /> Agregar plato
+      </button>
 
       <div className="card">
         <div className="card-title">Platos ({platos.length})</div>
@@ -137,15 +129,49 @@ function PlatosEditor() {
               </div>
             </div>
             <div className="row-wrap">
-              <button className="btn btn-sm btn-outline" onClick={() => editar(p)}><Pencil /></button>
-              <button className={'btn btn-sm ' + (p.activo ? 'btn-naranja' : 'btn-verde')} onClick={() => alternarActivo(p)}>
+              <button className="btn btn-sm btn-outline" aria-label={`Editar ${p.nombre}`} onClick={() => abrirEditar(p)}><Pencil /></button>
+              <button className={'btn btn-sm ' + (p.activo ? 'btn-naranja' : 'btn-verde')} aria-label={p.activo ? `Ocultar ${p.nombre}` : `Activar ${p.nombre}`} onClick={() => alternarActivo(p)}>
                 {p.activo ? <EyeOff /> : <Eye />}
               </button>
-              <button className="btn btn-sm btn-rojo" onClick={() => setEliminando(p)}><Trash2 /></button>
+              <button className="btn btn-sm btn-rojo" aria-label={`Eliminar ${p.nombre}`} onClick={() => setEliminando(p)}><Trash2 /></button>
             </div>
           </div>
         ))}
       </div>
+
+      {sheetAbierto && (
+        <Sheet
+          title={form.id ? `Editar: ${form.nombre || 'plato'}` : 'Agregar plato'}
+          onClose={cerrar}
+          footer={
+            <>
+              <button className="btn btn-outline grow" onClick={cerrar}>Cancelar</button>
+              <button className="btn grow" onClick={guardar}>{form.id ? 'Guardar cambios' : 'Agregar plato'}</button>
+            </>
+          }
+        >
+          <div className="field"><label htmlFor="pl-nombre">Nombre</label><input id="pl-nombre" autoFocus value={form.nombre} onChange={(e) => set('nombre', e.target.value)} /></div>
+          <div className="field"><label htmlFor="pl-cat">Categoría</label>
+            <select id="pl-cat" value={form.categoria} onChange={(e) => set('categoria', e.target.value)}>
+              <option>Platos Marinos</option>
+              <option>A la Carta</option>
+            </select>
+          </div>
+          <div className="grid-2">
+            <div className="field"><label htmlFor="pl-precio">Precio (S/)</label><input id="pl-precio" type="number" min="0" max="999.99" step="0.10" inputMode="decimal" value={form.precio} onChange={(e) => set('precio', e.target.value)} /></div>
+            <div className="field"><label htmlFor="pl-stock">Stock</label><input id="pl-stock" type="number" min="0" max="99" step="1" inputMode="numeric" value={form.stock} onChange={(e) => set('stock', e.target.value)} /></div>
+          </div>
+          <div className="field"><label htmlFor="pl-desc">Descripción</label><textarea id="pl-desc" rows={2} value={form.descripcion} onChange={(e) => set('descripcion', e.target.value)} /></div>
+          <div className="field">
+            <label htmlFor="pl-foto">Foto</label>
+            <input id="pl-foto" type="file" accept="image/*" onChange={subir} />
+            {subiendo && <span className="text-xs muted" style={{ marginLeft: 8 }}>subiendo...</span>}
+          </div>
+          {form.imagen && <img src={form.imagen} alt="" style={{ width: 90, height: 90, objectFit: 'cover', borderRadius: 10, marginBottom: 10 }} />}
+          <label className="row mb-2"><input type="checkbox" checked={form.incluye_refresco} onChange={(e) => set('incluye_refresco', e.target.checked)} /> Incluye refresco</label>
+          <label className="row"><input type="checkbox" checked={form.activo} onChange={(e) => set('activo', e.target.checked)} /> Activo (visible en el menú)</label>
+        </Sheet>
+      )}
 
       {eliminando && (
         <ConfirmDialog
