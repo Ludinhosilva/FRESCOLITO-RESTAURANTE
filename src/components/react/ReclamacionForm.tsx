@@ -37,7 +37,7 @@ export default function ReclamacionForm() {
       setConstancia(ref)
       setForm(initial)
     } catch {
-      setError('No se pudo registrar. Inténtalo de nuevo o escríbenos a contacto@frescolito.com')
+      setError('No se pudo registrar. Inténtalo de nuevo o escríbenos a contacto.frescolito@gmail.com')
     } finally {
       setEnviando(false)
     }
