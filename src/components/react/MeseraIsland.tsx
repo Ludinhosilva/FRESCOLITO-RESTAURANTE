@@ -1,34 +1,35 @@
 import Proveedores from './Proveedores.tsx'
 import GuardPersonal from './GuardPersonal.tsx'
-import BarraPersonal from './BarraPersonal.tsx'
+import AppShell from './AppShell.tsx'
+import ConfirmDialog from './ConfirmDialog.tsx'
+import Sheet from './ui/Sheet.tsx'
+import EmptyState from './ui/EmptyState.tsx'
+import { useToast } from './ui/Toast.tsx'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { Search, Minus, Plus, X, ShoppingBag, Armchair, Store, Package, Bell } from 'lucide-react'
 import { cobrarMesa, cancelarPedido, crearPedido, listarMesas, listarPedidosDelDia, listarPlatos } from '../../lib/pedidos.ts'
 import { useRealtime } from '../../hooks/useRealtime.ts'
 import { sonidoListo } from '../../lib/sonido.ts'
-import ConfirmDialog from './ConfirmDialog.tsx'
-
-const METODOS = [
-  { id: 'efectivo', label: 'Efectivo' },
-  { id: 'yape', label: 'Yape' },
-  { id: 'plin', label: 'Plin' },
-]
+import { METODOS_PAGO, METODO_LABEL } from '../../lib/dominio.ts'
 
 const SECCIONES = [
-  { id: 'llevar', label: 'Para llevar' },
-  { id: 'salon', label: 'Salón' },
-  { id: 'stock', label: 'Stock' },
+  { id: 'llevar', label: 'Para llevar', icon: Store },
+  { id: 'salon', label: 'Salón', icon: Armchair },
+  { id: 'stock', label: 'Stock', icon: Package },
 ]
 
 function MeseraContenido() {
   const queryClient = useQueryClient()
+  const toast = useToast()
   const [seccion, setSeccion] = useState('llevar')
   const [mesa, setMesa] = useState(null)
+  const [busqueda, setBusqueda] = useState('')
   const [seleccion, setSeleccion] = useState<Record<string, number>>({})
   const [metodo, setMetodo] = useState('efectivo')
   const [notas, setNotas] = useState('')
   const [enviando, setEnviando] = useState(false)
-  const [mensaje, setMensaje] = useState('')
+  const [carritoAbierto, setCarritoAbierto] = useState(false)
   const [cobrando, setCobrando] = useState(null)
   const [cobroMetodo, setCobroMetodo] = useState('efectivo')
   const [cobroMonto, setCobroMonto] = useState('')
@@ -41,14 +42,12 @@ function MeseraContenido() {
   const { data: pedidos = [] } = useQuery({
     queryKey: ['pedidos-hoy'],
     queryFn: listarPedidosDelDia,
-    refetchInterval: 1000 * 20,
   })
 
   useRealtime('platos', () => queryClient.invalidateQueries({ queryKey: ['platos'] }))
   useRealtime('pedidos', () => queryClient.invalidateQueries({ queryKey: ['pedidos-hoy'] }))
   useRealtime('pedido_items', () => queryClient.invalidateQueries({ queryKey: ['pedidos-hoy'] }))
 
-  // Aviso: pedido de salon listo para servir
   useEffect(() => {
     for (const p of pedidos) {
       if (p.canal !== 'salon') continue
@@ -58,16 +57,10 @@ function MeseraContenido() {
       if (listo && !notificados.current.has(p.id)) {
         notificados.current.add(p.id)
         sonidoListo()
-        setMensaje(`Pedido #${p.numero_orden} listo para servir`)
+        toast(`Pedido #${p.numero_orden} listo para servir`)
       }
     }
-  }, [pedidos])
-
-  useEffect(() => {
-    if (!mensaje) return
-    const t = setTimeout(() => setMensaje(''), 3500)
-    return () => clearTimeout(t)
-  }, [mensaje])
+  }, [pedidos, toast])
 
   const porCategoria = useMemo(() => {
     const map: Record<string, any[]> = {}
@@ -77,6 +70,12 @@ function MeseraContenido() {
     }
     return map
   }, [platos])
+
+  const filtrados = useMemo(() => {
+    const q = busqueda.trim().toLowerCase()
+    if (!q) return null
+    return platos.filter((p) => p.nombre.toLowerCase().includes(q))
+  }, [platos, busqueda])
 
   const itemsPedido = Object.entries(seleccion)
     .map(([id, cantidad]) => {
@@ -116,8 +115,9 @@ function MeseraContenido() {
   })
 
   const abrirConfirmacion = () => {
-    if (itemsPedido.length === 0) return setMensaje('Agrega al menos un plato')
-    if (seccion === 'salon' && !mesa) return setMensaje('Selecciona la mesa')
+    if (itemsPedido.length === 0) return toast('Agrega al menos un plato', 'error')
+    if (seccion === 'salon' && !mesa) return toast('Selecciona la mesa', 'error')
+    setCarritoAbierto(false)
     setConfirmando(true)
   }
 
@@ -126,17 +126,16 @@ function MeseraContenido() {
       await cancelarPedido(p.id)
       queryClient.invalidateQueries({ queryKey: ['pedidos-hoy'] })
       setCancelando(null)
-      setMensaje('Pedido cancelado')
+      toast('Pedido cancelado')
     } catch (err) {
-      setMensaje('Error: ' + (err.message || 'no se pudo cancelar'))
+      toast('Error: ' + (err.message || 'no se pudo cancelar'), 'error')
     }
   }
 
   const enviar = async () => {
-    if (itemsPedido.length === 0) return setMensaje('Agrega al menos un plato')
-    if (seccion === 'salon' && !mesa) return setMensaje('Selecciona la mesa')
+    if (itemsPedido.length === 0) return toast('Agrega al menos un plato', 'error')
+    if (seccion === 'salon' && !mesa) return toast('Selecciona la mesa', 'error')
     setEnviando(true)
-    setMensaje('')
     try {
       await crearPedido({
         mesaId: seccion === 'salon' ? mesa : null,
@@ -145,10 +144,10 @@ function MeseraContenido() {
         notas,
         items: itemsPedido.map((i) => ({ plato_id: i.plato.id, cantidad: i.cantidad })),
       })
-      setMensaje(seccion === 'llevar' ? 'Pedido para llevar enviado' : `Pedido enviado a la mesa ${mesa}`)
+      toast(seccion === 'llevar' ? 'Pedido para llevar enviado' : `Pedido enviado a la mesa ${mesa}`)
       limpiar()
     } catch (err) {
-      setMensaje(err.message || 'No se pudo enviar el pedido')
+      toast(err.message || 'No se pudo enviar el pedido', 'error')
     } finally {
       setEnviando(false)
     }
@@ -162,14 +161,14 @@ function MeseraContenido() {
 
   const confirmarCobro = async (p) => {
     const monto = Number(cobroMonto)
-    if (isNaN(monto) || monto < 0 || monto > 9999) return setMensaje('El monto debe estar entre 0 y 9999')
+    if (isNaN(monto) || monto < 0 || monto > 9999) return toast('El monto debe estar entre 0 y 9999', 'error')
     try {
       await cobrarMesa(p.id, cobroMetodo, monto || Number(p.total))
       queryClient.invalidateQueries({ queryKey: ['pedidos-hoy'] })
       setCobrando(null)
-      setMensaje('Cobro registrado ✓')
+      toast('Cobro registrado ✓')
     } catch (err) {
-      setMensaje('Error: ' + (err.message || 'no se pudo cobrar'))
+      toast('Error: ' + (err.message || 'no se pudo cobrar'), 'error')
     }
   }
 
@@ -178,20 +177,54 @@ function MeseraContenido() {
     [pedidos],
   )
 
+  const renderPlato = (p) => {
+    const sinStock = !p.stock_disponible || p.stock <= 0
+    const c = cant(p.id)
+    return (
+      <div key={p.id} className={'cli-plato' + (sinStock ? ' sinstock' : '')}>
+        <div className="cli-plato-left">
+          <div>
+            <div className="cli-plato-nombre">
+              <i className={'cli-dot ' + (sinStock ? 'rojo' : 'verde')} />
+              {p.nombre}
+            </div>
+            <div className="cli-plato-precio">S/ {Number(p.precio).toFixed(2)} · {sinStock ? 'Agotado' : `${p.stock} disp.`}</div>
+          </div>
+        </div>
+        {sinStock ? (
+          <span className="cli-plato-agotado">Agotado</span>
+        ) : (
+          <div className="cli-stepper">
+            <button className="cli-step-btn" aria-label={`Quitar ${p.nombre}`} onClick={() => cambiar(p, -1)} disabled={c <= 0}>
+              <Minus />
+            </button>
+            <span className="cli-step-num">{c}</span>
+            <button className="cli-step-btn" aria-label={`Agregar ${p.nombre}`} onClick={() => cambiar(p, 1)} disabled={c >= p.stock}>
+              <Plus />
+            </button>
+          </div>
+        )}
+      </div>
+    )
+  }
+
   return (
     <div>
       <h1 className="page-title">Tomar Pedido</h1>
 
       <div className="tabs-scroll">
-        {SECCIONES.map((s) => (
-          <button
-            key={s.id}
-            className={'filtro-chip' + (seccion === s.id ? ' active' : '')}
-            onClick={() => { setSeccion(s.id); limpiar() }}
-          >
-            {s.label}{s.id === 'salon' && mesasAbiertas.length > 0 ? ` (${mesasAbiertas.length})` : ''}
-          </button>
-        ))}
+        {SECCIONES.map((s) => {
+          const Icon = s.icon
+          return (
+            <button
+              key={s.id}
+              className={'filtro-chip' + (seccion === s.id ? ' active' : '')}
+              onClick={() => { setSeccion(s.id); limpiar() }}
+            >
+              <Icon /> {s.label}{s.id === 'salon' && mesasAbiertas.length > 0 ? ` (${mesasAbiertas.length})` : ''}
+            </button>
+          )
+        })}
       </div>
 
       {seccion !== 'stock' && (
@@ -199,109 +232,69 @@ function MeseraContenido() {
           {seccion === 'salon' && (
             <div className="card">
               <div className="card-title">Mesa</div>
-              <ul className="table-list">
-                {mesas.map((m) => (
-                  <li key={m.id}>
-                    <button className={'mesa-btn' + (mesa === m.id ? ' selected' : '')} onClick={() => setMesa(m.id)}>
-                      {m.numero}
-                    </button>
-                  </li>
-                ))}
-              </ul>
+              {mesas.length === 0 ? (
+                <EmptyState icon={Armchair} title="Sin mesas" sub="No hay mesas configuradas." />
+              ) : (
+                <ul className="table-list">
+                  {mesas.map((m) => (
+                    <li key={m.id}>
+                      <button
+                        className={'mesa-btn' + (mesa === m.id ? ' selected' : '')}
+                        aria-pressed={mesa === m.id}
+                        onClick={() => setMesa(m.id)}
+                      >
+                        {m.numero}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           )}
 
           <div className="card">
             <div className="card-title">Platos</div>
-            <div className="cli-leyenda">
-              <span><i className="cli-dot verde" /> Disponible</span>
-              <span><i className="cli-dot rojo" /> Agotado</span>
+            <div className="field" style={{ position: 'relative' }}>
+              <Search style={{ position: 'absolute', left: 12, top: 13, width: 18, height: 18, color: 'var(--ink-400)' }} />
+              <input
+                style={{ paddingLeft: 38 }}
+                placeholder="Buscar plato..."
+                aria-label="Buscar plato"
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+              />
             </div>
-            {Object.entries(porCategoria).map(([cat, lista]) => (
-              <div key={cat}>
-                <div className="seccion-title">{cat}</div>
-                {lista.map((p) => {
-                  const sinStock = !p.stock_disponible || p.stock <= 0
-                  const c = cant(p.id)
-                  return (
-                    <div key={p.id} className={'cli-plato' + (sinStock ? ' sinstock' : '')}>
-                      <div className="cli-plato-left">
-                        <div>
-                          <div className="cli-plato-nombre">
-                            <i className={'cli-dot ' + (sinStock ? 'rojo' : 'verde')} />
-                            {p.nombre}
-                          </div>
-                          <div className="cli-plato-precio">S/ {Number(p.precio).toFixed(2)} · {sinStock ? 'Agotado' : `${p.stock} disp.`}</div>
-                        </div>
-                      </div>
-                      {sinStock ? (
-                        <span className="cli-plato-agotado">Agotado</span>
-                      ) : (
-                        <div className="cli-stepper">
-                          <button className="cli-step-btn" onClick={() => cambiar(p, -1)} disabled={c <= 0}>−</button>
-                          <span className="cli-step-num">{c}</span>
-                          <button className="cli-step-btn" onClick={() => cambiar(p, 1)} disabled={c >= p.stock}>+</button>
-                        </div>
-                      )}
-                    </div>
-                  )
-                })}
-              </div>
-            ))}
+
+            {filtrados ? (
+              filtrados.length === 0
+                ? <div className="text-sm muted">Sin resultados</div>
+                : filtrados.map(renderPlato)
+            ) : (
+              Object.entries(porCategoria).map(([cat, lista]) => (
+                <div key={cat}>
+                  <div className="seccion-title">{cat}</div>
+                  {lista.map(renderPlato)}
+                </div>
+              ))
+            )}
           </div>
 
           {seccion === 'llevar' && (
             <div className="card">
               <div className="card-title">Método de pago</div>
               <div className="pago-grid">
-                {METODOS.map((m) => (
-                  <button key={m.id} className={'pago-option' + (metodo === m.id ? ' selected' : '')} onClick={() => setMetodo(m.id)}>
-                    {m.label}
+                {METODOS_PAGO.map((m) => (
+                  <button key={m} className={'pago-option' + (metodo === m ? ' selected' : '')} onClick={() => setMetodo(m)}>
+                    {METODO_LABEL[m]}
                   </button>
                 ))}
               </div>
             </div>
           )}
 
-          <div className="card">
-            <div className="field">
-              <label>Notas (opcional)</label>
-              <textarea rows={2} value={notas} onChange={(e) => setNotas(e.target.value)} placeholder="Ej: sin cebolla, salsa aparte..." />
-            </div>
-          </div>
-
-          {itemsPedido.length > 0 && (
-            <div className="card">
-              <div className="card-title">Pedido en curso</div>
-              {itemsPedido.map(({ plato, cantidad }) => (
-                <div key={plato.id} className="cli-item">
-                  <div>
-                    <div className="cli-item-nombre">{plato.nombre}</div>
-                    <div className="cli-item-precio">S/ {(plato.precio * cantidad).toFixed(2)}</div>
-                  </div>
-                  <div className="cant-controller">
-                    <button className="cant-btn" onClick={() => cambiar(plato, -1)}>−</button>
-                    <span className="cli-item-cant">{cantidad}</span>
-                    <button className="cant-btn" onClick={() => cambiar(plato, 1)} disabled={cantidad >= plato.stock}>+</button>
-                    <button className="cli-item-quitar" onClick={() => quitarPlato(plato.id)}>✕</button>
-                  </div>
-                </div>
-              ))}
-              <div className="total-row"><span>Subtotal</span><span>S/ {subtotal.toFixed(2)}</span></div>
-              {cargoEnvases > 0 && <div className="total-row"><span>Para llevar (S/1 x {unidades})</span><span>S/ {cargoEnvases.toFixed(2)}</span></div>}
-              <div className="total-row final"><span>Total</span><span>S/ {total.toFixed(2)}</span></div>
-              {seccion === 'salon' && (
-                <p className="cli-legal">El cobro se hace cuando la mesa termine (sección Salón → Cobrar).</p>
-              )}
-              <button className="btn btn-block btn-verde" onClick={abrirConfirmacion} disabled={enviando} style={{ marginTop: 10 }}>
-                Revisar y enviar
-              </button>
-            </div>
-          )}
-
           {seccion === 'salon' && mesasAbiertas.length > 0 && (
             <div className="card">
-              <div className="card-title">Mesas abiertas (por cobrar)</div>
+              <div className="card-title"><Bell style={{ width: 16, height: 16 }} /> Mesas abiertas (por cobrar)</div>
               {mesasAbiertas.map((p) => (
                 <div key={p.id} className="mesa-abierta">
                   <div>
@@ -322,17 +315,17 @@ function MeseraContenido() {
                   {cobrando === p.id && (
                     <div className="mesa-cobro">
                       <div className="pago-grid">
-                        {METODOS.map((m) => (
-                          <button key={m.id} className={'pago-option' + (cobroMetodo === m.id ? ' selected' : '')} onClick={() => setCobroMetodo(m.id)}>
-                            {m.label}
+                        {METODOS_PAGO.map((m) => (
+                          <button key={m} className={'pago-option' + (cobroMetodo === m ? ' selected' : '')} onClick={() => setCobroMetodo(m)}>
+                            {METODO_LABEL[m]}
                           </button>
                         ))}
                       </div>
-                      <div className="field" style={{ marginTop: 8 }}>
+                      <div className="field mt-2">
                         <label>Monto a cobrar</label>
                         <input type="number" min="0" max="9999" step="0.10" inputMode="decimal" value={cobroMonto} onChange={(e) => setCobroMonto(e.target.value)} />
                       </div>
-                      <div style={{ display: 'flex', gap: 8 }}>
+                      <div className="row">
                         <button className="btn btn-sm btn-verde" onClick={() => confirmarCobro(p)}>Confirmar cobro</button>
                         <button className="btn btn-sm btn-outline" onClick={() => setCobrando(null)}>Cancelar</button>
                       </div>
@@ -364,6 +357,62 @@ function MeseraContenido() {
         </div>
       )}
 
+      {seccion !== 'stock' && unidades > 0 && (
+        <>
+          <div style={{ height: 64 }} />
+          <div className="cart-bar">
+            <div className="pedir-foot-info">
+              <small>{unidades} plato(s)</small>
+              <strong style={{ color: '#fff' }}>S/ {total.toFixed(2)}</strong>
+            </div>
+            <button className="btn" onClick={() => setCarritoAbierto(true)}>
+              <ShoppingBag /> Ver pedido
+            </button>
+          </div>
+        </>
+      )}
+
+      {carritoAbierto && (
+        <Sheet
+          title="Pedido en curso"
+          onClose={() => setCarritoAbierto(false)}
+          footer={
+            <>
+              <div className="pedir-foot-info">
+                <small className="muted">{unidades} plato(s)</small>
+                <strong>S/ {total.toFixed(2)}</strong>
+              </div>
+              <button className="btn btn-verde" onClick={abrirConfirmacion}>Revisar y enviar</button>
+            </>
+          }
+        >
+          {itemsPedido.map(({ plato, cantidad }) => (
+            <div key={plato.id} className="cli-item">
+              <div>
+                <div className="cli-item-nombre">{plato.nombre}</div>
+                <div className="cli-item-precio">S/ {(plato.precio * cantidad).toFixed(2)}</div>
+              </div>
+              <div className="cant-controller">
+                <button className="cant-btn" aria-label={`Quitar ${plato.nombre}`} onClick={() => cambiar(plato, -1)}><Minus /></button>
+                <span className="cli-item-cant">{cantidad}</span>
+                <button className="cant-btn" aria-label={`Agregar ${plato.nombre}`} onClick={() => cambiar(plato, 1)} disabled={cantidad >= plato.stock}><Plus /></button>
+                <button className="cli-item-quitar" aria-label={`Eliminar ${plato.nombre}`} onClick={() => quitarPlato(plato.id)}><X /></button>
+              </div>
+            </div>
+          ))}
+
+          <div className="field mt-3">
+            <label htmlFor="notas">Notas (opcional)</label>
+            <textarea id="notas" rows={2} value={notas} onChange={(e) => setNotas(e.target.value)} placeholder="Ej: sin cebolla, salsa aparte..." />
+          </div>
+
+          <div className="total-row"><span>Subtotal</span><span>S/ {subtotal.toFixed(2)}</span></div>
+          {cargoEnvases > 0 && <div className="total-row"><span>Para llevar (S/1 x {unidades})</span><span>S/ {cargoEnvases.toFixed(2)}</span></div>}
+          <div className="total-row final"><span>Total</span><span>S/ {total.toFixed(2)}</span></div>
+          {seccion === 'salon' && <p className="cli-legal">El cobro se hace cuando la mesa termine.</p>}
+        </Sheet>
+      )}
+
       {confirmando && (
         <ConfirmDialog
           titulo={seccion === 'llevar' ? 'Confirmar pedido para llevar' : `Confirmar pedido — Mesa ${mesa ?? ''}`}
@@ -375,10 +424,10 @@ function MeseraContenido() {
           {itemsPedido.map(({ plato, cantidad }) => (
             <div key={plato.id} className="cli-item-simple">{cantidad}× {plato.nombre} — S/ {(plato.precio * cantidad).toFixed(2)}</div>
           ))}
-          <div className="total-row" style={{ marginTop: 8 }}><span>Subtotal</span><span>S/ {subtotal.toFixed(2)}</span></div>
+          <div className="total-row mt-2"><span>Subtotal</span><span>S/ {subtotal.toFixed(2)}</span></div>
           {cargoEnvases > 0 && <div className="total-row"><span>Para llevar (S/1 x {unidades})</span><span>S/ {cargoEnvases.toFixed(2)}</span></div>}
           <div className="total-row final"><span>Total</span><span>S/ {total.toFixed(2)}</span></div>
-          {seccion === 'llevar' && <p className="cli-legal">Pago: {metodo}</p>}
+          {seccion === 'llevar' && <p className="cli-legal">Pago: {METODO_LABEL[metodo]}</p>}
           {notas ? <p className="cli-legal">Nota: {notas}</p> : null}
         </ConfirmDialog>
       )}
@@ -395,8 +444,6 @@ function MeseraContenido() {
           <p className="cli-legal">Se devolverá el stock de los platos.</p>
         </ConfirmDialog>
       )}
-
-      {mensaje && <div className="toast">{mensaje}</div>}
     </div>
   )
 }
@@ -405,9 +452,9 @@ export default function MeseraIsland() {
   return (
     <Proveedores>
       <GuardPersonal roles={['mesera', 'admin']}>
-        <BarraPersonal>
+        <AppShell>
           <MeseraContenido />
-        </BarraPersonal>
+        </AppShell>
       </GuardPersonal>
     </Proveedores>
   )

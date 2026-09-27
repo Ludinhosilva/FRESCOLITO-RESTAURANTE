@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Eye, EyeOff, LogIn, AlertTriangle } from 'lucide-react'
 import Proveedores from './Proveedores.tsx'
 import { useAuth } from '../../context/AuthContext.tsx'
 
@@ -7,6 +8,7 @@ const DESTINO = { admin: '/admin', cocina: '/cocina', repartidor: '/repartidor',
 function Form() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [verPass, setVerPass] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const { iniciarSesion } = useAuth()
@@ -18,8 +20,8 @@ function Form() {
     try {
       const rol = await iniciarSesion(email, password)
       window.location.href = DESTINO[rol] || '/personal'
-    } catch {
-      setError('Credenciales incorrectas. Verifica email y contraseña.')
+    } catch (err) {
+      setError(err?.message || 'Credenciales incorrectas. Verifica email y contraseña.')
     } finally {
       setLoading(false)
     }
@@ -33,22 +35,46 @@ function Form() {
         <p className="login-sub">Acceso del personal</p>
 
         <div className="field">
-          <label>Email</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
+          <label htmlFor="email">Email</label>
+          <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
         </div>
+
         <div className="field">
-          <label>Contraseña</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" />
+          <label htmlFor="password">Contraseña</label>
+          <div style={{ position: 'relative' }}>
+            <input
+              id="password"
+              type={verPass ? 'text' : 'password'}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              autoComplete="current-password"
+              style={{ paddingRight: 46 }}
+            />
+            <button
+              type="button"
+              className="icon-btn sm"
+              onClick={() => setVerPass((v) => !v)}
+              aria-label={verPass ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+              style={{ position: 'absolute', right: 4, top: 4, border: 'none', background: 'transparent' }}
+            >
+              {verPass ? <EyeOff /> : <Eye />}
+            </button>
+          </div>
         </div>
 
-        {error && <p className="error-text" style={{ marginBottom: 12 }}>{error}</p>}
+        {error && (
+          <div className="cli-warn" role="alert">
+            <AlertTriangle style={{ width: 16, height: 16, flexShrink: 0 }} /> {error}
+          </div>
+        )}
 
-        <button className="btn btn-block" type="submit" disabled={loading}>
-          {loading ? 'Ingresando...' : 'Ingresar'}
+        <button className="btn btn-block btn-lg" type="submit" disabled={loading}>
+          <LogIn /> {loading ? 'Ingresando...' : 'Ingresar'}
         </button>
 
         <p style={{ textAlign: 'center', marginTop: 14 }}>
-          <a href="/" style={{ color: '#8D6E63', fontSize: 13 }}>← Volver al inicio</a>
+          <a href="/" style={{ color: 'var(--ink-600)', fontSize: 13 }}>← Volver al inicio</a>
         </p>
       </form>
     </div>

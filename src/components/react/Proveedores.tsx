@@ -3,6 +3,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider } from '../../context/AuthContext.tsx'
 import { CarritoClienteProvider } from '../../context/CarritoClienteContext.tsx'
 import { desbloquearAudio } from '../../lib/sonido.ts'
+import { ToastProvider } from './ui/Toast.tsx'
+import ErrorBoundary from './ui/ErrorBoundary.tsx'
 import '../../styles/panel.css'
 
 const queryClient = new QueryClient({
@@ -28,7 +30,11 @@ export default function Proveedores({ children }) {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <CarritoClienteProvider>
-          <div className="panel-root">{children}</div>
+          <div className="panel-root">
+            <ToastProvider>
+              <ErrorBoundary>{children}</ErrorBoundary>
+            </ToastProvider>
+          </div>
         </CarritoClienteProvider>
       </AuthProvider>
     </QueryClientProvider>

@@ -39,13 +39,16 @@ D:\FRESCOLITO\
 │   │       ├── PedirIsland.tsx        # Pedido online del cliente
 │   │       ├── MenuPublicoIsland.tsx  # Carta pública
 │   │       ├── ContactForm.tsx        # Formulario de contacto
+│   │       ├── AppShell.tsx           # Shell de paneles (tab bar móvil + header)
 │   │       ├── AdminIsland.tsx        # Panel administrador
-│   │       ├── CocinaIsland.tsx       # Panel cocina
-│   │       ├── MeseraIsland.tsx       # Panel mesera (salón/cobro)
+│   │       ├── admin/                 # Secciones del admin (reportes, pedidos, catálogo, config)
+│   │       ├── CocinaIsland.tsx       # Panel cocina (KDS)
+│   │       ├── MeseraIsland.tsx       # Panel mesera (POS)
 │   │       ├── RepartidorIsland.tsx   # Panel repartidor
-│   │       ├── EditarPedido.tsx, Proveedores.tsx, UsoPanel.tsx, BarraPersonal.tsx
+│   │       ├── ui/                    # Kit de UI (Toast, Sheet, EmptyState, ErrorBoundary, ConfirmDialog)
+│   │       ├── EditarPedido.tsx, Proveedores.tsx, UsoPanel.tsx
 │   │       ├── ReclamacionForm.tsx, LoginIsland.tsx, GuardPersonal.tsx
-│   │       ├── HorarioBadge.tsx, HorarioTexto.tsx, ConfirmDialog.tsx
+│   │       ├── HorarioBadge.tsx, HorarioTexto.tsx
 │   │       └── bits/                  # UI reutilizable (charts, contadores)
 │   ├── pages/                # Rutas (file-based)
 │   ├── layouts/              # BaseLayout.astro, PanelLayout.astro
