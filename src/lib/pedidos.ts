@@ -178,7 +178,8 @@ export async function listarPedidosDiaAdmin(dia) {
 
 // ===== Editor de menu (admin) =====
 export async function listarPlatosTodos() {
-  const { data, error } = await supabase
+  // Incluye columnas nuevas (destacado, destacado_orden) no presentes en database.types.ts.
+  const { data, error } = await (supabase as any)
     .from('platos')
     .select('*')
     .order('categoria')

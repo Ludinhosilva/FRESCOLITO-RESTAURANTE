@@ -1,8 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Hero from '../components/Hero.astro'
-import { featuredDishes } from '../data/menu'
+import DestacadosIsland from '../components/react/DestacadosIsland.tsx'
 import { Fish, Leaf, Truck, HeartHandshake, PartyPopper } from 'lucide-react'
+import '../styles/home.css'
 
 const ventajas = [
   { Icon: Fish, title: 'Sazón amazónica', desc: 'Ceviches, chicharrones y platos marinos preparados al momento con recetas de casa.' },
@@ -23,20 +24,7 @@ const ventajas = [
         <h2 class="home-h2">Platos destacados</h2>
         <span class="home-divider"></span>
       </div>
-      <div class="home-dishes">
-        {featuredDishes.map((d) => (
-          <article class="home-dish" data-reveal-scale>
-            <div class="home-dish-img"><img src={d.image} alt={d.name} loading="lazy" /></div>
-            <div class="home-dish-body">
-              <h3>{d.name}</h3>
-              <div class="home-dish-foot">
-                <span class="home-dish-price">S/ {d.price.toFixed(2)}</span>
-                <button class="btn btn-primary home-dish-btn" data-pedir>Ordenar</button>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
+      <DestacadosIsland client:visible />
       <div class="home-cta-center">
         <a href="/menu" class="btn btn-outline">Ver todo el menú</a>
       </div>
@@ -112,21 +100,6 @@ const ventajas = [
     border-radius: 2px; margin: 0 auto;
   }
 
-  .home-dishes { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-lg); }
-  .home-dish {
-    background: var(--color-bg); border-radius: var(--radius); overflow: hidden;
-    box-shadow: var(--shadow-sm); display: flex; flex-direction: column;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  .home-dish:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
-  .home-dish-img { height: 190px; overflow: hidden; }
-  .home-dish-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
-  .home-dish:hover .home-dish-img img { transform: scale(1.05); }
-  .home-dish-body { padding: var(--space-md); display: flex; flex-direction: column; gap: var(--space-sm); flex: 1; }
-  .home-dish-body h3 { font-family: var(--font-heading); font-weight: 700; font-size: 1.1rem; color: var(--color-dark); }
-  .home-dish-foot { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
-  .home-dish-price { font-family: var(--font-body); font-weight: 700; font-size: 1.15rem; color: var(--color-primary-hover); }
-  .home-dish-btn { font-size: 0.82rem; padding: 0.5rem 1.1rem; border-radius: 50px; }
   .home-cta-center { text-align: center; margin-top: var(--space-xl); }
 
   .home-values { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-lg); }
@@ -149,10 +122,10 @@ const ventajas = [
   .home-eventos-text p { color: var(--color-mid); line-height: 1.9; margin: var(--space-md) 0 var(--space-lg); }
 
   @media (max-width: 960px) {
-    .home-dishes, .home-values { grid-template-columns: 1fr 1fr; }
+    .home-values { grid-template-columns: 1fr 1fr; }
   }
   @media (max-width: 700px) {
-    .home-dishes, .home-values { grid-template-columns: 1fr; }
+    .home-values { grid-template-columns: 1fr; }
     .home-eventos { grid-template-columns: 1fr; }
   }
 </style>

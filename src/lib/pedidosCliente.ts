@@ -22,6 +22,21 @@ export async function listarPlatosPublico() {
   return data
 }
 
+/** Lista los platos destacados para el inicio (maximo 4). */
+export async function listarDestacados() {
+  // Columnas nuevas (destacado, destacado_orden) aun no estan en database.types.ts.
+  const { data, error } = await (supabase as any)
+    .from('platos')
+    .select('id, nombre, categoria, precio, descripcion, imagen')
+    .eq('activo', true)
+    .eq('destacado', true)
+    .order('destacado_orden')
+    .order('nombre')
+    .limit(4)
+  if (error) throw error
+  return data
+}
+
 /** Crea un pedido de cliente (invitado). */
 export async function crearPedidoCliente({
   nombre,

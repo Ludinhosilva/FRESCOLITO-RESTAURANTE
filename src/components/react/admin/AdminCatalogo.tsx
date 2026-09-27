@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Pencil, Eye, EyeOff, Trash2, ImagePlus, Plus } from 'lucide-react'
+import { Pencil, Eye, EyeOff, Trash2, ImagePlus, Plus, Star } from 'lucide-react'
 import { actualizarPlato, crearPlato, eliminarPlato, listarPlatos, listarPlatosTodos, subirImagenPlato } from '../../../lib/pedidos.ts'
 import { useToast } from '../ui/Toast.tsx'
 import ConfirmDialog from '../ConfirmDialog.tsx'
 import Sheet from '../ui/Sheet.tsx'
 
-const VACIO = { id: null, nombre: '', categoria: 'Platos Marinos', precio: '', stock: '', descripcion: '', imagen: '', activo: true, incluye_refresco: false }
+const VACIO = { id: null, nombre: '', categoria: 'Platos Marinos', precio: '', stock: '', descripcion: '', imagen: '', activo: true, incluye_refresco: false, destacado: false, destacado_orden: 0 }
 
 function PlatosEditor() {
   const queryClient = useQueryClient()
@@ -29,6 +29,7 @@ function PlatosEditor() {
     setForm({
       id: p.id, nombre: p.nombre, categoria: p.categoria, precio: p.precio, stock: p.stock,
       descripcion: p.descripcion || '', imagen: p.imagen || '', activo: p.activo, incluye_refresco: p.incluye_refresco,
+      destacado: !!p.destacado, destacado_orden: p.destacado_orden ?? 0,
     })
     setSheetAbierto(true)
   }
@@ -74,6 +75,8 @@ function PlatosEditor() {
       activo: form.activo,
       incluye_refresco: form.incluye_refresco,
       stock_disponible: stock > 0,
+      destacado: form.destacado,
+      destacado_orden: Number(form.destacado_orden) || 0,
     }
     try {
       if (form.id) await actualizarPlato(form.id, payload)
@@ -90,6 +93,16 @@ function PlatosEditor() {
     try {
       await actualizarPlato(p.id, { activo: !p.activo })
       invalidar()
+    } catch (err) {
+      toast('Error: ' + err.message, 'error')
+    }
+  }
+
+  const alternarDestacado = async (p) => {
+    try {
+      await actualizarPlato(p.id, { destacado: !p.destacado })
+      invalidar()
+      toast(p.destacado ? 'Quitado de destacados' : 'Agregado a destacados')
     } catch (err) {
       toast('Error: ' + err.message, 'error')
     }
@@ -129,6 +142,9 @@ function PlatosEditor() {
               </div>
             </div>
             <div className="row-wrap">
+              <button className={'btn btn-sm ' + (p.destacado ? 'btn-naranja' : 'btn-outline')} aria-label={p.destacado ? `Quitar de destacados: ${p.nombre}` : `Destacar: ${p.nombre}`} onClick={() => alternarDestacado(p)}>
+                <Star fill={p.destacado ? 'currentColor' : 'none'} />
+              </button>
               <button className="btn btn-sm btn-outline" aria-label={`Editar ${p.nombre}`} onClick={() => abrirEditar(p)}><Pencil /></button>
               <button className={'btn btn-sm ' + (p.activo ? 'btn-naranja' : 'btn-verde')} aria-label={p.activo ? `Ocultar ${p.nombre}` : `Activar ${p.nombre}`} onClick={() => alternarActivo(p)}>
                 {p.activo ? <EyeOff /> : <Eye />}
@@ -169,7 +185,14 @@ function PlatosEditor() {
           </div>
           {form.imagen && <img src={form.imagen} alt="" style={{ width: 90, height: 90, objectFit: 'cover', borderRadius: 10, marginBottom: 10 }} />}
           <label className="row mb-2"><input type="checkbox" checked={form.incluye_refresco} onChange={(e) => set('incluye_refresco', e.target.checked)} /> Incluye refresco</label>
-          <label className="row"><input type="checkbox" checked={form.activo} onChange={(e) => set('activo', e.target.checked)} /> Activo (visible en el menú)</label>
+          <label className="row mb-2"><input type="checkbox" checked={form.activo} onChange={(e) => set('activo', e.target.checked)} /> Activo (visible en el menú)</label>
+          <label className="row mb-2"><input type="checkbox" checked={form.destacado} onChange={(e) => set('destacado', e.target.checked)} /> Destacar en el inicio</label>
+          {form.destacado && (
+            <div className="field">
+              <label htmlFor="pl-dest-orden">Orden en destacados (menor = primero)</label>
+              <input id="pl-dest-orden" type="number" min="0" step="1" inputMode="numeric" value={form.destacado_orden} onChange={(e) => set('destacado_orden', e.target.value)} />
+            </div>
+          )}
         </Sheet>
       )}
 

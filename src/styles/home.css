@@ -1,0 +1,25 @@
+/* ===== Home: platos destacados (isla) ===== */
+.home-dishes { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-lg); }
+.home-dish {
+  background: var(--color-bg); border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow-sm); display: flex; flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.home-dish:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+.home-dish-img { height: 190px; overflow: hidden; }
+.home-dish-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.home-dish:hover .home-dish-img img { transform: scale(1.05); }
+.home-dish-ph {
+  width: 100%; height: 100%; display: grid; place-items: center;
+  font-size: 2.6rem; background: linear-gradient(135deg, #FDF3DC, #F7E4B0);
+  color: var(--color-primary-hover);
+}
+.home-dish-body { padding: var(--space-md); display: flex; flex-direction: column; gap: var(--space-sm); flex: 1; }
+.home-dish-body h3 { font-family: var(--font-heading); font-weight: 700; font-size: 1.1rem; color: var(--color-dark); }
+.home-dish-desc { color: var(--color-mid); font-size: 0.85rem; line-height: 1.5; }
+.home-dish-foot { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+.home-dish-price { font-family: var(--font-body); font-weight: 700; font-size: 1.15rem; color: var(--color-primary-hover); }
+.home-dish-btn { font-size: 0.82rem; padding: 0.5rem 1.1rem; border-radius: 50px; }
+
+@media (max-width: 960px) { .home-dishes { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 700px) { .home-dishes { grid-template-columns: 1fr; } }
