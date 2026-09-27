@@ -1,0 +1,190 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import CateringCotizador from '../components/react/CateringCotizador.tsx'
+import { WHATSAPP_NUMBER } from '../data/config.ts'
+import { UtensilsCrossed, Armchair, Users, MessageCircle } from 'lucide-react'
+import '../styles/catering.css'
+
+const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hola Frescolito, quiero información sobre el servicio de catering para eventos.')}`
+
+const servicios = [
+  {
+    Icon: UtensilsCrossed,
+    title: 'Comida para eventos',
+    desc: 'Llevamos nuestra sazón amazónica y marina a tu evento: ceviches, chicharrones, chaufas, arroz con mariscos y más, preparado al momento.',
+  },
+  {
+    Icon: Armchair,
+    title: 'Alquiler de menaje',
+    desc: 'Vajilla, cubiertos, copas, mantelería y montaje de mesas. Nos encargamos del detalle para que tu celebración se vea impecable.',
+  },
+  {
+    Icon: Users,
+    title: 'Personal de servicio',
+    desc: 'Mozos y personal de atención para tu evento, con trato cercano y coordinado para que tú solo disfrutes con tus invitados.',
+  },
+]
+
+const pasos = [
+  { title: 'Cuéntanos tu evento', desc: 'Escríbenos por WhatsApp con el tipo de evento, la fecha y el número de invitados.' },
+  { title: 'Recibe tu cotización', desc: 'Te enviamos una propuesta a tu medida según el menú, el menaje y el personal.' },
+  { title: 'Coordinamos juntos', desc: 'Ajustamos detalles: menú, horarios, montaje y logística del servicio.' },
+  { title: 'Disfruta el evento', desc: 'Llegamos, servimos y nos encargamos de todo para que solo te preocupes por celebrar.' },
+]
+
+const galeria = [
+  '/imagenes/galeria/MesaRepresentativa.webp',
+  '/imagenes/galeria/MesaGaleria.webp',
+  '/imagenes/galeria/Mesacomida.webp',
+  '/imagenes/galeria/RONDA.webp',
+  '/imagenes/galeria/Presentacion.webp',
+  '/imagenes/galeria/EQUIPO.webp',
+]
+
+const faqs = [
+  { q: '¿Qué incluye el servicio de catering?', a: 'Ofrecemos comida para eventos, alquiler de menaje (vajilla, cubiertos, montaje) y personal de servicio (mozos). Armamos la propuesta según lo que necesites.' },
+  { q: '¿Con cuánta anticipación debo reservar?', a: 'Recomendamos contactarnos con la mayor anticipación posible, idealmente con varios días, para asegurar disponibilidad según la fecha y el tamaño del evento.' },
+  { q: '¿Atienden fuera del local?', a: 'Sí. Llevamos el servicio a distintos puntos de Iquitos y alrededores. Cuéntanos la ubicación y lo coordinamos.' },
+  { q: '¿Para cuántos invitados pueden atender?', a: 'Nos adaptamos desde eventos pequeños hasta celebraciones grandes. Escríbenos con el número de invitados y te confirmamos la disponibilidad.' },
+]
+---
+
+<BaseLayout
+  title="Catering y Eventos | FRESCOLITO RESTAURANTE"
+  description="Frescolito lleva su sazón a tu evento: comida para eventos, alquiler de menaje y personal de servicio (mozos) en Iquitos. Cotiza por WhatsApp."
+  effect="fade"
+>
+  <main class="cat-page">
+    <!-- Hero -->
+    <section class="cat-hero">
+      <div class="container cat-hero-grid">
+        <div data-reveal>
+          <span class="cat-label">· Servicio de catering ·</span>
+          <h1 class="cat-title">Llevamos Frescolito a tu evento</h1>
+          <p class="cat-lead">
+            Comida para eventos, alquiler de menaje y personal de servicio. Nos encargamos de
+            los detalles para que tu celebración sea inolvidable, con la sazón que nos caracteriza.
+          </p>
+          <div class="cat-hero-actions">
+            <a href="#cotizar" class="btn btn-primary">Cotizar mi evento</a>
+            <a href={waLink} target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+              <MessageCircle /> WhatsApp
+            </a>
+          </div>
+        </div>
+        <div class="cat-hero-img" data-reveal-scale>
+          <img src="/imagenes/galeria/MesaRepresentativa.webp" alt="Montaje de evento Frescolito" loading="eager" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Servicios -->
+    <section class="cat-section alt">
+      <div class="container">
+        <div class="cat-head" data-reveal>
+          <span class="cat-label">· Lo que ofrecemos ·</span>
+          <h2 class="cat-h2">Nuestros servicios</h2>
+          <p class="cat-sub">Todo lo que necesitas para tu evento, en un solo lugar.</p>
+        </div>
+        <div class="cat-grid-3">
+          {servicios.map(({ Icon, title, desc }) => (
+            <article class="cat-card" data-reveal>
+              <div class="cat-card-icon"><Icon /></div>
+              <h3>{title}</h3>
+              <p>{desc}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Cómo funciona -->
+    <section class="cat-section">
+      <div class="container">
+        <div class="cat-head" data-reveal>
+          <span class="cat-label">· Así de simple ·</span>
+          <h2 class="cat-h2">Cómo funciona</h2>
+        </div>
+        <div class="cat-pasos">
+          {pasos.map((p, i) => (
+            <div class="cat-paso" data-reveal>
+              <span class="cat-paso-num">{i + 1}</span>
+              <h3>{p.title}</h3>
+              <p>{p.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Galería -->
+    <section class="cat-section alt">
+      <div class="container">
+        <div class="cat-head" data-reveal>
+          <span class="cat-label">· Momentos ·</span>
+          <h2 class="cat-h2">Nuestros eventos</h2>
+        </div>
+        <div class="cat-galeria">
+          {galeria.map((src) => (
+            <img src={src} alt="Evento atendido por Frescolito" loading="lazy" data-reveal-scale />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Cobertura -->
+    <section class="cat-section">
+      <div class="container">
+        <div class="cat-head" data-reveal>
+          <span class="cat-label">· Dónde llegamos ·</span>
+          <h2 class="cat-h2">Cobertura y capacidad</h2>
+        </div>
+        <div class="cat-cobertura">
+          <div class="cat-cobertura-item" data-reveal-left>
+            <h3>Zona de atención</h3>
+            <p>Atendemos Iquitos y alrededores. Cuéntanos la ubicación de tu evento y coordinamos la logística del servicio.</p>
+          </div>
+          <div class="cat-cobertura-item" data-reveal-right>
+            <h3>Capacidad</h3>
+            <p>Nos adaptamos a eventos pequeños y grandes. Indícanos el número de invitados y te confirmamos la disponibilidad según la fecha.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="cat-section alt">
+      <div class="container">
+        <div class="cat-head" data-reveal>
+          <span class="cat-label">· Dudas frecuentes ·</span>
+          <h2 class="cat-h2">Preguntas frecuentes</h2>
+        </div>
+        <div class="cat-faq" data-reveal>
+          {faqs.map((f) => (
+            <details>
+              <summary>{f.q}</summary>
+              <p>{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA + Cotizador -->
+    <section class="cat-cta" id="cotizar">
+      <div class="container">
+        <div class="cat-cta-card" data-reveal-scale>
+          <div>
+            <span class="cat-label" style="color: var(--color-primary)">· Cotiza tu evento ·</span>
+            <h2>Cuéntanos tu evento</h2>
+            <p>
+              Completa los datos y te llevamos directo a WhatsApp con el mensaje listo.
+              Te respondemos con una propuesta a tu medida.
+            </p>
+          </div>
+          <CateringCotizador client:visible />
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

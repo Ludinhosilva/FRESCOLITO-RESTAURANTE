@@ -502,6 +502,37 @@
 .panel-root .cli-estado { border-radius: var(--r-md); padding: 10px 14px; font-weight: 700; font-size: 13px; margin-bottom: 16px; }
 .panel-root .cli-estado.abierto { background: var(--success-soft); color: #127a37; }
 .panel-root .cli-estado.cerrado { background: var(--danger-soft); color: #b91c1c; }
+
+/* Estado de apertura elegante (pedido cliente) */
+.panel-root .cli-abierto {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--success-soft); color: #127a37;
+  border: 1px solid #BFE6CC; border-radius: var(--r-pill);
+  padding: 8px 14px; font-weight: 700; font-size: 13px; margin-bottom: 14px;
+}
+.panel-root .cli-abierto .cli-dot { margin-right: 0; }
+.panel-root .cli-cerrado {
+  text-align: center; background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--r-lg);
+  padding: 22px 18px; margin-bottom: 16px; box-shadow: var(--elev-1);
+}
+.panel-root .cli-cerrado-icon {
+  width: 54px; height: 54px; border-radius: 50%; margin: 0 auto 12px;
+  display: grid; place-items: center;
+  background: var(--brand-soft); color: var(--brand-hover);
+}
+.panel-root .cli-cerrado-icon svg { width: 26px; height: 26px; }
+.panel-root .cli-cerrado-title { font-weight: 800; font-size: 1.15rem; color: var(--ink-900); }
+.panel-root .cli-cerrado-sub { font-size: 13px; color: var(--ink-600); margin-top: 4px; }
+.panel-root .cli-cerrado-next {
+  display: inline-block; margin-top: 10px; padding: 5px 12px;
+  background: var(--brand-soft); color: #8a6d00; border-radius: var(--r-pill);
+  font-size: 12.5px; font-weight: 700;
+}
+.panel-root .cli-cerrado-note {
+  font-size: 12px; color: var(--ink-400); margin-top: 12px;
+  border-top: 1px dashed var(--border); padding-top: 10px;
+}
 .panel-root .cli-plato { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); padding: 12px 14px; margin-bottom: 8px; }
 .panel-root .cli-plato.sinstock { opacity: 0.5; }
 .panel-root .cli-plato-nombre { font-weight: 700; font-size: 15px; }

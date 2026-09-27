@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { obtenerConfig } from '../lib/pedidosCliente.ts'
-import { horarioConDias, estaAbierto, etiquetaDias, formatearHoras } from '../lib/horario.ts'
+import { horarioConDias, estaAbierto, etiquetaDias, formatearHoras, proximaApertura } from '../lib/horario.ts'
 
 /**
  * Lee los dias de atencion desde la configuracion publica y expone
@@ -27,5 +27,6 @@ export function useHorario() {
     abierto: estaAbierto(horario),
     horas: formatearHoras(),
     diasLabel: etiquetaDias(lista),
+    proxima: proximaApertura(lista),
   }
 }

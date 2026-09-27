@@ -1,11 +1,86 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Hero from '../components/Hero.astro'
+import { featuredDishes } from '../data/menu'
+import { Fish, Leaf, Truck, HeartHandshake, PartyPopper } from 'lucide-react'
+
+const ventajas = [
+  { Icon: Fish, title: 'Sazón amazónica', desc: 'Ceviches, chicharrones y platos marinos preparados al momento con recetas de casa.' },
+  { Icon: Leaf, title: 'Ingredientes frescos', desc: 'Seleccionamos insumos frescos de la región amazónica para cada preparación.' },
+  { Icon: Truck, title: 'Delivery y recojo', desc: 'Pide en línea y recibe en casa, o recoge en el local. Rápido y sin complicaciones.' },
+  { Icon: HeartHandshake, title: 'Trato familiar', desc: 'Más de una década sirviendo con cariño a la familia de Iquitos.' },
+]
 ---
 
-<BaseLayout title="FRESCOLITO RESTAURANTE | Iquitos - Perú" effect="stripes">
+<BaseLayout title="FRESCOLITO RESTAURANTE | Iquitos - Perú" description="Cocina regional peruana en Iquitos. Ceviches, chicharrones, arroz con mariscos y promociones. Pide online o visítanos." effect="stripes">
   <Hero />
 
+  <!-- Platos destacados -->
+  <section class="home-section">
+    <div class="container">
+      <div class="home-head" data-reveal>
+        <span class="home-label">· Lo más pedido ·</span>
+        <h2 class="home-h2">Platos destacados</h2>
+        <span class="home-divider"></span>
+      </div>
+      <div class="home-dishes">
+        {featuredDishes.map((d) => (
+          <article class="home-dish" data-reveal-scale>
+            <div class="home-dish-img"><img src={d.image} alt={d.name} loading="lazy" /></div>
+            <div class="home-dish-body">
+              <h3>{d.name}</h3>
+              <div class="home-dish-foot">
+                <span class="home-dish-price">S/ {d.price.toFixed(2)}</span>
+                <button class="btn btn-primary home-dish-btn" data-pedir>Ordenar</button>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+      <div class="home-cta-center">
+        <a href="/menu" class="btn btn-outline">Ver todo el menú</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Propuesta de valor -->
+  <section class="home-section alt">
+    <div class="container">
+      <div class="home-head" data-reveal>
+        <span class="home-label">· Por qué elegirnos ·</span>
+        <h2 class="home-h2">La experiencia Frescolito</h2>
+      </div>
+      <div class="home-values">
+        {ventajas.map(({ Icon, title, desc }) => (
+          <article class="home-value" data-reveal>
+            <div class="home-value-icon"><Icon /></div>
+            <h3>{title}</h3>
+            <p>{desc}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Eventos / Catering -->
+  <section class="home-section">
+    <div class="container home-eventos" data-reveal>
+      <div class="home-eventos-img">
+        <img src="/imagenes/galeria/MesaRepresentativa.webp" alt="Servicio de catering para eventos" loading="lazy" />
+      </div>
+      <div class="home-eventos-text">
+        <span class="home-label">· Eventos y catering ·</span>
+        <h2 class="home-h2">¿Organizas un evento?</h2>
+        <p>
+          Llevamos Frescolito a tu celebración: comida para eventos, alquiler de menaje y
+          personal de servicio. Cotiza fácil por WhatsApp.
+        </p>
+        <a href="/catering" class="btn btn-primary"><PartyPopper /> Cotizar mi evento</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reseñas -->
   <section class="section reviews-section" id="reviews-section">
     <div class="container">
       <h2 class="section-title">RESEÑAS</h2>
@@ -14,9 +89,72 @@ import Hero from '../components/Hero.astro'
   </section>
 </BaseLayout>
 
+<script is:inline src="https://static.elfsight.com/platform/platform.js" async></script>
+
 <style>
   .section-title { font-family: var(--font-heading); font-weight: 700; text-align: center; margin-bottom: var(--space-md); }
   .reviews-section { background: var(--color-bg); padding: var(--space-lg) 0; }
+
+  .home-section { padding: var(--space-xl) 0; }
+  .home-section.alt { background: #FBF6EE; }
+  .home-head { text-align: center; margin-bottom: var(--space-xl); }
+  .home-label {
+    display: inline-block; font-family: var(--font-body); font-size: 0.72rem;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.22em;
+    color: var(--color-primary-hover); margin-bottom: var(--space-xs);
+  }
+  .home-h2 {
+    font-family: var(--font-script); font-weight: 400;
+    font-size: clamp(2rem, 4.5vw, 3rem); color: var(--color-dark); margin-bottom: var(--space-sm);
+  }
+  .home-divider {
+    display: block; width: 30px; height: 2px; background: var(--color-primary);
+    border-radius: 2px; margin: 0 auto;
+  }
+
+  .home-dishes { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-lg); }
+  .home-dish {
+    background: var(--color-bg); border-radius: var(--radius); overflow: hidden;
+    box-shadow: var(--shadow-sm); display: flex; flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .home-dish:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+  .home-dish-img { height: 190px; overflow: hidden; }
+  .home-dish-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+  .home-dish:hover .home-dish-img img { transform: scale(1.05); }
+  .home-dish-body { padding: var(--space-md); display: flex; flex-direction: column; gap: var(--space-sm); flex: 1; }
+  .home-dish-body h3 { font-family: var(--font-heading); font-weight: 700; font-size: 1.1rem; color: var(--color-dark); }
+  .home-dish-foot { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+  .home-dish-price { font-family: var(--font-body); font-weight: 700; font-size: 1.15rem; color: var(--color-primary-hover); }
+  .home-dish-btn { font-size: 0.82rem; padding: 0.5rem 1.1rem; border-radius: 50px; }
+  .home-cta-center { text-align: center; margin-top: var(--space-xl); }
+
+  .home-values { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-lg); }
+  .home-value {
+    background: var(--color-bg); border: 1px solid var(--color-light);
+    border-radius: var(--radius); padding: var(--space-lg); box-shadow: var(--shadow-sm);
+    border-top: 4px solid var(--color-primary);
+  }
+  .home-value-icon {
+    width: 50px; height: 50px; border-radius: 14px; display: grid; place-items: center;
+    background: rgba(253, 185, 19, 0.14); color: var(--color-primary-hover); margin-bottom: var(--space-md);
+  }
+  .home-value-icon svg { width: 25px; height: 25px; }
+  .home-value h3 { font-family: var(--font-heading); font-weight: 700; font-size: 1.15rem; color: var(--color-dark); margin-bottom: 6px; }
+  .home-value p { color: var(--color-mid); font-size: 0.92rem; line-height: 1.75; }
+
+  .home-eventos { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl); align-items: center; }
+  .home-eventos-img { border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-lg); aspect-ratio: 4 / 3; }
+  .home-eventos-img img { width: 100%; height: 100%; object-fit: cover; }
+  .home-eventos-text p { color: var(--color-mid); line-height: 1.9; margin: var(--space-md) 0 var(--space-lg); }
+
+  @media (max-width: 960px) {
+    .home-dishes, .home-values { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 700px) {
+    .home-dishes, .home-values { grid-template-columns: 1fr; }
+    .home-eventos { grid-template-columns: 1fr; }
+  }
 </style>
 
 <script>

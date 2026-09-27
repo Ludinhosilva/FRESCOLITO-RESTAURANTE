@@ -51,7 +51,7 @@ const categories = [
 
         <div class="gal-masonry" id="gal-masonry">
           {images.map((img, i) => (
-            <div class="gal-item" data-cat={img.cat}>
+            <div class="gal-item" data-cat={img.cat} role="button" tabindex="0" aria-label={`Ver ${img.alt}`}>
               <img src={img.src} alt={img.alt} class="gal-img" loading={i < 6 ? 'eager' : 'lazy'} />
               <div class="gal-item-overlay">
                 <span class="gal-item-name">{img.alt}</span>
@@ -63,12 +63,12 @@ const categories = [
     </section>
   </main>
 
-  <div class="gal-lightbox" id="gal-lightbox">
-    <button class="gal-lb-close" id="gal-lb-close">✕</button>
-    <button class="gal-lb-nav gal-lb-prev" id="gal-lb-prev">‹</button>
-    <button class="gal-lb-nav gal-lb-next" id="gal-lb-next">›</button>
+  <div class="gal-lightbox" id="gal-lightbox" role="dialog" aria-modal="true" aria-label="Visor de imágenes" tabindex="-1">
+    <button class="gal-lb-close" id="gal-lb-close" aria-label="Cerrar visor">✕</button>
+    <button class="gal-lb-nav gal-lb-prev" id="gal-lb-prev" aria-label="Imagen anterior">‹</button>
+    <button class="gal-lb-nav gal-lb-next" id="gal-lb-next" aria-label="Imagen siguiente">›</button>
     <div class="gal-lb-content">
-      <img id="gal-lb-img" class="gal-lb-img" />
+      <img id="gal-lb-img" class="gal-lb-img" alt="" />
       <span class="gal-lb-caption" id="gal-lb-caption"></span>
     </div>
   </div>
@@ -152,6 +152,8 @@ const categories = [
     opacity: 0; transition: opacity 0.3s ease;
   }
   .gal-item:hover .gal-item-overlay { opacity: 1; }
+  .gal-item:focus-visible { outline: 3px solid var(--color-primary); outline-offset: 3px; }
+  .gal-item:focus-visible .gal-item-overlay { opacity: 1; }
   .gal-item-name {
     color: white; font-weight: 600; font-size: 0.9rem;
     font-family: var(--font-body);
@@ -228,6 +230,8 @@ const categories = [
     cat: item.getAttribute('data-cat'),
   }))
 
+  let lastFocused = null
+
   function filterGallery(cat) {
     const visible = []
     const hidden = []
@@ -247,16 +251,9 @@ const categories = [
     hidden.forEach(el => fragment.appendChild(el))
     masonry.appendChild(fragment)
 
-    setTimeout(() => {
-      ScrollTrigger.refresh()
-      resetLightboxIndexes()
-    }, 50)
-  }
-
-  function resetLightboxIndexes() {
-    const idxMap = {}
-    items.forEach((item, i) => { idxMap[item] = i })
-    currentIdx = 0
+    const firstVisible = items.findIndex(item => item.style.display !== 'none')
+    currentIdx = firstVisible === -1 ? 0 : firstVisible
+    setTimeout(() => ScrollTrigger.refresh(), 50)
   }
 
   filters.forEach(filter => {
@@ -270,14 +267,18 @@ const categories = [
   function openLightbox(idx) {
     currentIdx = idx
     lbImg.src = allImages[idx].src
+    lbImg.alt = allImages[idx].alt
     lbCaption.textContent = allImages[idx].alt
+    lastFocused = document.activeElement
     lightbox.style.display = 'flex'
     document.body.style.overflow = 'hidden'
+    lbClose.focus()
   }
 
   function closeLightbox() {
     lightbox.style.display = 'none'
     document.body.style.overflow = ''
+    if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus()
   }
 
   function getVisibleIndices() {
@@ -303,6 +304,12 @@ const categories = [
 
   items.forEach((item, i) => {
     item.addEventListener('click', () => openLightbox(i))
+    item.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault()
+        openLightbox(i)
+      }
+    })
   })
 
   lbClose.addEventListener('click', closeLightbox)
@@ -310,13 +317,22 @@ const categories = [
   lbNext.addEventListener('click', nextImage)
 
   lightbox.addEventListener('click', (e) => {
-    if (e.target === lightbox || e.target === lbImg) closeLightbox()
+    if (e.target === lightbox) closeLightbox()
   })
 
   document.addEventListener('keydown', (e) => {
     if (lightbox.style.display !== 'flex') return
-    if (e.key === 'Escape') closeLightbox()
-    if (e.key === 'ArrowLeft') prevImage()
-    if (e.key === 'ArrowRight') nextImage()
+    if (e.key === 'Escape') return closeLightbox()
+    if (e.key === 'ArrowLeft') return prevImage()
+    if (e.key === 'ArrowRight') return nextImage()
+    if (e.key === 'Tab') {
+      const focusables = [lbClose, lbPrev, lbNext]
+      const idx = focusables.indexOf(document.activeElement)
+      e.preventDefault()
+      const next = e.shiftKey
+        ? focusables[(idx - 1 + focusables.length) % focusables.length]
+        : focusables[(idx + 1) % focusables.length]
+      next.focus()
+    }
   })
 </script>

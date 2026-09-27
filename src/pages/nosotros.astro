@@ -123,9 +123,12 @@ const marquee = ['SABORES DE LA AMAZONÍA', 'Frescura de la selva en tu mesa']
           <h2 class="nst-h2">Visítanos</h2>
           <p class="nst-visit-line"><strong>Iquitos, Perú</strong></p>
           <p class="nst-visit-line">Horario: <HorarioTexto client:idle /></p>
-          <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hola%20Frescolito%2C%20quisiera%20hacer%20un%20pedido`} target="_blank" rel="noopener" class="btn btn-primary">
-            Pedir por WhatsApp
-          </a>
+          <div class="nst-visit-actions">
+            <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hola%20Frescolito%2C%20quisiera%20hacer%20un%20pedido`} target="_blank" rel="noopener" class="btn btn-primary">
+              Pedir por WhatsApp
+            </a>
+            <a href="/catering" class="btn btn-outline">Eventos y catering</a>
+          </div>
         </div>
         <div class="nst-visit-map" data-reveal-right>
           <iframe
@@ -269,7 +272,7 @@ const marquee = ['SABORES DE LA AMAZONÍA', 'Frescura de la selva en tu mesa']
     gap: var(--space-xl); align-items: center;
   }
   .nst-visit-line { color: var(--color-mid); line-height: 2; font-size: 1.05rem; }
-  .nst-visit-info .btn { margin-top: var(--space-md); }
+  .nst-visit-actions { display: flex; gap: var(--space-sm); flex-wrap: wrap; margin-top: var(--space-md); }
   .nst-visit-map {
     border-radius: var(--radius); overflow: hidden;
     box-shadow: var(--shadow-lg); height: 360px;

@@ -4,7 +4,7 @@ export const HORA_APERTURA = '11:00'
 export const HORA_CIERRE = '15:30'
 
 export const DIAS_LABEL = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
-const DIAS_LARGO = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
+export const DIAS_LARGO = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
 
 /** Construye un horario a partir de los dias, usando las horas fijas. */
 export function horarioConDias(dias: number[]) {
@@ -59,4 +59,29 @@ export function etiquetaDias(dias: number[]) {
   const consecutivos = s.every((d, i) => i === 0 || d === s[i - 1] + 1)
   if (consecutivos && s.length >= 3) return `${DIAS_LARGO[s[0]]} a ${DIAS_LARGO[s[s.length - 1]]}`
   return s.map((d) => DIAS_LABEL[d]).join(', ')
+}
+
+/**
+ * Texto de la próxima apertura, ej. "hoy a las 11:00 AM",
+ * "mañana a las 11:00 AM" o "el Lunes a las 11:00 AM". null si no hay dias.
+ */
+export function proximaApertura(dias: number[], ahora = new Date()): string | null {
+  const lista = (dias || []).map(Number)
+  if (lista.length === 0) return null
+  const lima = new Date(ahora.toLocaleString('en-US', { timeZone: 'America/Lima' }))
+  const dow = lima.getDay()
+  const minutos = lima.getHours() * 60 + lima.getMinutes()
+  const [ah, am] = HORA_APERTURA.split(':').map(Number)
+  const apertura = ah * 60 + am
+  const hora = fmtHora(HORA_APERTURA)
+
+  if (lista.includes(dow) && minutos < apertura) return `hoy a las ${hora}`
+  for (let i = 1; i <= 7; i++) {
+    const d = (dow + i) % 7
+    if (lista.includes(d)) {
+      if (i === 1) return `mañana a las ${hora}`
+      return `el ${DIAS_LARGO[d]} a las ${hora}`
+    }
+  }
+  return null
 }

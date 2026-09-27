@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import Proveedores from './Proveedores.tsx'
 import { listarPlatosPublico } from '../../lib/pedidosCliente.ts'
@@ -8,6 +8,8 @@ function Contenido() {
     queryKey: ['platos-publico'],
     queryFn: listarPlatosPublico,
   })
+  const [activa, setActiva] = useState(null)
+  const sectionRefs = useRef({})
 
   const categorias = useMemo(() => {
     const map: Record<string, any[]> = {}
@@ -19,6 +21,27 @@ function Contenido() {
   }, [platos])
 
   const nombres = Object.keys(categorias)
+
+  useEffect(() => {
+    if (nombres.length === 0) return
+    const onScroll = () => {
+      let current = nombres[0]
+      for (const cat of nombres) {
+        const el = sectionRefs.current[cat]
+        if (el && el.getBoundingClientRect().top <= 150) current = cat
+      }
+      setActiva(current)
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nombres.join('|')])
+
+  const irACategoria = (cat) => {
+    sectionRefs.current[cat]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    setActiva(cat)
+  }
 
   if (isLoading) {
     return (
@@ -48,16 +71,31 @@ function Contenido() {
     )
   }
 
+  const catActiva = activa || nombres[0]
+
   return (
     <div className="menu-section">
       <div className="container">
+        <nav className="menu-cat-nav" aria-label="Categorías del menú">
+          {nombres.map((cat) => (
+            <button
+              key={cat}
+              className={'menu-cat-tab' + (cat === catActiva ? ' active' : '')}
+              aria-current={cat === catActiva ? 'true' : undefined}
+              onClick={() => irACategoria(cat)}
+            >
+              {cat}
+            </button>
+          ))}
+        </nav>
+
         <div className="menu-leyenda">
           <span><i className="menu-dot verde" /> Disponible</span>
           <span><i className="menu-dot rojo" /> Agotado</span>
         </div>
 
         {nombres.map((cat) => (
-          <section key={cat} className="menu-cat">
+          <section key={cat} className="menu-cat" ref={(el) => { sectionRefs.current[cat] = el }}>
             <h2 className="menu-cat-title">{cat}</h2>
             <div className="menu-grid">
               {categorias[cat].map((p) => {
@@ -68,6 +106,7 @@ function Contenido() {
                       {p.imagen
                         ? <img src={p.imagen} alt={p.nombre} className="menu-item-img" loading="lazy" />
                         : <div className="menu-item-img-ph">🍽️</div>}
+                      {sinStock && <span className="menu-item-badge">Agotado</span>}
                     </div>
                     <div className="menu-item-body">
                       <h3 className="menu-item-name">

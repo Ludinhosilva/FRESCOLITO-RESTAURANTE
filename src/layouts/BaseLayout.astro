@@ -13,7 +13,16 @@ export interface Props {
   effect?: 'stripes' | 'slide-up' | 'fade' | 'scale' | 'slide-right' | 'slide-left'
 }
 
-const { title = 'FRESCOLITO RESTAURANTE', description = 'Cocina regional peruana en Iquitos', effect = 'fade' } = Astro.props
+const {
+  title = 'FRESCOLITO RESTAURANTE',
+  description = 'Cocina regional peruana en Iquitos. Ceviches, chicharrones, arroz con mariscos y más.',
+  effect = 'fade',
+} = Astro.props
+
+const siteName = 'FRESCOLITO RESTAURANTE'
+const site = Astro.site ?? new URL('https://frescolito-restaurante.vercel.app')
+const canonical = new URL(Astro.url.pathname, site).href
+const ogImage = new URL('/imagenes/frescolito.jpeg', site).href
 ---
 
 <!doctype html>
@@ -22,51 +31,60 @@ const { title = 'FRESCOLITO RESTAURANTE', description = 'Cocina regional peruana
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#FDB913" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content="es_PE" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content="/imagenes/frescolito.jpeg" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
     <link rel="icon" href="/imagenes/frescolito.jpeg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Satisfy&family=Playfair+Display:wght@400;700;900&family=Poppins:wght@300;400;600;700&family=Work+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" />
-    <script src="https://static.elfsight.com/platform/platform.js" async></script>
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Restaurant",
-        "@id": "https://frescolito.com",
-        "name": "FRESCOLITO RESTAURANTE",
-        "description": "Cocina regional peruana en Iquitos. Ceviches, chicharrones, arroz con mariscos y más.",
-        "image": "/imagenes/frescolito.jpeg",
-        "url": "https://frescolito.com",
-        "telephone": "+51916207362",
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Iquitos",
-          "addressCountry": "PE"
-        },
-        "geo": {
-          "@type": "GeoCoordinates",
-          "latitude": -3.7621462,
-          "longitude": -73.2700371
-        },
-        "openingHoursSpecification": {
-          "@type": "OpeningHoursSpecification",
-          "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
-          "opens": "11:00",
-          "closes": "15:30"
-        },
-        "servesCuisine": "Peruvian",
-        "priceRange": "S/10 - S/40",
-        "menu": "https://frescolito.com/menu"
-      }
-    </script>
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Restaurant',
+      '@id': site.href,
+      name: siteName,
+      description: 'Cocina regional peruana en Iquitos. Ceviches, chicharrones, arroz con mariscos y más.',
+      image: ogImage,
+      url: site.href,
+      telephone: '+51916207362',
+      address: { '@type': 'PostalAddress', addressLocality: 'Iquitos', addressCountry: 'PE' },
+      geo: { '@type': 'GeoCoordinates', latitude: -3.7621462, longitude: -73.2700371 },
+      openingHoursSpecification: {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '11:00',
+        closes: '15:30',
+      },
+      servesCuisine: 'Peruvian',
+      priceRange: 'S/10 - S/40',
+      menu: new URL('/menu', site).href,
+      sameAs: [
+        'https://www.facebook.com/Frescolito.restaurant',
+        'https://www.tiktok.com/@frescolito_restaurant',
+      ],
+    })} />
     <title>{title}</title>
   </head>
   <body>
+    <a href="#contenido" class="skip-link">Saltar al contenido</a>
     <Preloader effect={effect} />
     <Navbar />
-    <slot />
+    <div id="contenido" tabindex="-1">
+      <slot />
+    </div>
     <HorarioBadge client:load />
     <WhatsAppFAB />
     <PedirIsland client:idle />
@@ -79,19 +97,21 @@ const { title = 'FRESCOLITO RESTAURANTE', description = 'Cocina regional peruana
   import initScrollReveal from '../utils/scrollReveal'
   import { initScrollAnimations } from '../utils/scrollAnimations'
 
-  const lenis = new Lenis({
-    duration: 1.2,
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    wheelMultiplier: 1,
-    touchMultiplier: 1.5,
-  })
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-  function raf(time) {
-    lenis.raf(time)
+  if (!reduceMotion) {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      wheelMultiplier: 1,
+      touchMultiplier: 1.5,
+    })
+    function raf(time) {
+      lenis.raf(time)
+      requestAnimationFrame(raf)
+    }
     requestAnimationFrame(raf)
   }
-
-  requestAnimationFrame(raf)
 
   document.addEventListener('astro:page-load', initScrollReveal)
   document.addEventListener('astro:page-load', initScrollAnimations)

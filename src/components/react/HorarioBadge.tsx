@@ -2,7 +2,7 @@ import { useHorario } from '../../hooks/useHorario.ts'
 import '../../styles/horario.css'
 
 export default function HorarioBadge() {
-  const { cargando, abierto, horas, diasLabel } = useHorario()
+  const { cargando, abierto, horas, diasLabel, proxima } = useHorario()
   const estado = cargando ? 'Consultando...' : abierto ? 'Abierto ahora' : 'Cerrado'
   const dot = cargando ? 'loading' : abierto ? 'open' : 'closed'
 
@@ -12,9 +12,12 @@ export default function HorarioBadge() {
         <span className={`bh-dot ${dot}`} />
         <span className="bh-status">{estado}</span>
       </div>
-      <div className="bh-tooltip">
-        <strong>Horario de Atención</strong><br />
-        {cargando ? horas : `${diasLabel}: ${horas}`}
+      <div className="bh-tooltip" role="tooltip">
+        <strong>Horario de atención</strong>
+        <span className="bh-tooltip-line">{cargando ? horas : `${diasLabel} · ${horas}`}</span>
+        {!cargando && !abierto && proxima && (
+          <span className="bh-tooltip-next">Abrimos {proxima}</span>
+        )}
       </div>
     </div>
   )

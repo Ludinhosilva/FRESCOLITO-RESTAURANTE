@@ -12,9 +12,9 @@ import {
   obtenerConfig,
   obtenerUltimoPedido,
 } from '../../lib/pedidosCliente.ts'
-import { estaAbierto, horarioConDias } from '../../lib/horario.ts'
+import { estaAbierto, horarioConDias, etiquetaDias, formatearHoras, proximaApertura } from '../../lib/horario.ts'
 import { ESTADOS_PEDIDO, PAGO_LABEL } from '../../lib/dominio.ts'
-import { Plus, Minus, Utensils, ArrowRight, ArrowLeft, Download } from 'lucide-react'
+import { Plus, Minus, Utensils, ArrowRight, ArrowLeft, Download, Clock } from 'lucide-react'
 
 function Contenido() {
   const { items, agregar, setCantidad, quitar, limpiar, subtotal, unidades } = useCarritoCliente()
@@ -36,7 +36,11 @@ function Contenido() {
   const { data: platos = [], isLoading } = useQuery({ queryKey: ['platos-publico'], queryFn: listarPlatosPublico })
   const { data: config } = useQuery({ queryKey: ['config-publica'], queryFn: obtenerConfig })
   const tarifas = config?.tarifas || { delivery_por_plato: 2, envase_por_plato: 1 }
-  const abierto = config?.horario ? estaAbierto(horarioConDias(config.horario.dias)) : true
+  const dias = config?.horario?.dias || []
+  const abierto = config?.horario ? estaAbierto(horarioConDias(dias)) : true
+  const diasLabel = etiquetaDias(dias)
+  const horas = formatearHoras()
+  const proxima = proximaApertura(dias)
 
   const { data: pedido } = useQuery({
     queryKey: ['pedido-cliente', codigo],
@@ -234,9 +238,19 @@ function Contenido() {
         <Sheet title={titulo} onClose={() => setVisible(false)} bodyRef={bodyRef} footer={footer}>
           {paso === 'menu' && (
             <>
-              <div className={'cli-estado ' + (abierto ? 'abierto' : 'cerrado')}>
-                {abierto ? 'Abierto — estamos recibiendo pedidos' : 'Cerrado — vuelve en nuestro horario'}
-              </div>
+              {abierto ? (
+                <div className="cli-abierto">
+                  <span className="cli-dot verde" /> Abierto ahora · recibiendo pedidos
+                </div>
+              ) : (
+                <div className="cli-cerrado">
+                  <div className="cli-cerrado-icon"><Clock /></div>
+                  <div className="cli-cerrado-title">Estamos cerrados</div>
+                  <div className="cli-cerrado-sub">{diasLabel} · {horas}</div>
+                  {proxima && <div className="cli-cerrado-next">Abrimos {proxima}</div>}
+                  <div className="cli-cerrado-note">Puedes ver la carta; los pedidos se activan en horario.</div>
+                </div>
+              )}
 
               {isLoading ? (
                 <>
