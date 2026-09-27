@@ -9,13 +9,20 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   const cargarPerfil = useCallback(async (userId) => {
-    const { data } = await supabase
-      .from('usuarios')
-      .select('*')
-      .eq('id', userId)
-      .single()
-    setPerfil(data)
-    setLoading(false)
+    try {
+      const { data, error } = await supabase
+        .from('usuarios')
+        .select('*')
+        .eq('id', userId)
+        .single()
+      if (error) throw error
+      setPerfil(data)
+    } catch {
+      // Un fallo de red no debe cerrar una sesión válida.
+      setPerfil(null)
+    } finally {
+      setLoading(false)
+    }
   }, [])
 
   useEffect(() => {
@@ -49,13 +56,17 @@ export function AuthProvider({ children }) {
   const iniciarSesion = async (email, password) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) throw error
-    const { data: perfilData } = await supabase
+    const { data: perfilData, error: perfilError } = await supabase
       .from('usuarios')
       .select('*')
       .eq('id', data.user.id)
       .single()
+    if (perfilError || !perfilData) {
+      await supabase.auth.signOut()
+      throw new Error('Tu usuario no tiene un perfil asignado. Contacta al administrador.')
+    }
     setPerfil(perfilData)
-    return perfilData?.rol ?? null
+    return perfilData.rol
   }
 
   const cerrarSesion = async () => {

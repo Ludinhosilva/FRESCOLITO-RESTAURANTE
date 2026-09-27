@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import ContactForm from '../src/components/react/ContactForm'
@@ -48,7 +48,8 @@ describe('Contact Page - Caja Negra', () => {
     expect(screen.getByText('Teléfono inválido (mín. 7 dígitos)')).toBeInTheDocument()
   })
 
-  it('debe enviar el formulario con datos válidos', async () => {
+  it('debe abrir WhatsApp con los datos del formulario', async () => {
+    const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null)
     const user = userEvent.setup()
     renderContact()
     await user.type(screen.getByLabelText('Nombre'), 'Juan Pérez')
@@ -56,7 +57,13 @@ describe('Contact Page - Caja Negra', () => {
     await user.type(screen.getByLabelText('Teléfono'), '987654321')
     await user.type(screen.getByLabelText('Mensaje'), 'Quiero hacer un pedido')
     await user.click(screen.getByText('Enviar Mensaje'))
-    expect(screen.getByText('Mensaje enviado con éxito. Te contactaremos pronto.')).toBeInTheDocument()
+    expect(screen.getByText('Abriendo WhatsApp para enviar tu mensaje…')).toBeInTheDocument()
+    expect(openSpy).toHaveBeenCalled()
+    const url = openSpy.mock.calls[0][0]
+    expect(url).toContain('https://wa.me/51916207362')
+    expect(url).toContain(encodeURIComponent('Juan Pérez'))
+    expect(url).toContain(encodeURIComponent('Quiero hacer un pedido'))
+    openSpy.mockRestore()
   }, 10000)
 })
 

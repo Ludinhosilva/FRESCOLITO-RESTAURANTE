@@ -26,8 +26,13 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://frescolito-restaurante.vercel.app/reservas</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <loc>https://frescolito-restaurante.vercel.app/politica-de-privacidad</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://frescolito-restaurante.vercel.app/libro-de-reclamaciones</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
 </urlset>

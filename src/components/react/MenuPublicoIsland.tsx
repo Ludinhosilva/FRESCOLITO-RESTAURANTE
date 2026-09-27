@@ -4,7 +4,7 @@ import Proveedores from './Proveedores.tsx'
 import { listarPlatosPublico } from '../../lib/pedidosCliente.ts'
 
 function Contenido() {
-  const { data: platos = [], isLoading } = useQuery({
+  const { data: platos = [], isLoading, isError } = useQuery({
     queryKey: ['platos-publico'],
     queryFn: listarPlatosPublico,
   })
@@ -26,6 +26,26 @@ function Contenido() {
     return (
       <div className="menu-section">
         <div className="container" style={{ textAlign: 'center' }}>Cargando menú...</div>
+      </div>
+    )
+  }
+
+  if (isError) {
+    return (
+      <div className="menu-section">
+        <div className="container" style={{ textAlign: 'center' }}>
+          No pudimos cargar el menú. Revisa tu conexión e inténtalo de nuevo.
+        </div>
+      </div>
+    )
+  }
+
+  if (nombres.length === 0) {
+    return (
+      <div className="menu-section">
+        <div className="container" style={{ textAlign: 'center' }}>
+          Estamos actualizando nuestra carta. Vuelve pronto.
+        </div>
       </div>
     )
   }

@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import { useHorario } from '../../hooks/useHorario.ts'
-import { WHATSAPP_NUMBER } from '../../data/config.ts'
+import { WHATSAPP_NUMBER, WHATSAPP_NUMBER_2 } from '../../data/config.ts'
+
+const WHATSAPP_DISPLAY = '+51 916 207 362'
+const WHATSAPP_DISPLAY_2 = '+51 928 104 463'
 
 const initialForm = { name: '', email: '', phone: '', message: '' }
 
@@ -33,6 +36,12 @@ export default function ContactForm() {
       setErrors(validationErrors)
       return
     }
+    const texto =
+      `Hola FRESCOLITO, mi nombre es ${form.name}.\n` +
+      `Email: ${form.email}\n` +
+      `Teléfono: ${form.phone}\n\n` +
+      `${form.message}`
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(texto)}`, '_blank', 'noopener,noreferrer')
     setSubmitted(true)
     setForm(initialForm)
     setTimeout(() => setSubmitted(false), 5000)
@@ -46,8 +55,8 @@ export default function ContactForm() {
             <h2 className="contact-form-title">Envíanos un mensaje</h2>
 
             {submitted && (
-              <div className="contact-success">
-                Mensaje enviado con éxito. Te contactaremos pronto.
+              <div className="contact-success" role="status">
+                Abriendo WhatsApp para enviar tu mensaje…
               </div>
             )}
 
@@ -58,11 +67,14 @@ export default function ContactForm() {
                 </label>
                 <input
                   id={field} name={field}
-                  type={field === 'email' ? 'email' : 'text'}
+                  type={field === 'email' ? 'email' : field === 'phone' ? 'tel' : 'text'}
+                  inputMode={field === 'phone' ? 'tel' : undefined}
                   value={form[field]} onChange={handleChange}
+                  aria-invalid={!!errors[field]}
+                  aria-describedby={errors[field] ? `${field}-error` : undefined}
                   className={errors[field] ? 'input-error' : ''}
                 />
-                {errors[field] && <span className="field-error">{errors[field]}</span>}
+                {errors[field] && <span id={`${field}-error`} className="field-error" role="alert">{errors[field]}</span>}
               </div>
             ))}
 
@@ -70,9 +82,11 @@ export default function ContactForm() {
               <label htmlFor="message">Mensaje</label>
               <textarea id="message" name="message" rows={4}
                 value={form.message} onChange={handleChange}
+                aria-invalid={!!errors.message}
+                aria-describedby={errors.message ? 'message-error' : undefined}
                 className={errors.message ? 'input-error' : ''}
               />
-              {errors.message && <span className="field-error">{errors.message}</span>}
+              {errors.message && <span id="message-error" className="field-error" role="alert">{errors.message}</span>}
             </div>
 
             <button type="submit" className="btn btn-primary">Enviar Mensaje</button>
@@ -84,11 +98,12 @@ export default function ContactForm() {
               <h3>Dirección</h3><p>Iquitos, Perú</p>
             </div>
             <div className="info-block">
-              <h3>Teléfono</h3><p>(065) 123-456</p>
-            </div>
-            <div className="info-block">
               <h3>WhatsApp</h3>
-              <p><a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank">+51 916 207 362</a></p>
+              <p>
+                <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer">{WHATSAPP_DISPLAY}</a>
+                <br />
+                <a href={`https://wa.me/${WHATSAPP_NUMBER_2}`} target="_blank" rel="noopener noreferrer">{WHATSAPP_DISPLAY_2}</a>
+              </p>
             </div>
             <div className="info-block">
               <h3>Horarios</h3><p>{diasLabel}: {horas}</p>
