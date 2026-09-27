@@ -1,8 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 import CateringCotizador from '../components/react/CateringCotizador.tsx'
+import GaleriaIsland from '../components/react/GaleriaIsland.tsx'
 import { UtensilsCrossed, Armchair, Users } from 'lucide-react'
 import '../styles/catering.css'
+import '../styles/galeria.css'
 
 const servicios = [
   {
@@ -29,13 +31,23 @@ const pasos = [
   { title: 'Disfruta el evento', desc: 'Llegamos, servimos y nos encargamos de todo para que solo te preocupes por celebrar.' },
 ]
 
-const galeria = [
-  '/imagenes/galeria/MesaRepresentativa.webp',
-  '/imagenes/galeria/MesaGaleria.webp',
-  '/imagenes/galeria/Mesacomida.webp',
-  '/imagenes/galeria/RONDA.webp',
-  '/imagenes/galeria/Presentacion.webp',
-  '/imagenes/galeria/EQUIPO.webp',
+const catEventos = [
+  { id: 'todas', label: 'Todas' },
+  { id: 'bodas', label: 'Bodas' },
+  { id: 'corporativos', label: 'Corporativos' },
+  { id: 'cumpleanos', label: 'Cumpleaños' },
+  { id: 'bautizos', label: 'Bautizos' },
+  { id: 'aniversarios', label: 'Aniversarios' },
+  { id: 'otros', label: 'Otros' },
+]
+
+const fallbackEventos = [
+  { src: '/imagenes/galeria/MesaRepresentativa.webp', alt: 'Montaje de evento', cat: 'otros' },
+  { src: '/imagenes/galeria/MesaGaleria.webp', alt: 'Mesa de evento', cat: 'otros' },
+  { src: '/imagenes/galeria/Mesacomida.webp', alt: 'Mesa servida', cat: 'otros' },
+  { src: '/imagenes/galeria/RONDA.webp', alt: 'Ronda de platos', cat: 'otros' },
+  { src: '/imagenes/galeria/Presentacion.webp', alt: 'Presentación', cat: 'otros' },
+  { src: '/imagenes/galeria/EQUIPO.webp', alt: 'Equipo en evento', cat: 'otros' },
 ]
 
 const faqs = [
@@ -118,11 +130,7 @@ const faqs = [
           <span class="cat-label">· Momentos ·</span>
           <h2 class="cat-h2">Nuestros eventos</h2>
         </div>
-        <div class="cat-galeria">
-          {galeria.map((src) => (
-            <img src={src} alt="Evento atendido por Frescolito" loading="lazy" data-reveal-scale />
-          ))}
-        </div>
+        <GaleriaIsland client:visible tabla="eventos_fotos" categorias={catEventos} fallback={fallbackEventos} />
       </div>
     </section>
 
