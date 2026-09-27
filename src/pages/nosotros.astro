@@ -21,22 +21,19 @@ const marquee = ['SABORES DE LA AMAZONÍA', 'Frescura de la selva en tu mesa']
   effect="fade"
 >
   <main style="padding-top:70px">
-    <!-- 1. Intro / legado -->
-    <section class="nst-intro">
-      <div class="container nst-intro-grid">
-        <div class="nst-intro-text" data-reveal>
-          <span class="nst-label">Desde 2014</span>
-          <h1 class="nst-title">Nuestro legado</h1>
-          <p>
-            Desde 2014, Frescolito nació en el corazón de Iquitos con una idea sencilla: compartir lo mejor
-            de la cocina amazónica y marina, preparada al momento y con ingredientes frescos de la región.
-            Más de una década después, seguimos sirviendo con la misma sazón, el mismo cariño y el mismo
-            compromiso de siempre.
-          </p>
-        </div>
-        <div class="nst-intro-img" data-reveal-scale>
-          <img class="nst-parallax" src="/imagenes/galeria/MesaRepresentativa.webp" alt="Frescolito" />
-        </div>
+    <!-- 1. Intro / legado (banner) -->
+    <section class="nst-intro-banner">
+      <img class="nst-intro-bg" src="/imagenes/galeria/Historia.webp" alt="La historia de Frescolito" loading="eager" />
+      <div class="nst-intro-overlay"></div>
+      <div class="container nst-intro-content" data-reveal>
+        <span class="nst-label">Desde 2014</span>
+        <h1 class="nst-title">Nuestro legado</h1>
+        <p>
+          Desde 2014, Frescolito nació en el corazón de Iquitos con una idea sencilla: compartir lo mejor
+          de la cocina amazónica y marina, preparada al momento y con ingredientes frescos de la región.
+          Más de una década después, seguimos sirviendo con la misma sazón, el mismo cariño y el mismo
+          compromiso de siempre.
+        </p>
       </div>
     </section>
 
@@ -168,20 +165,25 @@ const marquee = ['SABORES DE LA AMAZONÍA', 'Frescura de la selva en tu mesa']
     margin-bottom: var(--space-md);
   }
 
-  /* ===== 1. Intro ===== */
-  .nst-intro { padding: var(--space-xl) 0; }
-  .nst-intro-grid {
-    display: grid; grid-template-columns: 1fr 0.9fr;
-    gap: var(--space-xl); align-items: center;
+  /* ===== 1. Intro (banner) ===== */
+  .nst-intro-banner {
+    position: relative; min-height: 66vh;
+    display: grid; align-items: center; overflow: hidden;
   }
-  .nst-intro-text p {
-    color: var(--color-mid); line-height: 1.9; font-size: 1.05rem;
+  .nst-intro-bg {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
   }
-  .nst-intro-img {
-    border-radius: var(--radius); overflow: hidden;
-    box-shadow: var(--shadow-lg); aspect-ratio: 4 / 3; position: relative;
+  .nst-intro-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(62,39,35,0.55) 0%, rgba(62,39,35,0.78) 100%);
   }
-  .nst-intro-img img { position: absolute; top: -8%; left: 0; width: 100%; height: 116%; object-fit: cover; }
+  .nst-intro-content {
+    position: relative; z-index: 2; max-width: 720px; margin: 0 auto;
+    text-align: center; padding: var(--space-xl) var(--space-md);
+  }
+  .nst-intro-content .nst-label { color: var(--color-primary); }
+  .nst-intro-content .nst-title { color: #fff; }
+  .nst-intro-content p { color: rgba(255,255,255,0.92); line-height: 1.9; font-size: 1.05rem; }
 
   /* ===== 2. Propósito ===== */
   .nst-proposito { padding: var(--space-xl) 0; background: #FBF6EE; }
@@ -280,7 +282,7 @@ const marquee = ['SABORES DE LA AMAZONÍA', 'Frescura de la selva en tu mesa']
 
   /* ===== Responsive ===== */
   @media (max-width: 860px) {
-    .nst-intro-grid, .nst-grid, .nst-visit-grid, .nst-mv-grid {
+    .nst-grid, .nst-visit-grid, .nst-mv-grid {
       grid-template-columns: 1fr;
     }
     .nst-grid .nst-img { order: 2; }

@@ -1,11 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 import CateringCotizador from '../components/react/CateringCotizador.tsx'
-import { WHATSAPP_NUMBER } from '../data/config.ts'
-import { UtensilsCrossed, Armchair, Users, MessageCircle } from 'lucide-react'
+import { UtensilsCrossed, Armchair, Users } from 'lucide-react'
 import '../styles/catering.css'
-
-const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hola Frescolito, quiero información sobre el servicio de catering para eventos.')}`
 
 const servicios = [
   {
@@ -67,9 +64,6 @@ const faqs = [
           </p>
           <div class="cat-hero-actions">
             <a href="#cotizar" class="btn btn-primary">Cotizar mi evento</a>
-            <a href={waLink} target="_blank" rel="noopener noreferrer" class="btn btn-outline">
-              <MessageCircle /> WhatsApp
-            </a>
           </div>
         </div>
         <div class="cat-hero-img" data-reveal-scale>

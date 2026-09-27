@@ -2,7 +2,6 @@
 import Navbar from '../components/Navbar.astro'
 import Footer from '../components/Footer.astro'
 import HorarioBadge from '../components/react/HorarioBadge.tsx'
-import WhatsAppFAB from '../components/WhatsAppFAB.astro'
 import PedirIsland from '../components/react/PedirIsland.tsx'
 import '../styles/global.css'
 import Preloader from '../components/Preloader.astro'
@@ -86,7 +85,6 @@ const ogImage = new URL('/imagenes/frescolito.jpeg', site).href
       <slot />
     </div>
     <HorarioBadge client:load />
-    <WhatsAppFAB />
     <PedirIsland client:idle />
     <Footer />
   </body>

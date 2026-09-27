@@ -133,6 +133,21 @@ img {
   color: var(--color-primary);
 }
 
+.btn-wa {
+  background: #25D366;
+  color: #fff;
+  border-radius: 50px;
+  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.35);
+}
+.btn-wa:hover {
+  background: #1eb857;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+}
+.btn-wa:active { transform: translateY(0); }
+.btn-wa svg { width: 20px; height: 20px; }
+
 .sr-only {
   position: absolute;
   width: 1px;
