@@ -1,5 +1,6 @@
 ---
 import { categories } from '../data/menu'
+import { WHATSAPP_NUMBER } from '../data/config'
 ---
 
 <div class="menu-section" id="menu-section">
@@ -151,7 +152,7 @@ import { categories } from '../data/menu'
   }
 </style>
 
-<script>
+<script define:vars={{ WHATSAPP_NUMBER }}>
   const pills = document.querySelectorAll('.menu-pill')
   const cats = document.querySelectorAll('.menu-category')
 
@@ -170,8 +171,6 @@ import { categories } from '../data/menu'
     else cat.classList.remove('active')
   })
 
-  const WHATSAPP = '51916207362'
-
   document.querySelectorAll('.menu-order-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const name = btn.getAttribute('data-name')
@@ -179,7 +178,7 @@ import { categories } from '../data/menu'
       if (!name || !price) return
 
       const msg = encodeURIComponent(`Hola FRESCOLITO, quiero ordenar:\n\n${name} - S/ ${price.toFixed(2)}`)
-      window.open(`https://wa.me/${WHATSAPP}?text=${msg}`, '_blank')
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank')
     })
   })
 </script>

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 import HorarioTexto from '../components/react/HorarioTexto.tsx'
+import { WHATSAPP_NUMBER } from '../data/config.ts'
 
 const historia = [
   { year: '2014', texto: 'Nace Frescolito en el corazón de Iquitos, con las recetas de casa y el sueño de una familia por compartir lo mejor de nuestra cocina.' },
@@ -122,7 +123,7 @@ const marquee = ['SABORES DE LA AMAZONÍA', 'Frescura de la selva en tu mesa']
           <h2 class="nst-h2">Visítanos</h2>
           <p class="nst-visit-line"><strong>Iquitos, Perú</strong></p>
           <p class="nst-visit-line">Horario: <HorarioTexto client:idle /></p>
-          <a href="https://wa.me/51916207362?text=Hola%20Frescolito%2C%20quisiera%20hacer%20un%20pedido" target="_blank" rel="noopener" class="btn btn-primary">
+          <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hola%20Frescolito%2C%20quisiera%20hacer%20un%20pedido`} target="_blank" rel="noopener" class="btn btn-primary">
             Pedir por WhatsApp
           </a>
         </div>

@@ -14,11 +14,13 @@
 
 ## Tipografía
 
-| Propiedad | Títulos | Cuerpo |
-|-----------|---------|--------|
-| **Font** | Playfair Display | Lato |
-| **Weights** | 400, 700, 900 | 300, 400, 700 |
-| **Sizes** | 2.5rem - 4rem | 1rem - 1.25rem |
+| Token | Fuente | Uso |
+|-------|--------|-----|
+| `--font-heading` | Playfair Display (400, 700, 900) | Títulos de sección |
+| `--font-body` | Poppins / Work Sans (300, 400, 600, 700) | Cuerpo de texto |
+| `--font-script` | Satisfy (400) | Marca "Frescolito" y títulos del landing |
+
+Cargadas vía Google Fonts en `src/layouts/BaseLayout.astro`.
 
 ## Espaciados
 

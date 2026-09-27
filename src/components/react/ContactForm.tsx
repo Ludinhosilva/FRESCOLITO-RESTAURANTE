@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useHorario } from '../../hooks/useHorario.ts'
+import { WHATSAPP_NUMBER } from '../../data/config.ts'
 
 const initialForm = { name: '', email: '', phone: '', message: '' }
 
@@ -87,7 +88,7 @@ export default function ContactForm() {
             </div>
             <div className="info-block">
               <h3>WhatsApp</h3>
-              <p><a href="https://wa.me/51927367844" target="_blank">+51 927 367 844</a></p>
+              <p><a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank">+51 916 207 362</a></p>
             </div>
             <div className="info-block">
               <h3>Horarios</h3><p>{diasLabel}: {horas}</p>

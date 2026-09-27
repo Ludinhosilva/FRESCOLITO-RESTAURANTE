@@ -1,6 +1,12 @@
 # ADR — Architecture Decision Records
 
+> **Nota**: Los ADR-001 y ADR-002 (React + Vite SPA con React Router) fueron
+> **superados por el ADR-006** (migración a Astro con islas React). Se conservan
+> como registro histórico de la decisión.
+
 ## ADR-001: React + Vite sobre HTML plano
+
+**Estado**: Superseded por ADR-006.
 
 **Contexto**: Se consideró HTML+Tailwind (plan original) vs React+Vite.
 **Decisión**: React + Vite por:
@@ -14,6 +20,8 @@
 ---
 
 ## ADR-002: React Router con lazy loading
+
+**Estado**: Superseded por ADR-006.
 
 **Contexto**: SPA todo en una página vs rutas separadas.
 **Decisión**: 6 rutas lazy con `React.lazy()` + `Suspense`. Cada ruta es un chunk JS independiente.
@@ -65,8 +73,9 @@
 
 **Contexto**: Pasarela de pago (LemonSqueezy, Stripe) vs pedido manual.
 **Decisión**: Carrito React como isla `client:load` que genera un mensaje de WhatsApp con el resumen del pedido. Sin backend, sin pasarela de pago. El encargado recibe el pedido directo por WhatsApp.
-- Número del encargado: `+51 927367844`
-- URL: `https://wa.me/51927367844?text={mensaje_codificado}`
+- Número del encargado: `+51 916 207 362`
+- URL: `https://wa.me/51916207362?text={mensaje_codificado}`
+- Fuente única del número: `src/data/config.ts` (`WHATSAPP_NUMBER`)
 - Mensaje incluye: items, cantidades, subtotal, nota del cliente
 - Estado del carrito persistido en localStorage
 
