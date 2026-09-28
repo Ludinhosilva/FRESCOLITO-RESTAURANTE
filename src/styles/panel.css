@@ -728,6 +728,62 @@
 }
 .panel-root .gal-admin-actions .icon-btn.sm { flex: 1; width: auto; }
 
+/* ===== Plano de mesas ===== */
+.panel-root .plano {
+  position: relative; width: 100%; aspect-ratio: 16 / 10;
+  background-color: var(--surface-2);
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 39px, var(--border) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, var(--border) 40px);
+  border: 1px solid var(--border); border-radius: var(--r-lg);
+  overflow: hidden; touch-action: none;
+}
+.panel-root .plano-mesa {
+  position: absolute; width: 58px; height: 58px;
+  transform: translate(-50%, -50%);
+  display: grid; place-items: center; touch-action: none;
+}
+.panel-root .plano-mesa .mesa-tablero {
+  width: 44px; height: 44px; border-radius: 10px;
+  display: grid; place-items: center;
+  background: var(--surface); border: 2px solid var(--ink-300);
+  font-weight: 800; font-size: 15px; color: var(--ink-900);
+  box-shadow: var(--elev-1);
+}
+.panel-root .plano-mesa .mesa-silla {
+  position: absolute; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--ink-300);
+}
+.panel-root .plano-mesa .mesa-silla.top { top: 0; left: 50%; transform: translateX(-50%); }
+.panel-root .plano-mesa .mesa-silla.bottom { bottom: 0; left: 50%; transform: translateX(-50%); }
+.panel-root .plano-mesa .mesa-silla.left { left: 0; top: 50%; transform: translateY(-50%); }
+.panel-root .plano-mesa .mesa-silla.right { right: 0; top: 50%; transform: translateY(-50%); }
+.panel-root .plano-mesa.tone-ocupada .mesa-tablero { border-color: var(--warning); background: var(--warning-soft); color: #9a5200; }
+.panel-root .plano-mesa.tone-cobrar .mesa-tablero { border-color: var(--success); background: var(--success-soft); color: #127a37; }
+.panel-root .plano-mesa.selected .mesa-tablero { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(245, 179, 1, 0.3); }
+.panel-root .plano-mesa.inactiva { opacity: 0.4; }
+.panel-root .plano-mesa.editable { cursor: grab; }
+.panel-root .plano-mesa.editable:active { cursor: grabbing; }
+.panel-root .plano-mesa-info {
+  position: absolute; bottom: -14px;
+  font-size: 10px; font-weight: 800; white-space: nowrap;
+  background: var(--ink-900); color: #fff; padding: 1px 7px; border-radius: 50px;
+}
+.panel-root .plano-leyenda { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--ink-600); margin-top: 10px; }
+.panel-root .plano-leyenda span { display: inline-flex; align-items: center; gap: 6px; }
+.panel-root .plano-leyenda i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.panel-root .plano-leyenda i.libre { background: var(--ink-300); }
+.panel-root .plano-leyenda i.ocupada { background: var(--warning); }
+.panel-root .plano-leyenda i.cobrar { background: var(--success); }
+
+/* ===== Mesas: mover items ===== */
+.panel-root .mover-lista { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.panel-root .mover-item {
+  display: flex; align-items: center; gap: 10px;
+  border: 1px solid var(--border); border-radius: var(--r-sm); padding: 10px 12px; background: var(--surface);
+}
+.panel-root .mover-item input { width: 18px; height: 18px; }
+
 /* Focus visible global del panel */
 .panel-root :focus-visible { outline: 2px solid var(--brand-hover); outline-offset: 2px; border-radius: 4px; }
 

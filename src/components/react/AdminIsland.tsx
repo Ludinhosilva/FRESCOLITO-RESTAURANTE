@@ -11,6 +11,7 @@ import AdminMes from './admin/AdminMes.tsx'
 import AdminCatalogo from './admin/AdminCatalogo.tsx'
 import AdminConfig from './admin/AdminConfig.tsx'
 import AdminGaleria from './admin/AdminGaleria.tsx'
+import AdminMesas from './admin/AdminMesas.tsx'
 
 const UsoPanel = lazy(() => import('./UsoPanel.tsx'))
 
@@ -21,6 +22,7 @@ const TABS = [
   { id: 'uso', label: 'Uso' },
   { id: 'platos', label: 'Platos' },
   { id: 'galeria', label: 'Galería' },
+  { id: 'mesas', label: 'Mesas' },
   { id: 'inventario', label: 'Inventario' },
   { id: 'horario', label: 'Horario' },
 ]
@@ -61,6 +63,7 @@ function AdminContenido() {
       )}
       {tab === 'platos' && <AdminCatalogo vista="platos" />}
       {tab === 'galeria' && <AdminGaleria />}
+      {tab === 'mesas' && <AdminMesas />}
       {tab === 'inventario' && <AdminCatalogo vista="inventario" />}
       {tab === 'horario' && <AdminConfig config={config} />}
     </div>

@@ -7,8 +7,10 @@ import EmptyState from './ui/EmptyState.tsx'
 import { useToast } from './ui/Toast.tsx'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Search, Minus, Plus, X, ShoppingBag, Armchair, Store, Package, Bell } from 'lucide-react'
-import { cobrarMesa, cancelarPedido, crearPedido, listarMesas, listarPedidosDelDia, listarPlatos } from '../../lib/pedidos.ts'
+import { Search, Minus, Plus, X, ShoppingBag, Armchair, Store, Package, Bell, ArrowRightLeft } from 'lucide-react'
+import { cobrarMesa, cancelarPedido, crearPedido, listarPedidosDelDia, listarPlatos } from '../../lib/pedidos.ts'
+import { listarMesas, moverItems } from '../../lib/mesas.ts'
+import MesasPlano from './MesasPlano.tsx'
 import { useRealtime } from '../../hooks/useRealtime.ts'
 import { sonidoListo } from '../../lib/sonido.ts'
 import { METODOS_PAGO, METODO_LABEL } from '../../lib/dominio.ts'
@@ -35,6 +37,11 @@ function MeseraContenido() {
   const [cobroMonto, setCobroMonto] = useState('')
   const [confirmando, setConfirmando] = useState(false)
   const [cancelando, setCancelando] = useState(null)
+  const [moverAbierto, setMoverAbierto] = useState(false)
+  const [moverPedido, setMoverPedido] = useState(null)
+  const [moverSel, setMoverSel] = useState([])
+  const [moverDestino, setMoverDestino] = useState('')
+  const [moviendo, setMoviendo] = useState(false)
   const notificados = useRef(new Set())
 
   const { data: platos = [] } = useQuery({ queryKey: ['platos'], queryFn: listarPlatos })
@@ -177,6 +184,50 @@ function MeseraContenido() {
     [pedidos],
   )
 
+  const estadosMesa = useMemo(() => {
+    const map: Record<number, any> = {}
+    for (const p of pedidos) {
+      if (p.canal !== 'salon') continue
+      if (['cancelado', 'entregado'].includes(p.estado)) continue
+      const items = p.pedido_items || []
+      const listo = items.length > 0 && items.every((i) => i.estado === 'listo')
+      map[p.mesa_id] = { tone: listo ? 'cobrar' : 'ocupada', total: p.total, numero_orden: p.numero_orden }
+    }
+    return map
+  }, [pedidos])
+
+  const pedidoMesa = useMemo(
+    () => pedidos.find((p) => p.canal === 'salon' && p.mesa_id === mesa && !['cancelado', 'entregado'].includes(p.estado)) || null,
+    [pedidos, mesa],
+  )
+
+  const abrirMover = (p) => {
+    setMoverPedido(p)
+    setMoverSel([])
+    setMoverDestino('')
+    setMoverAbierto(true)
+  }
+
+  const confirmarMover = async () => {
+    if (!moverPedido) return
+    if (moverSel.length === 0) return toast('Selecciona al menos un plato', 'error')
+    if (!moverDestino) return toast('Selecciona la mesa destino', 'error')
+    setMoviendo(true)
+    try {
+      await moverItems(moverPedido.id, Number(moverDestino), moverSel)
+      queryClient.invalidateQueries({ queryKey: ['pedidos-hoy'] })
+      toast('Ítems movidos')
+      setMoverAbierto(false)
+      setMoverPedido(null)
+      setMoverSel([])
+      setMoverDestino('')
+    } catch (e) {
+      toast('Error: ' + (e.message || 'no se pudo mover'), 'error')
+    } finally {
+      setMoviendo(false)
+    }
+  }
+
   const renderPlato = (p) => {
     const sinStock = !p.stock_disponible || p.stock <= 0
     const c = cant(p.id)
@@ -231,24 +282,33 @@ function MeseraContenido() {
         <>
           {seccion === 'salon' && (
             <div className="card">
-              <div className="card-title">Mesa</div>
+              <div className="card-title">Plano del salón</div>
               {mesas.length === 0 ? (
                 <EmptyState icon={Armchair} title="Sin mesas" sub="No hay mesas configuradas." />
               ) : (
-                <ul className="table-list">
-                  {mesas.map((m) => (
-                    <li key={m.id}>
-                      <button
-                        className={'mesa-btn' + (mesa === m.id ? ' selected' : '')}
-                        aria-pressed={mesa === m.id}
-                        onClick={() => setMesa(m.id)}
-                      >
-                        {m.numero}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+                <>
+                  <MesasPlano mesas={mesas} estados={estadosMesa} selectedId={mesa} onSelect={setMesa} />
+                  <div className="plano-leyenda">
+                    <span><i className="libre" /> Disponible</span>
+                    <span><i className="ocupada" /> Ocupada</span>
+                    <span><i className="cobrar" /> Por cobrar</span>
+                  </div>
+                </>
               )}
+            </div>
+          )}
+
+          {seccion === 'salon' && pedidoMesa && (
+            <div className="card">
+              <div className="card-title">
+                Mesa {mesas.find((m) => m.id === mesa)?.numero} · #{pedidoMesa.numero_orden}
+              </div>
+              <div className="text-sm muted mb-2">
+                {(pedidoMesa.pedido_items || []).map((i) => `${i.cantidad}× ${i.plato_nombre}`).join(', ')}
+              </div>
+              <button className="btn btn-sm btn-outline" onClick={() => abrirMover(pedidoMesa)}>
+                <ArrowRightLeft /> Mover ítems a otra mesa
+              </button>
             </div>
           )}
 
@@ -443,6 +503,44 @@ function MeseraContenido() {
           <p>¿Cancelar el pedido <strong>#{cancelando.numero_orden}</strong> de {cancelando.mesas ? `Mesa ${cancelando.mesas.numero}` : 'mostrador'}?</p>
           <p className="cli-legal">Se devolverá el stock de los platos.</p>
         </ConfirmDialog>
+      )}
+
+      {moverAbierto && moverPedido && (
+        <Sheet
+          title="Mover ítems a otra mesa"
+          onClose={() => setMoverAbierto(false)}
+          footer={
+            <>
+              <button className="btn btn-outline grow" onClick={() => setMoverAbierto(false)}>Cancelar</button>
+              <button className="btn grow" onClick={confirmarMover} disabled={moviendo}>
+                {moviendo ? 'Moviendo...' : 'Mover ítems'}
+              </button>
+            </>
+          }
+        >
+          <div className="mover-lista">
+            {(moverPedido.pedido_items || []).map((it) => (
+              <label key={it.id} className="mover-item">
+                <input
+                  type="checkbox"
+                  checked={moverSel.includes(it.id)}
+                  onChange={(e) => setMoverSel((s) => (e.target.checked ? [...s, it.id] : s.filter((x) => x !== it.id)))}
+                />
+                <span>{it.cantidad}× {it.plato_nombre}</span>
+              </label>
+            ))}
+          </div>
+          <div className="field">
+            <label htmlFor="mover-destino">Mesa destino</label>
+            <select id="mover-destino" value={moverDestino} onChange={(e) => setMoverDestino(e.target.value)}>
+              <option value="">Selecciona...</option>
+              {mesas.filter((m) => m.id !== mesa && m.activa !== false).map((m) => (
+                <option key={m.id} value={m.id}>Mesa {m.numero}</option>
+              ))}
+            </select>
+          </div>
+          <p className="cli-legal">Si la mesa destino no tiene pedido abierto, se crea uno automáticamente.</p>
+        </Sheet>
       )}
     </div>
   )
