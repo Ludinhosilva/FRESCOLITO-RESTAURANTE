@@ -77,7 +77,7 @@ export default function AdminMesas() {
       </button>
 
       <div className="card">
-        <div className="card-title"><Move style={{ width: 16, height: 16 }} /> Plano del salón (arrastra para ubicar)</div>
+        <div className="card-title"><Move style={{ width: 16, height: 16 }} /> Plano del local (arrastra para ubicar)</div>
         {isLoading ? (
           <div className="skeleton" style={{ height: 260 }} />
         ) : mesas.length === 0 ? (

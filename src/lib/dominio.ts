@@ -5,7 +5,7 @@ export type EstadoPago = 'pendiente' | 'por_verificar' | 'pagado' | 'contra_entr
 export type MetodoPago = 'efectivo' | 'yape' | 'plin'
 
 export const CANAL_LABEL: Record<string, string> = {
-  salon: 'Salón',
+  salon: 'En el local',
   delivery: 'Delivery',
   recojo: 'Recojo',
 }

@@ -17,7 +17,7 @@ import { METODOS_PAGO, METODO_LABEL } from '../../lib/dominio.ts'
 
 const SECCIONES = [
   { id: 'llevar', label: 'Para llevar', icon: Store },
-  { id: 'salon', label: 'Salón', icon: Armchair },
+  { id: 'salon', label: 'En el local', icon: Armchair },
   { id: 'stock', label: 'Stock', icon: Package },
 ]
 
@@ -282,7 +282,7 @@ function MeseraContenido() {
         <>
           {seccion === 'salon' && (
             <div className="card">
-              <div className="card-title">Plano del salón</div>
+              <div className="card-title">Plano del local</div>
               {mesas.length === 0 ? (
                 <EmptyState icon={Armchair} title="Sin mesas" sub="No hay mesas configuradas." />
               ) : (

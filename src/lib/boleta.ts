@@ -9,7 +9,7 @@ const RESTAURANTE = {
   logo: '/imagenes/frescolito-logo.jpeg',
 }
 
-const CANAL_LABEL = { salon: 'Salón', delivery: 'Delivery', recojo: 'Para llevar / Recojo' }
+const CANAL_LABEL = { salon: 'En el local', delivery: 'Delivery', recojo: 'Para llevar / Recojo' }
 const PAGO_LABEL = {
   efectivo: 'Efectivo',
   yape: 'Yape',
