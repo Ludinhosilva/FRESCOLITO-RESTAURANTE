@@ -50,7 +50,7 @@ export default function MesasPlano({ mesas, estados = {}, selectedId = null, onS
   return (
     <div className="plano" ref={contRef}>
       {visibles.map((m) => {
-        const pos = drag && drag.id === m.id ? drag : m
+        const pos = drag && drag.id === m.id ? drag : { x: m.x ?? 8, y: m.y ?? 8 }
         const estado = estados[m.id]
         const tone = estado?.tone || 'libre'
         const inactiva = m.activa === false
