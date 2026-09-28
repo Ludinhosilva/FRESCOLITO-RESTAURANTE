@@ -32,7 +32,7 @@ function tiempoDesde(iso) {
 
 const FILTROS = [
   { id: 'todos', label: 'Todos' },
-  { id: 'salon', label: 'Salón' },
+  { id: 'salon', label: 'En el local' },
   { id: 'delivery', label: 'Delivery' },
   { id: 'recojo', label: 'Recojo' },
 ]
@@ -230,7 +230,7 @@ function CocinaContenido() {
                   <div className="row-wrap">
                     <span className="orden-numero">#{pedido.numero_orden}</span>
                     <span className={'canal-chip ' + (CANAL_CLASS[pedido.canal] || 'canal-salon')}>
-                      {CANAL_LABEL[pedido.canal] || 'Salón'}
+                      {CANAL_LABEL[pedido.canal] || 'En el local'}
                     </span>
                     {pedido.mesas && <span style={{ fontWeight: 700 }}>Mesa {pedido.mesas.numero}</span>}
                   </div>

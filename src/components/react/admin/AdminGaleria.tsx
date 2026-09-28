@@ -140,7 +140,7 @@ export default function AdminGaleria() {
           </div>
           <div className="field">
             <label htmlFor="gal-alt">Descripción (opcional)</label>
-            <input id="gal-alt" value={alt} onChange={(e) => setAlt(e.target.value)} placeholder="Ej: Boda en el salón" />
+            <input id="gal-alt" value={alt} onChange={(e) => setAlt(e.target.value)} placeholder="Ej: Boda en el local" />
           </div>
         </div>
         <label className="btn btn-block" style={{ cursor: 'pointer' }}>
