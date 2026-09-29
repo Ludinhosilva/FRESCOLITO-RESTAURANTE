@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
+import { etiquetaMesas } from './dominio.ts'
 
 const RESTAURANTE = {
   nombre: 'FRESCOLITO',
@@ -103,7 +104,7 @@ export async function generarBoletaPDF(pedido) {
   y += 6
   const clienteTxt = pedido.cliente_nombre
     ? pedido.cliente_nombre
-    : (pedido.mesas ? `Mesa ${pedido.mesas.numero}` : '—')
+    : (etiquetaMesas(pedido) || '—')
   doc.text(`Cliente: ${clienteTxt}`, 14, y)
   if (pedido.cliente_telefono) {
     y += 6

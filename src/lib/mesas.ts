@@ -39,3 +39,21 @@ export async function moverItems(origen: string, mesaDestino: number, itemIds: s
   if (error) throw error
   return data
 }
+
+/** Mueve (acomoda) una mesa en el plano. Mesera/admin. */
+export async function moverMesa(id: number, x: number, y: number) {
+  const { error } = await db.rpc('mover_mesa', { p_id: id, p_x: x, p_y: y })
+  if (error) throw error
+}
+
+/** Une mesas a un pedido (una sola cuenta). Fusiona los pedidos abiertos. */
+export async function unirMesas(pedidoId: string, mesaIds: number[]) {
+  const { error } = await db.rpc('unir_mesas', { p_pedido_id: pedidoId, p_mesa_ids: mesaIds })
+  if (error) throw error
+}
+
+/** Separa una mesa del grupo (queda libre). */
+export async function separarMesa(pedidoId: string, mesaId: number) {
+  const { error } = await db.rpc('separar_mesa', { p_pedido_id: pedidoId, p_mesa_id: mesaId })
+  if (error) throw error
+}

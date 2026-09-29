@@ -84,7 +84,7 @@ export default function AdminMesas() {
           <div className="empty">Sin mesas todavía</div>
         ) : (
           <>
-            <MesasPlano mesas={mesas} editable onMove={mover} />
+            <MesasPlano mesas={mesas} dragMode="move" onMove={mover} />
             <div className="plano-leyenda">
               <span><i className="libre" /> Disponible</span>
               <span><i className="ocupada" /> Ocupada</span>

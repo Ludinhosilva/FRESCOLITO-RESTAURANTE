@@ -17,7 +17,7 @@ import {
 } from '../../lib/pedidos.ts'
 import { useRealtime } from '../../hooks/useRealtime.ts'
 import { sonidoNuevoPedido } from '../../lib/sonido.ts'
-import { CANAL_LABEL, CANAL_CLASS, tonoPorTiempo } from '../../lib/dominio.ts'
+import { CANAL_LABEL, CANAL_CLASS, tonoPorTiempo, etiquetaMesas } from '../../lib/dominio.ts'
 
 function minutosDesde(iso) {
   return Math.floor((Date.now() - new Date(iso).getTime()) / 60000)
@@ -232,7 +232,7 @@ function CocinaContenido() {
                     <span className={'canal-chip ' + (CANAL_CLASS[pedido.canal] || 'canal-salon')}>
                       {CANAL_LABEL[pedido.canal] || 'En el local'}
                     </span>
-                    {pedido.mesas && <span style={{ fontWeight: 700 }}>Mesa {pedido.mesas.numero}</span>}
+                    {etiquetaMesas(pedido) && <span style={{ fontWeight: 700 }}>{etiquetaMesas(pedido)}</span>}
                   </div>
                   <span className={'orden-tiempo tone-' + tone}>
                     <Clock /> {tiempoDesde(pedido.creado_en)}

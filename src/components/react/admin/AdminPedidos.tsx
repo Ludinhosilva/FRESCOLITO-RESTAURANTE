@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { BadgeCheck, Pencil, FileText, Ban, CircleDollarSign } from 'lucide-react'
 import { cancelarPedido, listarPedidosDiaAdmin, verificarPagoPedido } from '../../../lib/pedidos.ts'
-import { CANAL_LABEL, CANAL_CLASS, PAGO_LABEL, PAGO_CLASS } from '../../../lib/dominio.ts'
+import { CANAL_LABEL, CANAL_CLASS, PAGO_LABEL, PAGO_CLASS, etiquetaMesas } from '../../../lib/dominio.ts'
 import { useToast } from '../ui/Toast.tsx'
 import ConfirmDialog from '../ConfirmDialog.tsx'
 import EditarPedido from '../EditarPedido.tsx'
@@ -63,7 +63,7 @@ export default function AdminPedidos({ fecha, setFecha, platos }) {
               <div>
                 <div className="verificar-main">
                   <strong>#{p.numero_orden}</strong>
-                  <span>{p.cliente_nombre || (p.mesas ? `Mesa ${p.mesas.numero}` : '—')}</span>
+                  <span>{p.cliente_nombre || etiquetaMesas(p) || '—'}</span>
                   <span className="verificar-monto">S/ {Number(p.total).toFixed(2)}</span>
                 </div>
                 <div className="verificar-ref">{p.metodo_pago} · Op. {p.referencia_pago || '—'}</div>
@@ -92,7 +92,7 @@ export default function AdminPedidos({ fecha, setFecha, platos }) {
 
             {(p.cliente_nombre || p.mesas) && (
               <div className="text-sm muted mb-2">
-                {p.mesas ? `Mesa ${p.mesas.numero}` : p.cliente_nombre} {p.cliente_telefono ? `· ${p.cliente_telefono}` : ''}
+                {etiquetaMesas(p) || p.cliente_nombre} {p.cliente_telefono ? `· ${p.cliente_telefono}` : ''}
                 {p.cliente_direccion ? ` · 📍 ${p.cliente_direccion}` : ''}
               </div>
             )}
