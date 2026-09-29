@@ -7,13 +7,13 @@ import EmptyState from './ui/EmptyState.tsx'
 import { useToast } from './ui/Toast.tsx'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Search, Minus, Plus, X, ShoppingBag, Armchair, Store, Package, Bell, ArrowRightLeft } from 'lucide-react'
+import { Search, Minus, Plus, X, ShoppingBag, Armchair, Store, Package, Bell, ArrowRightLeft, Move, Link2 } from 'lucide-react'
 import { cobrarMesa, cancelarPedido, crearPedido, listarPedidosDelDia, listarPlatos } from '../../lib/pedidos.ts'
-import { listarMesas, moverItems } from '../../lib/mesas.ts'
+import { listarMesas, moverItems, moverMesa, unirMesas, separarMesa } from '../../lib/mesas.ts'
 import MesasPlano from './MesasPlano.tsx'
 import { useRealtime } from '../../hooks/useRealtime.ts'
 import { sonidoListo } from '../../lib/sonido.ts'
-import { METODOS_PAGO, METODO_LABEL } from '../../lib/dominio.ts'
+import { METODOS_PAGO, METODO_LABEL, etiquetaMesas } from '../../lib/dominio.ts'
 
 const SECCIONES = [
   { id: 'llevar', label: 'Para llevar', icon: Store },
@@ -26,6 +26,8 @@ function MeseraContenido() {
   const toast = useToast()
   const [seccion, setSeccion] = useState('llevar')
   const [mesa, setMesa] = useState(null)
+  const [planoModo, setPlanoModo] = useState('ver')
+  const [juntarSel, setJuntarSel] = useState<number[]>([])
   const [busqueda, setBusqueda] = useState('')
   const [seleccion, setSeleccion] = useState<Record<string, number>>({})
   const [metodo, setMetodo] = useState('efectivo')
@@ -184,6 +186,19 @@ function MeseraContenido() {
     [pedidos],
   )
 
+  const pedidoPorMesa = useMemo(() => {
+    const map: Record<number, any> = {}
+    for (const p of pedidos) {
+      if (p.canal !== 'salon') continue
+      if (['cancelado', 'entregado'].includes(p.estado)) continue
+      if (p.mesa_id) map[p.mesa_id] = p
+      for (const pm of p.pedido_mesas || []) {
+        if (pm?.mesa_id) map[pm.mesa_id] = p
+      }
+    }
+    return map
+  }, [pedidos])
+
   const estadosMesa = useMemo(() => {
     const map: Record<number, any> = {}
     for (const p of pedidos) {
@@ -191,15 +206,70 @@ function MeseraContenido() {
       if (['cancelado', 'entregado'].includes(p.estado)) continue
       const items = p.pedido_items || []
       const listo = items.length > 0 && items.every((i) => i.estado === 'listo')
-      map[p.mesa_id] = { tone: listo ? 'cobrar' : 'ocupada', total: p.total, numero_orden: p.numero_orden }
+      const mesasDe = [p.mesa_id, ...(p.pedido_mesas || []).map((x) => x.mesa_id)].filter(Boolean)
+      const unida = mesasDe.length > 1
+      const grupo = unida ? (etiquetaMesas(p) || '').replace('Mesa ', '') : null
+      for (const mid of mesasDe) {
+        map[mid] = { tone: listo ? 'cobrar' : 'ocupada', total: p.total, numero_orden: p.numero_orden, unida, grupo }
+      }
     }
     return map
   }, [pedidos])
 
-  const pedidoMesa = useMemo(
-    () => pedidos.find((p) => p.canal === 'salon' && p.mesa_id === mesa && !['cancelado', 'entregado'].includes(p.estado)) || null,
-    [pedidos, mesa],
-  )
+  const pedidoMesa = mesa ? (pedidoPorMesa[mesa] || null) : null
+
+  const moverMesaPlano = async (id, x, y) => {
+    try {
+      await moverMesa(id, x, y)
+      queryClient.invalidateQueries({ queryKey: ['mesas'] })
+      queryClient.invalidateQueries({ queryKey: ['mesas-admin'] })
+    } catch (e) {
+      toast('Error: ' + (e.message || 'no se pudo mover'), 'error')
+    }
+  }
+
+  const seleccionarJuntar = (id) => {
+    setJuntarSel((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]))
+  }
+
+  const juntarSeleccionadas = async () => {
+    if (juntarSel.length < 2) return toast('Selecciona al menos 2 mesas', 'error')
+    const mainMesa = juntarSel.find((id) => pedidoPorMesa[id])
+    if (!mainMesa) return toast('Ninguna mesa seleccionada tiene pedido abierto', 'error')
+    const pedido = pedidoPorMesa[mainMesa]
+    try {
+      await unirMesas(pedido.id, juntarSel)
+      queryClient.invalidateQueries({ queryKey: ['pedidos-hoy'] })
+      toast('Mesas unidas')
+      setJuntarSel([])
+      setPlanoModo('ver')
+    } catch (e) {
+      toast('Error: ' + (e.message || 'no se pudo unir'), 'error')
+    }
+  }
+
+  const juntarPorDrop = async (fromId, toId) => {
+    const mainMesa = pedidoPorMesa[toId] ? toId : pedidoPorMesa[fromId] ? fromId : null
+    if (!mainMesa) return toast('Ninguna de las mesas tiene pedido abierto', 'error')
+    const pedido = pedidoPorMesa[mainMesa]
+    try {
+      await unirMesas(pedido.id, [fromId, toId])
+      queryClient.invalidateQueries({ queryKey: ['pedidos-hoy'] })
+      toast('Mesas unidas')
+    } catch (e) {
+      toast('Error: ' + (e.message || 'no se pudo unir'), 'error')
+    }
+  }
+
+  const separar = async (pedidoId, mesaId) => {
+    try {
+      await separarMesa(pedidoId, mesaId)
+      queryClient.invalidateQueries({ queryKey: ['pedidos-hoy'] })
+      toast('Mesa separada')
+    } catch (e) {
+      toast('Error: ' + (e.message || 'no se pudo separar'), 'error')
+    }
+  }
 
   const abrirMover = (p) => {
     setMoverPedido(p)
@@ -287,12 +357,38 @@ function MeseraContenido() {
                 <EmptyState icon={Armchair} title="Sin mesas" sub="No hay mesas configuradas." />
               ) : (
                 <>
-                  <MesasPlano mesas={mesas} estados={estadosMesa} selectedId={mesa} onSelect={setMesa} />
+                  <div className="tabs-scroll" style={{ marginBottom: 10 }}>
+                    <button className={'filtro-chip' + (planoModo === 'ver' ? ' active' : '')} onClick={() => { setPlanoModo('ver'); setJuntarSel([]) }}>Ver</button>
+                    <button className={'filtro-chip' + (planoModo === 'mover' ? ' active' : '')} onClick={() => { setPlanoModo('mover'); setJuntarSel([]) }}><Move /> Mover</button>
+                    <button className={'filtro-chip' + (planoModo === 'juntar' ? ' active' : '')} onClick={() => { setPlanoModo('juntar'); setJuntarSel([]) }}><Link2 /> Juntar</button>
+                  </div>
+
+                  <MesasPlano
+                    mesas={mesas}
+                    estados={estadosMesa}
+                    selectedId={planoModo === 'ver' ? mesa : null}
+                    selectedIds={planoModo === 'juntar' ? juntarSel : []}
+                    onSelect={planoModo === 'juntar' ? seleccionarJuntar : setMesa}
+                    dragMode={planoModo === 'mover' ? 'move' : planoModo === 'juntar' ? 'join' : 'none'}
+                    onMove={moverMesaPlano}
+                    onJoinDrop={juntarPorDrop}
+                  />
+
                   <div className="plano-leyenda">
                     <span><i className="libre" /> Disponible</span>
                     <span><i className="ocupada" /> Ocupada</span>
                     <span><i className="cobrar" /> Por cobrar</span>
                   </div>
+
+                  {planoModo === 'mover' && <p className="text-xs muted mt-2">Arrastra las mesas para acomodarlas. Se guarda para todos.</p>}
+                  {planoModo === 'juntar' && (
+                    <div className="row-wrap mt-3">
+                      <button className="btn btn-sm" onClick={juntarSeleccionadas} disabled={juntarSel.length < 2}>
+                        <Link2 /> Juntar seleccionadas ({juntarSel.length})
+                      </button>
+                      <span className="text-xs muted">Toca mesas para seleccionar, o arrastra una sobre otra.</span>
+                    </div>
+                  )}
                 </>
               )}
             </div>
@@ -301,14 +397,28 @@ function MeseraContenido() {
           {seccion === 'salon' && pedidoMesa && (
             <div className="card">
               <div className="card-title">
-                Mesa {mesas.find((m) => m.id === mesa)?.numero} · #{pedidoMesa.numero_orden}
+                {etiquetaMesas(pedidoMesa)} · #{pedidoMesa.numero_orden}
               </div>
               <div className="text-sm muted mb-2">
                 {(pedidoMesa.pedido_items || []).map((i) => `${i.cantidad}× ${i.plato_nombre}`).join(', ')}
               </div>
-              <button className="btn btn-sm btn-outline" onClick={() => abrirMover(pedidoMesa)}>
-                <ArrowRightLeft /> Mover ítems a otra mesa
-              </button>
+              <div className="row-wrap">
+                <button className="btn btn-sm btn-outline" onClick={() => abrirMover(pedidoMesa)}>
+                  <ArrowRightLeft /> Mover ítems a otra mesa
+                </button>
+              </div>
+              {[pedidoMesa.mesa_id, ...(pedidoMesa.pedido_mesas || []).map((x) => x.mesa_id)].filter(Boolean).length > 1 && (
+                <div className="mt-3">
+                  <div className="text-xs muted mb-1">Mesas unidas — toca para separar:</div>
+                  <div className="row-wrap">
+                    {[pedidoMesa.mesa_id, ...(pedidoMesa.pedido_mesas || []).map((x) => x.mesa_id)].filter(Boolean).map((mid) => (
+                      <button key={mid} className="filtro-chip" onClick={() => separar(pedidoMesa.id, mid)}>
+                        Separar mesa {mesas.find((m) => m.id === mid)?.numero ?? mid}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -358,7 +468,7 @@ function MeseraContenido() {
               {mesasAbiertas.map((p) => (
                 <div key={p.id} className="mesa-abierta">
                   <div>
-                    <div className="mesa-abierta-num">Mesa {p.mesas?.numero ?? '—'} · #{p.numero_orden}</div>
+                    <div className="mesa-abierta-num">{etiquetaMesas(p) || 'Mostrador'} · #{p.numero_orden}</div>
                     <div className="mesa-abierta-items">
                       {(p.pedido_items || []).map((i) => `${i.cantidad}× ${i.plato_nombre}`).join(', ')}
                     </div>
@@ -500,7 +610,7 @@ function MeseraContenido() {
           onCancel={() => setCancelando(null)}
           onConfirm={() => cancelarMesa(cancelando)}
         >
-          <p>¿Cancelar el pedido <strong>#{cancelando.numero_orden}</strong> de {cancelando.mesas ? `Mesa ${cancelando.mesas.numero}` : 'mostrador'}?</p>
+          <p>¿Cancelar el pedido <strong>#{cancelando.numero_orden}</strong> de {etiquetaMesas(cancelando) || 'mostrador'}?</p>
           <p className="cli-legal">Se devolverá el stock de los platos.</p>
         </ConfirmDialog>
       )}

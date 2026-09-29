@@ -53,3 +53,19 @@ export function tonoPorTiempo(minutos: number): 'ok' | 'warn' | 'late' {
   if (minutos >= 10) return 'warn'
   return 'ok'
 }
+
+/**
+ * Etiqueta de mesas de un pedido, incluyendo mesas unidas.
+ * Ej: "Mesa 1" o "Mesa 1+2". null si el pedido no tiene mesa.
+ */
+export function etiquetaMesas(pedido: any): string | null {
+  if (!pedido) return null
+  const nums = new Set<number>()
+  if (pedido.mesas?.numero) nums.add(pedido.mesas.numero)
+  for (const pm of pedido.pedido_mesas || []) {
+    const n = pm?.mesas?.numero
+    if (n) nums.add(n)
+  }
+  if (nums.size === 0) return null
+  return 'Mesa ' + [...nums].sort((a, b) => a - b).join('+')
+}
