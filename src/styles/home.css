@@ -21,5 +21,23 @@
 .home-dish-price { font-family: var(--font-body); font-weight: 700; font-size: 1.15rem; color: var(--color-primary-hover); }
 .home-dish-btn { font-size: 0.82rem; padding: 0.5rem 1.1rem; border-radius: 50px; }
 
+/* Placeholder mientras cargan los destacados (evita mostrar platos equivocados) */
+.home-dish-skel { pointer-events: none; }
+.home-dish-skel .sk-img,
+.home-dish-skel .sk-line {
+  background: linear-gradient(90deg, #EEE9DF 25%, #F7F2E9 37%, #EEE9DF 63%);
+  background-size: 400% 100%;
+  animation: home-skel 1.4s ease infinite;
+}
+.home-dish-skel .sk-line { display: block; height: 14px; border-radius: 7px; }
+@keyframes home-skel {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+.home-dishes-empty {
+  text-align: center; color: var(--color-mid);
+  font-size: 0.95rem; padding: var(--space-lg) 0;
+}
+
 @media (max-width: 960px) { .home-dishes { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 700px) { .home-dishes { grid-template-columns: 1fr; } }

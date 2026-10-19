@@ -3,7 +3,17 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 import Hero from '../components/Hero.astro'
 import DestacadosIsland from '../components/react/DestacadosIsland.tsx'
 import { Fish, Leaf, Truck, HeartHandshake, PartyPopper } from 'lucide-react'
+import { listarDestacados } from '../lib/pedidosCliente.ts'
 import '../styles/home.css'
+
+// Precarga en build los platos destacados reales para que el primer pintado
+// ya muestre lo que hay en el panel admin (sin salto al hidratar).
+let destacados = []
+try {
+  destacados = (await listarDestacados()) ?? []
+} catch {
+  destacados = []
+}
 
 const ventajas = [
   { Icon: Fish, title: 'Sazón amazónica', desc: 'Ceviches, chicharrones y platos marinos preparados al momento con recetas de casa.' },
@@ -24,7 +34,7 @@ const ventajas = [
         <h2 class="home-h2">Platos destacados</h2>
         <span class="home-divider"></span>
       </div>
-      <DestacadosIsland client:visible />
+      <DestacadosIsland client:visible inicial={destacados} />
       <div class="home-cta-center">
         <a href="/menu" class="btn btn-outline">Ver todo el menú</a>
       </div>
