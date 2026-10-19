@@ -101,7 +101,9 @@ Migraciones en `supabase/migrations/`:
 `0001_init`, `0002_add_enums`, `0003_pedidos_clientes`, `0004_ventas_rango`,
 `0005_platos_imagen`, `0006_edicion_cobro_auditoria`, `0007_boleta_cliente`,
 `0008_eliminar_plato`, `0009_cancelar_mesera`, `0010_monitoreo`,
-`0011_limites_numericos`, `0012_reclamaciones`.
+`0011_limites_numericos`, `0012_reclamaciones`, `0013_horario_11_1530`,
+`0014_galeria`, `0015_platos_destacados`, `0016_mesas_plano`,
+`0017_juntar_mesas`, `0018_seguridad`.
 
 ## Flujo de un pedido
 
@@ -117,3 +119,8 @@ Migraciones en `supabase/migrations/`:
 PUBLIC_SUPABASE_URL=...
 PUBLIC_SUPABASE_ANON_KEY=...
 ```
+
+Las credenciales de Supabase se toman **solo** de variables de entorno
+(`src/lib/supabaseClient.ts` lanza error si faltan; no hay fallback hardcodeado).
+- Local: `.env` → proyecto de **staging**.
+- Vercel: `Settings → Environment Variables`, por entorno (Production → PROD, Preview → STAGING).
