@@ -15,7 +15,7 @@ const links = [
       <img src="/imagenes/frescolito.jpeg" alt="FRESCOLITO" class="nav-logo-img" />
     </a>
 
-    <button class="hamburger-btn" id="hamburger" aria-label="Menú" aria-expanded="false">
+    <button class="hamburger-btn" id="hamburger" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
       <span></span><span></span><span></span>
     </button>
 
@@ -27,24 +27,37 @@ const links = [
   </div>
 </nav>
 
-<div class="mobile-menu" id="mobile-menu">
-  <div class="container" style="padding-top: 1rem">
+<div class="mobile-backdrop" id="mobile-backdrop" aria-hidden="true"></div>
+
+<aside class="mobile-drawer" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menú de navegación" aria-hidden="true" tabindex="-1">
+  <div class="mobile-drawer-head">
+    <img src="/imagenes/frescolito.jpeg" alt="FRESCOLITO" class="mobile-drawer-logo" />
+    <button class="mobile-close" id="mobile-close" aria-label="Cerrar menú">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+  </div>
+  <nav class="mobile-drawer-nav" aria-label="Secciones">
     {links.map((link) => (
       <a href={link.to} class="mobile-link">{link.label}</a>
     ))}
-  </div>
-</div>
+  </nav>
+  <p class="mobile-drawer-foot">FRESCOLITO · Iquitos, Perú</p>
+</aside>
 
 <style>
   .navbar {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-navbar, 100);
     background: transparent;
     transition: background 0.35s ease;
   }
   .navbar.scrolled {
-    background: rgba(255,255,255,0.92);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.72);
+    -webkit-backdrop-filter: blur(var(--glass-blur, 16px)) saturate(var(--glass-saturate, 160%));
+    backdrop-filter: blur(var(--glass-blur, 16px)) saturate(var(--glass-saturate, 160%));
+    box-shadow: 0 1px 0 var(--glass-border-soft, rgba(255, 255, 255, 0.35));
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .navbar.scrolled { background: rgba(255, 255, 255, 0.97); }
   }
   .nav-container {
     display: flex; align-items: center; justify-content: center;
@@ -70,11 +83,12 @@ const links = [
     text-transform: uppercase; letter-spacing: 2px;
     position: relative; transition: color 0.3s ease;
     text-decoration: none;
+    padding: 0.5rem 0;
   }
   .navbar:not(.scrolled) .nav-link { color: white; text-shadow: 0 2px 6px rgba(0,0,0,0.4); }
   .navbar.scrolled .nav-link { color: var(--color-dark); }
   .nav-link::after {
-    content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
     height: 3px; background: var(--color-primary);
     transform: scaleX(0); transition: transform 0.3s ease;
   }
@@ -86,9 +100,9 @@ const links = [
 
   .hamburger-btn {
     display: none; flex-direction: column; justify-content: center;
-    align-items: center; gap: 5px; width: 40px; height: 40px;
+    align-items: center; gap: 5px; width: 44px; height: 44px;
     background: none; border: none; cursor: pointer;
-    position: absolute; right: var(--space-md); z-index: 1001;
+    position: absolute; right: var(--space-md); z-index: 1;
   }
   .hamburger-btn span {
     display: block; width: 24px; height: 2px;
@@ -100,26 +114,89 @@ const links = [
   .hamburger-btn.active span:nth-child(2) { opacity: 0; }
   .hamburger-btn.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-  .mobile-menu {
-    display: none; position: fixed; top: 70px; left: 0; right: 0;
-    background: var(--color-bg); z-index: 1002;
-    height: calc(100vh - 70px); overflow-y: auto;
-    transform: translateY(-110%); transition: transform 0.35s ease;
-    box-shadow: var(--shadow-lg);
+  /* ===== Drawer lateral móvil ===== */
+  .mobile-backdrop {
+    position: fixed; inset: 0; z-index: var(--z-overlay, 400);
+    background: rgba(62, 39, 35, 0.35);
+    opacity: 0; visibility: hidden; pointer-events: none;
+    -webkit-backdrop-filter: blur(6px) saturate(140%);
+    backdrop-filter: blur(6px) saturate(140%);
+    transition: opacity 0.3s ease, visibility 0.3s;
   }
-  .mobile-menu.open { transform: translateY(0); }
+  .mobile-backdrop.open { opacity: 1; visibility: visible; pointer-events: auto; }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .mobile-backdrop { background: rgba(62, 39, 35, 0.55); }
+  }
+
+  .mobile-drawer {
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: var(--z-modal, 450);
+    width: min(84vw, 340px);
+    display: flex; flex-direction: column;
+    background: rgba(255, 253, 248, 0.88);
+    -webkit-backdrop-filter: blur(var(--glass-blur, 16px)) saturate(var(--glass-saturate, 160%));
+    backdrop-filter: blur(var(--glass-blur, 16px)) saturate(var(--glass-saturate, 160%));
+    border-left: 1px solid rgba(255, 255, 255, 0.55);
+    box-shadow: -16px 0 48px rgba(62, 39, 35, 0.25);
+    transform: translateX(100%);
+    transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1), visibility 0s linear 0.35s;
+    padding-bottom: env(safe-area-inset-bottom);
+    visibility: hidden;
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .mobile-drawer { background: #FFFDF8; }
+  }
+  .mobile-drawer.open {
+    transform: translateX(0); visibility: visible;
+    transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1), visibility 0s;
+  }
+  .mobile-drawer-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px; border-bottom: 1px solid rgba(62, 39, 35, 0.08);
+  }
+  .mobile-drawer-logo {
+    height: 42px; width: 42px; border-radius: 50%; object-fit: cover;
+    border: 2px solid var(--color-primary);
+  }
+  .mobile-close {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; border: none; border-radius: 12px;
+    background: rgba(62, 39, 35, 0.06); color: var(--color-dark); cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  .mobile-close:hover { background: rgba(62, 39, 35, 0.12); }
+  .mobile-drawer-nav {
+    flex: 1; overflow-y: auto; padding: 8px 0;
+    display: flex; flex-direction: column;
+  }
   .mobile-link {
-    display: block; padding: 1rem 0; font-family: var(--font-body);
-    font-weight: 700; font-size: 1.2rem; text-transform: uppercase;
+    display: flex; align-items: center; min-height: 52px;
+    padding: 0 20px; font-family: var(--font-body);
+    font-weight: 700; font-size: 1rem; text-transform: uppercase;
     letter-spacing: 1px; color: var(--color-dark);
-    border-bottom: 1px solid var(--color-light); transition: color 0.3s ease;
     text-decoration: none;
+    border-bottom: 1px solid rgba(62, 39, 35, 0.06);
+    transition: background 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+  }
+  .mobile-link:hover, .mobile-link:focus-visible {
+    background: rgba(253, 185, 19, 0.12); color: var(--color-primary-hover);
+    padding-left: 26px;
+  }
+  .mobile-link.active { color: var(--color-primary-hover); }
+  .mobile-link.active::after {
+    content: ''; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--color-primary); margin-left: auto; margin-right: 4px;
+  }
+  .mobile-drawer-foot {
+    padding: 14px 20px; font-size: 0.72rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--color-mid); text-align: center;
   }
 
   @media (max-width: 768px) {
     .hamburger-btn { display: flex; }
     .nav-links { display: none !important; }
-    .mobile-menu { display: block; }
+  }
+  @media (min-width: 769px) {
+    .mobile-drawer, .mobile-backdrop { display: none; }
   }
 </style>
 
@@ -127,6 +204,8 @@ const links = [
   const navbar = document.getElementById('navbar')
   const hamburger = document.getElementById('hamburger')
   const menu = document.getElementById('mobile-menu')
+  const backdrop = document.getElementById('mobile-backdrop')
+  const closeBtn = document.getElementById('mobile-close')
   const isHome = window.location.pathname === '/'
 
   function updateNav() {
@@ -145,19 +224,45 @@ const links = [
   updateNav()
   window.addEventListener('scroll', updateNav, { passive: true })
 
+  function abrirMenu() {
+    if (!menu || !hamburger) return
+    menu.classList.add('open')
+    backdrop?.classList.add('open')
+    menu.setAttribute('aria-hidden', 'false')
+    hamburger.classList.add('active')
+    hamburger.setAttribute('aria-expanded', 'true')
+    hamburger.setAttribute('aria-label', 'Cerrar menú')
+    document.body.style.overflow = 'hidden'
+    closeBtn?.focus()
+  }
+  function cerrarMenu() {
+    if (!menu || !hamburger) return
+    menu.classList.remove('open')
+    backdrop?.classList.remove('open')
+    menu.setAttribute('aria-hidden', 'true')
+    hamburger.classList.remove('active')
+    hamburger.setAttribute('aria-expanded', 'false')
+    hamburger.setAttribute('aria-label', 'Abrir menú')
+    document.body.style.overflow = ''
+    hamburger.focus()
+  }
+  function menuAbierto() {
+    return !!menu?.classList.contains('open')
+  }
+
   if (hamburger && menu) {
     hamburger.addEventListener('click', () => {
-      const isOpen = menu.classList.toggle('open')
-      hamburger.classList.toggle('active')
-      hamburger.setAttribute('aria-expanded', isOpen)
+      menuAbierto() ? cerrarMenu() : abrirMenu()
+    })
+    closeBtn?.addEventListener('click', cerrarMenu)
+    backdrop?.addEventListener('click', cerrarMenu)
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && menuAbierto()) cerrarMenu()
     })
 
     menu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        menu.classList.remove('open')
-        hamburger.classList.remove('active')
-        hamburger.setAttribute('aria-expanded', 'false')
-      })
+      link.addEventListener('click', () => cerrarMenu())
     })
 
     const path = window.location.pathname

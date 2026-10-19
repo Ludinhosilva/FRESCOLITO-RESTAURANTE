@@ -159,6 +159,7 @@ function PlatosEditor() {
         <Sheet
           title={form.id ? `Editar: ${form.nombre || 'plato'}` : 'Agregar plato'}
           onClose={cerrar}
+          side="right"
           footer={
             <>
               <button className="btn btn-outline grow" onClick={cerrar}>Cancelar</button>

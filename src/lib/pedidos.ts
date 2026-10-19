@@ -64,9 +64,10 @@ export async function listarMesas() {
 /** Lista los pedidos del dia (cocina/admin). */
 export async function listarPedidosDelDia() {
   const hoy = fechaHoyLima()
-  const { data, error } = await supabase
+  // pedido_mesas no esta en database.types.ts todavia.
+  const { data, error } = await (supabase as any)
     .from('pedidos')
-    .select('*, pedido_items(*), mesas(numero)')
+    .select('*, pedido_items(*), mesas(numero), pedido_mesas(mesas(numero))')
     .eq('dia', hoy)
     .order('numero_orden', { ascending: true })
   if (error) throw error
@@ -167,9 +168,9 @@ export async function ventasRango(desde, hasta) {
 
 /** Lista TODOS los pedidos de un dia (admin; incluye cancelados). */
 export async function listarPedidosDiaAdmin(dia) {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('pedidos')
-    .select('*, pedido_items(*), mesas(numero)')
+    .select('*, pedido_items(*), mesas(numero), pedido_mesas(mesas(numero))')
     .eq('dia', dia)
     .order('numero_orden', { ascending: true })
   if (error) throw error
