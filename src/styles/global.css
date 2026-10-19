@@ -2,7 +2,7 @@
   --color-primary: #FDB913;
   --color-primary-hover: #F39C12;
   --color-dark: #3E2723;
-  --color-mid: #8D6E63;
+  --color-mid: #7C5F54;
   --color-light: #BCAAA4;
   --color-bg: #FFFFFF;
   --color-text: #000000;
@@ -21,6 +21,31 @@
   --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.12);
   --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* ===== Glassmorphism (cristal claro cálido) ===== */
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-bg-strong: rgba(255, 255, 255, 0.86);
+  --glass-blur: 16px;
+  --glass-saturate: 160%;
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-border-soft: rgba(255, 255, 255, 0.35);
+  --glass-shadow: 0 8px 32px rgba(62, 39, 35, 0.16);
+  --glass-tint: rgba(253, 185, 19, 0.08);
+
+  /* ===== Escala de capas (z-index) ===== */
+  --z-base: 0;
+  --z-sticky: 10;
+  --z-tabbar: 50;
+  --z-cartbar: 45;
+  --z-horario: 60;
+  --z-navbar: 100;
+  --z-fab: 150;
+  --z-overlay: 400;
+  --z-modal: 450;
+  --z-lightbox: 600;
+  --z-toast: 700;
+  --z-skip: 1000;
+  --z-preloader: 2000;
 }
 
 *,
@@ -237,10 +262,24 @@ img {
   .section { padding: var(--space-lg) 0; }
 }
 
+/* ===== Glassmorphism: utilidad reutilizable ===== */
+.glass {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background: rgba(255, 253, 248, 0.97);
+  }
+}
+
 /* ===== Accesibilidad ===== */
 .skip-link {
   position: absolute; left: 50%; transform: translateX(-50%);
-  top: -70px; z-index: 10000;
+  top: -70px; z-index: var(--z-skip);
   background: var(--color-dark); color: #fff;
   padding: 10px 18px; border-radius: 0 0 12px 12px;
   font-family: var(--font-body); font-weight: 700; font-size: 0.9rem;
