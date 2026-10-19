@@ -2,9 +2,12 @@
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Hero from '../components/Hero.astro'
 import DestacadosIsland from '../components/react/DestacadosIsland.tsx'
+import PromocionesIsland from '../components/react/PromocionesIsland.tsx'
 import { Fish, Leaf, Truck, HeartHandshake, PartyPopper } from 'lucide-react'
 import { listarDestacados } from '../lib/pedidosCliente.ts'
+import { listarPromociones } from '../lib/promociones.ts'
 import '../styles/home.css'
+import '../styles/promos.css'
 
 // Precarga en build los platos destacados reales para que el primer pintado
 // ya muestre lo que hay en el panel admin (sin salto al hidratar).
@@ -13,6 +16,13 @@ try {
   destacados = (await listarDestacados()) ?? []
 } catch {
   destacados = []
+}
+
+let promociones = []
+try {
+  promociones = (await listarPromociones()) ?? []
+} catch {
+  promociones = []
 }
 
 const ventajas = [
@@ -25,6 +35,18 @@ const ventajas = [
 
 <BaseLayout title="FRESCOLITO RESTAURANTE | Iquitos - Perú" description="Cocina regional peruana en Iquitos. Ceviches, chicharrones, arroz con mariscos y promociones. Pide online o visítanos." effect="stripes">
   <Hero />
+
+  <!-- Promociones -->
+  <section class="home-section">
+    <div class="container">
+      <div class="home-head" data-reveal>
+        <span class="home-label">· Promociones ·</span>
+        <h2 class="home-h2">Ofertas de la semana</h2>
+        <span class="home-divider"></span>
+      </div>
+      <PromocionesIsland client:visible inicial={promociones} />
+    </div>
+  </section>
 
   <!-- Platos destacados -->
   <section class="home-section">
