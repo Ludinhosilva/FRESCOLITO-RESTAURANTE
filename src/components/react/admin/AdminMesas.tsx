@@ -116,6 +116,7 @@ export default function AdminMesas() {
         <Sheet
           title="Agregar mesa"
           onClose={() => setNueva(false)}
+          side="right"
           footer={
             <>
               <button className="btn btn-outline grow" onClick={() => setNueva(false)}>Cancelar</button>

@@ -3,6 +3,7 @@ import GuardPersonal from './GuardPersonal.tsx'
 import AppShell from './AppShell.tsx'
 import ConfirmDialog from './ConfirmDialog.tsx'
 import Sheet from './ui/Sheet.tsx'
+import Drawer from './ui/Drawer.tsx'
 import EmptyState from './ui/EmptyState.tsx'
 import { useToast } from './ui/Toast.tsx'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -543,7 +544,7 @@ function MeseraContenido() {
       )}
 
       {carritoAbierto && (
-        <Sheet
+        <Drawer
           title="Pedido en curso"
           onClose={() => setCarritoAbierto(false)}
           footer={
@@ -580,7 +581,7 @@ function MeseraContenido() {
           {cargoEnvases > 0 && <div className="total-row"><span>Para llevar (S/1 x {unidades})</span><span>S/ {cargoEnvases.toFixed(2)}</span></div>}
           <div className="total-row final"><span>Total</span><span>S/ {total.toFixed(2)}</span></div>
           {seccion === 'salon' && <p className="cli-legal">El cobro se hace cuando la mesa termine.</p>}
-        </Sheet>
+        </Drawer>
       )}
 
       {confirmando && (

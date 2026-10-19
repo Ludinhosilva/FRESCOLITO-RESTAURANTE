@@ -84,14 +84,15 @@
 
 /* ===== Barra superior ===== */
 .panel-root .topbar {
-  position: sticky; top: 0; z-index: 40;
+  position: sticky; top: 0; z-index: var(--z-navbar, 100);
   display: flex; align-items: center; justify-content: space-between;
   gap: var(--space-2);
   padding: 10px var(--space-4);
   padding-top: max(10px, env(safe-area-inset-top));
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.78);
+  -webkit-backdrop-filter: blur(var(--glass-blur, 16px)) saturate(var(--glass-saturate, 160%));
+  backdrop-filter: blur(var(--glass-blur, 16px)) saturate(var(--glass-saturate, 160%));
+  border-bottom: 1px solid var(--glass-border-soft, rgba(255, 255, 255, 0.35));
 }
 .panel-root .topbar-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; min-width: 0; }
 .panel-root .logo-dot { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid var(--brand); display: block; flex-shrink: 0; }
@@ -111,17 +112,18 @@
 
 /* ===== Tab bar inferior (móvil) ===== */
 .panel-root .tabbar {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-tabbar, 50);
   display: flex; justify-content: space-around; align-items: stretch;
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  border-top: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.82);
+  -webkit-backdrop-filter: blur(var(--glass-blur, 16px)) saturate(var(--glass-saturate, 160%));
+  backdrop-filter: blur(var(--glass-blur, 16px)) saturate(var(--glass-saturate, 160%));
+  border-top: 1px solid var(--glass-border-soft, rgba(255, 255, 255, 0.35));
   padding-bottom: env(safe-area-inset-bottom);
 }
 .panel-root .tabbar-item {
   flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 3px; padding: 8px 4px; min-height: var(--touch);
-  text-decoration: none; color: var(--ink-400);
+  text-decoration: none; color: var(--ink-600);
   font-size: 10.5px; font-weight: 600; letter-spacing: 0.2px;
   transition: color 0.15s ease;
 }
@@ -353,7 +355,7 @@
 /* ===== Contadores ===== */
 .panel-root .cant-controller { display: flex; align-items: center; gap: 8px; }
 .panel-root .cant-btn {
-  width: 34px; height: 34px; border-radius: var(--r-sm); border: 1px solid var(--border);
+  width: 44px; height: 44px; border-radius: var(--r-sm); border: 1px solid var(--border);
   background: var(--surface); color: var(--ink-900); font-weight: 800; font-size: 17px; cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -390,12 +392,15 @@
 .panel-root .seccion-title { font-size: 12px; font-weight: 700; margin: 16px 0 10px; color: var(--ink-400); text-transform: uppercase; letter-spacing: 1px; }
 .panel-root .toast {
   position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
-  background: var(--ink-900); color: #fff; padding: 11px 20px; border-radius: var(--r-pill);
-  font-weight: 600; font-size: 14px; z-index: 300; box-shadow: var(--elev-2); animation: pDown 0.25s;
+  background: rgba(28, 25, 23, 0.92); color: #fff; padding: 11px 20px; border-radius: var(--r-pill);
+  font-weight: 600; font-size: 14px; z-index: var(--z-toast, 700); box-shadow: var(--elev-2); animation: pDown 0.25s;
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
   display: flex; align-items: center; gap: 8px; max-width: calc(100vw - 32px);
 }
 .panel-root .toast svg { width: 16px; height: 16px; }
 @keyframes pDown { from { opacity: 0; transform: translate(-50%, -16px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@keyframes pToastOut { from { opacity: 1; transform: translate(-50%, 0); } to { opacity: 0; transform: translate(-50%, -12px); } }
+.panel-root .toast.saliendo { animation: pToastOut 0.3s ease forwards; }
 .panel-root .mapa-wrap { height: 60vh; border-radius: var(--r-lg); overflow: hidden; }
 
 /* ===== Estados vacíos ===== */
@@ -415,32 +420,74 @@
 }
 @keyframes pShimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
 
-/* ===== Sheet / modal inferior ===== */
+/* ===== Sheet / modal (bottom por defecto, lateral con .side-right) ===== */
 .panel-root .sheet-overlay {
-  position: fixed; inset: 0; z-index: 3000; background: rgba(28, 25, 23, 0.5);
+  position: fixed; inset: 0; z-index: var(--z-overlay, 400);
+  background: rgba(28, 25, 23, 0.42);
+  -webkit-backdrop-filter: blur(6px) saturate(140%);
+  backdrop-filter: blur(6px) saturate(140%);
   display: flex; justify-content: center; align-items: flex-end; animation: pFade 0.2s;
 }
 .panel-root .sheet {
-  background: var(--bg); width: 100%; max-width: 560px; max-height: 92vh;
+  background: var(--glass-bg-strong, rgba(255, 255, 255, 0.86));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 16px)) saturate(var(--glass-saturate, 160%));
+  backdrop-filter: blur(var(--glass-blur, 16px)) saturate(var(--glass-saturate, 160%));
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.55));
+  width: 100%; max-width: 560px; max-height: 92vh;
   border-radius: 20px 20px 0 0; display: flex; flex-direction: column; overflow: hidden;
-  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.25); animation: pSheetUp 0.25s ease;
+  box-shadow: var(--glass-shadow, 0 8px 32px rgba(28, 25, 23, 0.18)); animation: pSheetUp 0.28s cubic-bezier(0.32, 0.72, 0, 1);
 }
 .panel-root .sheet-head {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 16px 18px; border-bottom: 1px solid var(--border); background: var(--surface);
+  padding: 16px 18px; border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.55);
 }
 .panel-root .sheet-head strong { font-weight: 800; font-size: 1.1rem; color: var(--ink-900); }
 .panel-root .sheet-body { flex: 1; overflow-y: auto; padding: 16px; }
 .panel-root .sheet-foot {
   display: flex; align-items: center; justify-content: space-between; gap: 10px;
-  padding: 14px 16px; border-top: 1px solid var(--border); background: var(--surface);
+  padding: 14px 16px; border-top: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.55);
   padding-bottom: max(14px, env(safe-area-inset-bottom));
 }
 @keyframes pFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pFadeOut { from { opacity: 1; } to { opacity: 0; } }
 @keyframes pSheetUp { from { transform: translateY(24px); opacity: 0.6; } to { transform: translateY(0); opacity: 1; } }
+@keyframes pSheetDown { from { transform: translateY(0); opacity: 1; } to { transform: translateY(24px); opacity: 0; } }
+@keyframes pSlideRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@keyframes pSlideOutRight { from { transform: translateX(0); } to { transform: translateX(100%); } }
+@keyframes pSlideLeft { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@keyframes pSlideOutLeft { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
+/* Cierre animado (la capa pone .closing antes de desmontar) */
+.panel-root .sheet-overlay.closing,
+.panel-root .drawer-overlay.closing,
+.panel-root .pedir-overlay.closing { animation: pFadeOut 0.2s ease forwards; }
+.panel-root .sheet-overlay.closing .sheet { animation: pSheetDown 0.2s ease forwards; }
+.panel-root .sheet-overlay.side-right.closing .sheet { animation: pSlideOutRight 0.2s ease forwards; }
+.panel-root .drawer-overlay.closing .drawer { animation: pSlideOutRight 0.22s ease forwards; }
+.panel-root .drawer-overlay.side-left.closing .drawer { animation: pSlideOutLeft 0.22s ease forwards; }
+.panel-root .pedir-overlay.closing .pedir-panel { animation: pSheetDown 0.2s ease forwards; }
+
+/* Variante lateral derecha (drawers de formularios / carrito) */
+.panel-root .sheet-overlay.side-right {
+  justify-content: flex-end; align-items: stretch; padding: 0;
+}
+.panel-root .sheet-overlay.side-right .sheet {
+  max-width: min(92vw, 420px); width: min(92vw, 420px); height: 100%; max-height: none;
+  border-radius: 0; border-top: none; border-bottom: none; border-right: none;
+  animation: pSlideRight 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+@media (min-width: 640px) {
+  .panel-root .sheet-overlay.side-right .sheet { max-width: 440px; width: 440px; }
+}
+
 @media (min-width: 640px) {
   .panel-root .sheet-overlay { align-items: center; padding: 24px; }
   .panel-root .sheet { border-radius: var(--r-lg); max-height: min(760px, 82vh); animation: pFade 0.2s; }
+  .panel-root .sheet-overlay.side-right { align-items: stretch; padding: 0; }
+  .panel-root .sheet-overlay.side-right .sheet { border-radius: 0; max-height: none; animation: pSlideRight 0.28s cubic-bezier(0.32, 0.72, 0, 1); }
 }
 
 /* Asa de arrastre del sheet (solo móvil) */
@@ -449,6 +496,55 @@
   border-radius: 3px; background: var(--ink-300); margin: 8px auto 0;
 }
 @media (min-width: 640px) { .panel-root .sheet::before { display: none; } }
+.panel-root .sheet-overlay.side-right .sheet::before { display: none; }
+
+/* ===== Drawer lateral (off-canvas glass) ===== */
+.panel-root .drawer-overlay {
+  position: fixed; inset: 0; z-index: var(--z-overlay, 400);
+  background: rgba(28, 25, 23, 0.35);
+  -webkit-backdrop-filter: blur(6px) saturate(140%);
+  backdrop-filter: blur(6px) saturate(140%);
+  display: flex; justify-content: flex-end; animation: pFade 0.2s;
+}
+.panel-root .drawer-overlay.side-left { justify-content: flex-start; }
+.panel-root .drawer {
+  width: min(92vw, 400px); height: 100%;
+  display: flex; flex-direction: column; overflow: hidden;
+  background: var(--glass-bg-strong, rgba(255, 255, 255, 0.86));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 16px)) saturate(var(--glass-saturate, 160%));
+  backdrop-filter: blur(var(--glass-blur, 16px)) saturate(var(--glass-saturate, 160%));
+  border-left: 1px solid var(--glass-border, rgba(255, 255, 255, 0.55));
+  box-shadow: -16px 0 48px rgba(28, 25, 23, 0.28);
+  animation: pSlideRight 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.panel-root .drawer-overlay.side-left .drawer {
+  border-left: none; border-right: 1px solid var(--glass-border, rgba(255, 255, 255, 0.55));
+  box-shadow: 16px 0 48px rgba(28, 25, 23, 0.28);
+  animation: pSlideLeft 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.panel-root .drawer-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 18px; border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.55);
+}
+.panel-root .drawer-head strong { font-weight: 800; font-size: 1.1rem; color: var(--ink-900); }
+.panel-root .drawer-body { flex: 1; overflow-y: auto; padding: 16px; }
+.panel-root .drawer-foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 14px 16px; border-top: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.55);
+  padding-bottom: max(14px, env(safe-area-inset-bottom));
+}
+@media (min-width: 640px) {
+  .panel-root .drawer { max-width: 440px; width: 440px; }
+}
+/* Fallback sin backdrop-filter */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .panel-root .sheet, .panel-root .drawer { background: var(--surface); }
+  .panel-root .sheet-overlay, .panel-root .drawer-overlay, .panel-root .pedir-overlay { background: rgba(28, 25, 23, 0.6); }
+  .panel-root .topbar, .panel-root .tabbar { background: rgba(255, 255, 255, 0.98); }
+}
 
 /* ===== Pedido cliente: fila de plato rediseñada ===== */
 .panel-root .cli-cat-tabs {
@@ -487,7 +583,7 @@
 }
 .panel-root .cli-dish-price { font-weight: 700; font-size: 14px; color: var(--ink-900); margin-top: 4px; }
 .panel-root .cli-add-btn {
-  width: 40px; height: 40px; flex-shrink: 0; border: none; border-radius: var(--r-md);
+  width: 44px; height: 44px; flex-shrink: 0; border: none; border-radius: var(--r-md);
   background: var(--brand); color: var(--ink-900); display: grid; place-items: center;
   cursor: pointer; transition: background 0.15s ease, transform 0.1s ease;
 }
@@ -545,7 +641,7 @@
 .panel-root .cli-item-nombre { font-weight: 700; }
 .panel-root .cli-item-precio { font-size: 12px; color: var(--ink-600); }
 .panel-root .cli-item-cant { font-weight: 800; min-width: 20px; text-align: center; }
-.panel-root .cli-item-quitar { border: none; background: none; color: var(--danger); font-size: 16px; cursor: pointer; margin-left: 4px; }
+.panel-root .cli-item-quitar { border: none; background: none; color: var(--danger); font-size: 16px; cursor: pointer; margin-left: 4px; min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-sm); }
 .panel-root .cli-canal { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .panel-root .cli-canal-opt { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; padding: 14px; border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface); cursor: pointer; font-weight: 800; text-align: left; transition: all 0.15s ease; }
 .panel-root .cli-canal-opt small { font-weight: 600; font-size: 11px; color: var(--ink-600); }
@@ -587,33 +683,47 @@
 .panel-root .cli-plato-img { width: 48px; height: 48px; object-fit: cover; border-radius: var(--r-sm); flex-shrink: 0; }
 .panel-root .cli-plato-img.ph { background: #ececec; }
 .panel-root .cli-stepper { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-.panel-root .cli-step-btn { width: 36px; height: 36px; border-radius: var(--r-sm); border: none; background: var(--brand); color: var(--ink-900); font-weight: 900; font-size: 18px; cursor: pointer; transition: all 0.15s ease; }
+.panel-root .cli-step-btn { width: 44px; height: 44px; border-radius: var(--r-sm); border: none; background: var(--brand); color: var(--ink-900); font-weight: 900; font-size: 18px; cursor: pointer; transition: all 0.15s ease; }
 .panel-root .cli-step-btn:hover { background: var(--brand-hover); }
 .panel-root .cli-step-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 .panel-root .cli-step-num { min-width: 22px; text-align: center; font-weight: 800; }
 
 /* FABs del flujo cliente */
 .panel-root .verpedido-fab {
-  position: fixed; left: 16px; bottom: 84px; z-index: 1500;
-  background: var(--surface); color: var(--ink-900); border: 1px solid var(--border);
+  position: fixed; left: 16px; bottom: 84px; z-index: var(--z-fab, 150);
+  background: var(--glass-bg-strong, rgba(255, 255, 255, 0.86)); color: var(--ink-900);
+  -webkit-backdrop-filter: blur(var(--glass-blur, 16px)) saturate(var(--glass-saturate, 160%));
+  backdrop-filter: blur(var(--glass-blur, 16px)) saturate(var(--glass-saturate, 160%));
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.55));
   border-radius: var(--r-pill); padding: 12px 20px; font-family: var(--font-body);
-  font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: var(--elev-2); transition: all 0.15s ease;
+  font-weight: 700; font-size: 14px; min-height: 44px; cursor: pointer;
+  box-shadow: var(--glass-shadow, 0 8px 32px rgba(28, 25, 23, 0.18)); transition: all 0.15s ease;
 }
 .panel-root .verpedido-fab:hover { background: var(--brand-soft); }
 
-/* Overlay de pedido cliente (usa pedir-* ) */
-.panel-root .pedir-overlay { position: fixed; inset: 0; z-index: 3000; background: rgba(28, 25, 23, 0.55); display: flex; justify-content: center; align-items: flex-end; animation: pFade 0.2s; }
+/* Overlay de pedido cliente (editar pedido admin; glass) */
+.panel-root .pedir-overlay {
+  position: fixed; inset: 0; z-index: var(--z-overlay, 400);
+  background: rgba(28, 25, 23, 0.42);
+  -webkit-backdrop-filter: blur(6px) saturate(140%);
+  backdrop-filter: blur(6px) saturate(140%);
+  display: flex; justify-content: center; align-items: flex-end; animation: pFade 0.2s;
+}
 .panel-root .pedir-panel {
-  background: var(--bg); width: 100%; max-width: 560px; height: 92vh;
+  background: var(--glass-bg-strong, rgba(255, 255, 255, 0.86));
+  -webkit-backdrop-filter: blur(var(--glass-blur, 16px)) saturate(var(--glass-saturate, 160%));
+  backdrop-filter: blur(var(--glass-blur, 16px)) saturate(var(--glass-saturate, 160%));
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.55));
+  width: 100%; max-width: 560px; height: 92vh;
   border-radius: 22px 22px 0 0; display: flex; flex-direction: column; overflow: hidden;
-  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--glass-shadow, 0 8px 32px rgba(28, 25, 23, 0.18));
 }
 .panel-root .pedir-head { display: flex; justify-content: space-between; align-items: center; padding: 16px 18px; background: var(--ink-900); color: #fff; }
 .panel-root .pedir-head strong { font-family: var(--font-body); font-size: 1.2rem; font-weight: 800; color: var(--brand); }
-.panel-root .pedir-close { background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: var(--r-sm); }
+.panel-root .pedir-close { background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: var(--r-sm); }
 .panel-root .pedir-close:hover { background: rgba(255, 255, 255, 0.12); }
 .panel-root .pedir-body { flex: 1; overflow-y: auto; padding: 16px; }
-.panel-root .pedir-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 16px; border-top: 1px solid var(--border); background: var(--surface); }
+.panel-root .pedir-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 16px; border-top: 1px solid var(--border); background: rgba(255, 255, 255, 0.55); }
 .panel-root .pedir-foot-info { display: flex; flex-direction: column; }
 .panel-root .pedir-foot-info small { font-size: 11px; color: var(--ink-600); }
 .panel-root .pedir-foot-info strong { font-family: var(--font-body); font-size: 19px; font-weight: 800; }
@@ -694,7 +804,7 @@
 
 /* Barra de carrito flotante (mesera / POS) */
 .panel-root .cart-bar {
-  position: fixed; left: 0; right: 0; z-index: 45;
+  position: fixed; left: 0; right: 0; z-index: var(--z-cartbar, 45);
   bottom: calc(56px + env(safe-area-inset-bottom));
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
   max-width: 760px; margin: 0 auto;

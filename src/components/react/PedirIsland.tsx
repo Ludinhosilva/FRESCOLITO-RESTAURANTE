@@ -235,7 +235,7 @@ function Contenido() {
       )}
 
       {visible && (
-        <Sheet title={titulo} onClose={() => setVisible(false)} bodyRef={bodyRef} footer={footer}>
+        <Sheet title={titulo} onClose={() => setVisible(false)} bodyRef={bodyRef} footer={footer} side="right">
           {paso === 'menu' && (
             <>
               {abierto ? (
