@@ -50,47 +50,16 @@ function animateHome() {
 }
 
 function animateMenu() {
-  const pills = gsap.utils.toArray('.menu-pill')
-  if (pills.length) {
-    gsap.from(pills, {
-      scrollTrigger: {
-        trigger: '.menu-pills',
-        start: 'top bottom-=40px',
-      },
-      opacity: 0,
-      y: 20,
-      duration: 0.5,
-      stagger: 0.08,
-      ease: 'power3.out',
-    })
-  }
-
   const frame = document.querySelector('.pm-frame')
   if (frame) {
     gsap.from(frame, {
       scrollTrigger: { trigger: frame, start: 'top bottom-=60px' },
       opacity: 0,
-      scale: 0.9,
+      scale: 0.97,
       duration: 0.8,
       ease: 'power3.out',
     })
   }
-
-  const items = gsap.utils.toArray<HTMLElement>('.menu-item')
-  items.forEach((el, i) => {
-    gsap.from(el, {
-      scrollTrigger: {
-        trigger: el,
-        start: 'top bottom-=40px',
-      },
-      opacity: 0,
-      y: 40,
-      scale: 0.92,
-      duration: 0.6,
-      delay: (i % 6) * 0.07,
-      ease: 'power3.out',
-    })
-  })
 }
 
 function animateNosotros() {
