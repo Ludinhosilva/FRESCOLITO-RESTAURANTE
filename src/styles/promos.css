@@ -102,3 +102,402 @@
 @media (max-width: 700px) {
   .promo-media { aspect-ratio: 4 / 3; }
 }
+
+/* ===== Banner intermedio de promociones ===== */
+.promo-banner-wrap {
+  margin: 0 0 2.6rem;
+}
+.promo-banner {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  height: 320px;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--color-bg);
+  border: 1px solid rgba(62, 39, 35, 0.12);
+  border-radius: 24px;
+  box-shadow: var(--shadow-lg);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+.promo-banner.is-closing {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+.promo-banner-media {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+  background: #FDF3DC;
+}
+.promo-banner-bg,
+.promo-modal-bg {
+  position: absolute;
+  inset: -12px;
+  background-size: cover;
+  background-position: center;
+  filter: blur(18px) saturate(1.1);
+  transform: scale(1.12);
+  opacity: 0.45;
+  pointer-events: none;
+}
+.promo-banner-frame {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  place-items: center;
+  padding: 18px;
+  overflow: hidden;
+}
+.promo-banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.promo-banner-ph,
+.promo-modal-ph {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #FDF3DC, #F7E4B0);
+  color: var(--color-primary-hover);
+  font-family: var(--font-script);
+  font-size: clamp(3rem, 7vw, 5rem);
+}
+.promo-banner-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 2;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: #3E2723;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 14px rgba(253, 185, 19, 0.45);
+}
+.promo-banner-count {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  z-index: 2;
+}
+.promo-banner-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 2rem 2.2rem 1.55rem;
+}
+.promo-banner-label {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-primary-hover);
+}
+.promo-banner-body h2 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.45rem, 2.4vw, 2rem);
+  line-height: 1.2;
+  color: var(--color-dark);
+}
+.promo-banner-body p {
+  max-width: 48ch;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--color-mid);
+}
+.promo-banner-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: auto;
+  padding-top: 0.7rem;
+}
+.promo-banner-prices {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+.promo-banner-price {
+  font-family: var(--font-body);
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: var(--color-primary-hover);
+}
+.promo-banner-price-regular {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--color-light);
+}
+.promo-banner-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.66rem 1.15rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-dark);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.83rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.22s ease, color 0.22s ease, transform 0.22s ease;
+}
+.promo-banner-cta:hover {
+  background: var(--color-primary);
+  color: var(--color-dark);
+  transform: translateY(-2px);
+}
+.promo-banner-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  background: rgba(255, 253, 248, 0.86);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: var(--color-dark);
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.promo-banner-close:hover {
+  background: #fff;
+  transform: rotate(90deg);
+}
+.promo-banner-dots {
+  display: flex;
+  gap: 6px;
+  margin-top: 0.35rem;
+}
+.promo-banner-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-light);
+  cursor: pointer;
+  transition: width 0.2s ease, background 0.2s ease;
+}
+.promo-banner-dot.active {
+  width: 24px;
+  background: var(--color-primary);
+}
+
+/* ===== Modal de detalle ===== */
+.promo-modal {
+  width: min(920px, 92vw);
+  max-width: 920px;
+  max-height: 92vh;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 24px;
+  background: transparent;
+  color: var(--color-text);
+  overflow: visible;
+}
+.promo-modal::backdrop {
+  background: rgba(30, 22, 20, 0.62);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+.promo-modal-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  overflow: hidden;
+  background: var(--color-bg);
+  border-radius: 24px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
+}
+.promo-modal-media {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 100%;
+  min-height: 380px;
+  padding: 0;
+  background: #FDF3DC;
+}
+.promo-modal-frame {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  place-items: center;
+  padding: 22px;
+  overflow: hidden;
+}
+.promo-modal-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.promo-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  background: rgba(255, 253, 248, 0.9);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: var(--color-dark);
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.promo-modal-close:hover {
+  background: #fff;
+  transform: rotate(90deg);
+}
+.promo-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 2.2rem 2.2rem 1.8rem;
+}
+.promo-modal-body h2 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+  line-height: 1.2;
+  color: var(--color-dark);
+}
+.promo-modal-body p {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.94rem;
+  line-height: 1.7;
+  color: var(--color-mid);
+}
+.promo-modal-body .promo-count {
+  align-self: flex-start;
+}
+.promo-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: auto;
+  padding-top: 1rem;
+}
+.promo-modal-actions .btn {
+  border-radius: 999px;
+  padding: 0.62rem 1rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+/* ===== Banner: responsive ===== */
+@media (max-width: 860px) {
+  .promo-banner {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  .promo-banner-media {
+    height: 220px;
+    min-height: 0;
+  }
+  .promo-banner-body {
+    padding: 1.6rem 1.6rem 1.4rem;
+  }
+  .promo-modal-card {
+    display: flex;
+    flex-direction: column;
+    max-height: 88vh;
+    overflow-y: auto;
+  }
+  .promo-modal-media {
+    flex: 0 0 230px;
+    height: 230px;
+    min-height: 0;
+  }
+  .promo-modal-body {
+    flex: 1;
+  }
+  .promo-modal-body {
+    padding: 1.6rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .promo-banner-wrap {
+    margin-bottom: 2rem;
+  }
+  .promo-banner-media {
+    min-height: 190px;
+  }
+  .promo-banner-body {
+    padding: 1.35rem;
+  }
+  .promo-banner-bottom {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .promo-banner-cta {
+    width: 100%;
+  }
+  .promo-modal {
+    width: 92vw;
+    max-width: 92vw;
+    height: auto;
+    max-height: 90dvh;
+    border-radius: 24px;
+  }
+  .promo-modal-card {
+    min-height: 0;
+    height: auto;
+    border-radius: 24px;
+  }
+  .promo-modal-media {
+    flex: 0 0 200px;
+    height: 200px;
+    min-height: 0;
+  }
+  .promo-modal-actions .btn {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promo-banner,
+  .promo-banner-cta,
+  .promo-banner-close,
+  .promo-modal-close {
+    transition: none;
+  }
+}
