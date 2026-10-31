@@ -14,9 +14,10 @@ Sitio web + sistema de pedidos de **Frescolito**, cocina regional peruana en Iqu
 - Node.js 20+
 - Variables de entorno (copia `.env.example` a `.env`):
   ```
-  PUBLIC_SUPABASE_URL=...
-  PUBLIC_SUPABASE_ANON_KEY=...
-  ```
+   PUBLIC_SUPABASE_URL=...
+   PUBLIC_SUPABASE_ANON_KEY=...
+   DATABASE_URL=...   # solo para aplicar migraciones (npm run migrate)
+   ```
 
 ## Comandos
 
@@ -33,6 +34,7 @@ Sitio web + sistema de pedidos de **Frescolito**, cocina regional peruana en Iqu
 | `npm run types` | Regenera tipos de Supabase |
 | `npm run optimize:images` | Optimiza imágenes |
 | `npm run qr` | Genera código QR |
+| `npm run migrate -- <archivo.sql>` | Aplica migraciones SQL a Supabase |
 
 ## Estructura
 
