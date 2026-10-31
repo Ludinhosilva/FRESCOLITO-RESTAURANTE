@@ -112,6 +112,9 @@ const ventajas = [
 
   .home-section { padding: var(--space-xl) 0; }
   .home-section.alt { background: #FBF6EE; }
+  /* Evita el hueco cuando no hay promociones o el banner se cierra. */
+  .home-section.promo-banner-section { padding: 0; }
+  .home-section.promo-banner-section:has(.promo-banner) { padding: var(--space-xl) 0; }
   .home-head { text-align: center; margin-bottom: var(--space-xl); }
   .home-label {
     display: inline-block; font-family: var(--font-body); font-size: 0.72rem;
