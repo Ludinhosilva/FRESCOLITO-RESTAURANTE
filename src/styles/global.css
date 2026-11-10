@@ -1,32 +1,26 @@
 :root {
-  --color-primary: #E9A900;
-  --color-primary-hover: #C98F00;
-  --color-dark: #332A24;
-  --color-mid: #6D6156;
-  --color-light: #E6DDD0;
-  --color-bg: #FBF8F2;
-  --color-text: #2B2520;
-
-  --color-surface: #FFFFFF;
-  --color-surface-alt: #F4EEE4;
-  --color-line: #E4DACB;
-  --color-forest: #2F5D4A;
+  --color-primary: #FDB913;
+  --color-primary-hover: #F39C12;
+  --color-dark: #3E2723;
+  --color-mid: #7C5F54;
+  --color-light: #BCAAA4;
+  --color-bg: #FFFFFF;
+  --color-text: #000000;
 
   --font-heading: 'Playfair Display', Georgia, serif;
-  --font-body: 'Work Sans', system-ui, sans-serif;
-  --font-script: 'Playfair Display', Georgia, serif;
+  --font-body: 'Poppins', 'Work Sans', system-ui, sans-serif;
+  --font-script: 'Satisfy', cursive;
 
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
   --space-md: 1rem;
   --space-lg: 1.75rem;
-  --space-xl: 3.5rem;
-  --space-2xl: 5rem;
+  --space-xl: 3rem;
 
-  --radius: 6px;
-  --shadow-sm: 0 1px 2px rgba(51, 42, 36, 0.06);
-  --shadow-lg: 0 18px 50px rgba(51, 42, 36, 0.10);
-  --transition: 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --radius: 12px;
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.12);
+  --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
   /* ===== Glassmorphism (cristal claro cálido) ===== */
   --glass-bg: rgba(255, 255, 255, 0.72);
@@ -69,10 +63,9 @@ html {
 body {
   font-family: var(--font-body);
   font-size: 1rem;
-  line-height: 1.65;
+  line-height: 1.6;
   color: var(--color-text);
   background: var(--color-bg);
-  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -80,13 +73,12 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   color: var(--color-dark);
-  line-height: 1.15;
-  letter-spacing: -0.015em;
+  line-height: 1.2;
 }
 
-h1 { font-size: 3.25rem; font-weight: 500; }
-h2 { font-size: 2.35rem; font-weight: 500; }
-h3 { font-size: 1.55rem; font-weight: 500; }
+h1 { font-size: 3.5rem; font-weight: 900; }
+h2 { font-size: 2.5rem; font-weight: 700; }
+h3 { font-size: 1.75rem; font-weight: 700; }
 
 a {
   color: var(--color-dark);
@@ -109,9 +101,9 @@ img {
 }
 
 .container {
-  max-width: 1160px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1.25rem;
+  padding: 0 var(--space-md);
 }
 
 .section {
@@ -121,18 +113,15 @@ img {
 .btn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  min-height: 44px;
-  padding: 0.72rem 1.35rem;
-  border: 1px solid transparent;
+  gap: var(--space-sm);
+  padding: 0.75rem 1.5rem;
+  border: none;
   border-radius: var(--radius);
   font-family: var(--font-body);
-  font-size: 0.9rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: background var(--transition), color var(--transition), border-color var(--transition);
+  transition: all var(--transition);
 }
 
 .btn-primary {
@@ -143,17 +132,20 @@ img {
 .btn-primary:hover {
   background: var(--color-primary-hover);
   color: var(--color-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-primary:active {
   background: var(--color-primary);
-  color: var(--color-dark);
+  color: #5a2a0a;
+  transform: translateY(0);
 }
 
 .btn-outline {
   background: transparent;
   color: var(--color-dark);
-  border-color: var(--color-dark);
+  border: 2px solid var(--color-dark);
 }
 
 .btn-outline:hover {
@@ -195,9 +187,9 @@ img {
 /* Scroll Reveal */
 [data-reveal] {
   opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-              transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 [data-reveal].revealed {
   opacity: 1;
@@ -205,9 +197,9 @@ img {
 }
 [data-reveal-left] {
   opacity: 0;
-  transform: translateX(-14px);
-  transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-              transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: translateX(-40px);
+  transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 [data-reveal-left].revealed {
   opacity: 1;
@@ -215,9 +207,9 @@ img {
 }
 [data-reveal-right] {
   opacity: 0;
-  transform: translateX(14px);
-  transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-              transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: translateX(40px);
+  transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 [data-reveal-right].revealed {
   opacity: 1;
@@ -225,7 +217,7 @@ img {
 }
 [data-reveal-scale] {
   opacity: 0;
-  transform: scale(0.985);
+  transform: scale(0.9);
   transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
               transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -234,30 +226,33 @@ img {
   transform: scale(1);
 }
 
-/* Card hover: discreto */
+/* Card hover improvements */
 .dish-card,
 .menu-item,
 .review-card,
 .value-card,
 .nos-value-card {
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.3s ease,
+              border-color 0.3s ease !important;
 }
 .dish-card:hover,
 .menu-item:hover {
-  border-color: var(--color-line) !important;
-  box-shadow: 0 10px 30px rgba(51, 42, 36, 0.08) !important;
+  transform: translateY(-6px) !important;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12) !important;
+  border-color: var(--color-primary) !important;
 }
 
 /* Image hover zoom */
 .dish-img,
 .gallery-thumb,
 .gallery-img {
-  transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
 }
 .dish-card:hover .dish-img,
 .gallery-thumb:hover,
 .gallery-img:hover {
-  transform: scale(1.025);
+  transform: scale(1.05);
 }
 
 @media (max-width: 768px) {

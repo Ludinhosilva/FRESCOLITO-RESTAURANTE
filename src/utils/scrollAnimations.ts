@@ -4,11 +4,12 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 
 export function initScrollAnimations() {
-  ScrollTrigger.getAll().forEach((t) => t.kill())
+  ScrollTrigger.getAll().forEach(t => t.kill())
 
   const path = window.location.pathname
 
   if (path === '/' || path === '') animateHome()
+  if (path === '/menu' || path.startsWith('/menu')) animateMenu()
   if (path === '/nosotros') animateNosotros()
   if (path === '/galeria') animateGaleria()
   if (path === '/contacto') animateContacto()
@@ -19,57 +20,115 @@ function animateHome() {
   if (!hero) return
 
   const heroContent = hero.querySelector('.hero-content')
-  if (!heroContent) return
+  const heroScroll = hero.querySelector('.hero-scroll')
 
-  gsap.to(heroContent, {
-    scrollTrigger: {
-      trigger: hero,
-      start: 'top top',
-      end: 'bottom top',
-      scrub: true,
-    },
-    opacity: 0,
-    y: 24,
-  })
+  if (heroContent) {
+    gsap.to(heroContent, {
+      scrollTrigger: {
+        trigger: hero,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true,
+      },
+      opacity: 0,
+      y: 60,
+      scale: 0.95,
+    })
+  }
+
+  if (heroScroll) {
+    gsap.to(heroScroll, {
+      scrollTrigger: {
+        trigger: hero,
+        start: 'top top',
+        end: 'center top',
+        scrub: true,
+      },
+      opacity: 0,
+    })
+  }
+}
+
+function animateMenu() {
+  const frame = document.querySelector('.pm-frame')
+  if (frame) {
+    gsap.from(frame, {
+      scrollTrigger: { trigger: frame, start: 'top bottom-=60px' },
+      opacity: 0,
+      scale: 0.97,
+      duration: 0.8,
+      ease: 'power3.out',
+    })
+  }
 }
 
 function animateNosotros() {
+  // Parallax suave en las imagenes.
+  gsap.utils.toArray<HTMLElement>('.nst-parallax').forEach((img) => {
+    gsap.fromTo(
+      img,
+      { yPercent: -7 },
+      {
+        yPercent: 7,
+        ease: 'none',
+        scrollTrigger: { trigger: img, start: 'top bottom', end: 'bottom top', scrub: true },
+      }
+    )
+  })
+
+  // Stagger en las tarjetas de Mision / Vision.
   const cards = gsap.utils.toArray<HTMLElement>('.nst-mv-card')
   if (cards.length) {
     gsap.from(cards, {
       scrollTrigger: { trigger: '.nst-mv', start: 'top bottom-=60px' },
       opacity: 0,
-      y: 14,
-      duration: 0.6,
-      stagger: 0.08,
-      ease: 'power2.out',
+      y: 40,
+      duration: 0.7,
+      stagger: 0.15,
+      ease: 'power3.out',
     })
   }
 
+  // Stagger en la linea de tiempo.
   const items = gsap.utils.toArray<HTMLElement>('.nst-tl-item')
   if (items.length) {
     gsap.from(items, {
       scrollTrigger: { trigger: '.nst-timeline', start: 'top bottom-=60px' },
       opacity: 0,
-      y: 12,
-      duration: 0.5,
-      stagger: 0.06,
-      ease: 'power2.out',
+      x: 40,
+      duration: 0.6,
+      stagger: 0.12,
+      ease: 'power3.out',
     })
   }
+
+  // Blur-in.
+  gsap.utils.toArray<HTMLElement>('.nst-blur').forEach((el) => {
+    gsap.from(el, {
+      scrollTrigger: { trigger: el, start: 'top bottom-=60px' },
+      opacity: 0,
+      filter: 'blur(12px)',
+      y: 24,
+      duration: 0.9,
+      ease: 'power2.out',
+    })
+  })
 }
 
 function animateGaleria() {
-  gsap.utils.toArray<HTMLElement>('.gal-item').forEach((el) => {
+  const galleryItems = gsap.utils.toArray<HTMLElement>('.gal-item')
+  galleryItems.forEach((el, i) => {
     gsap.from(el, {
       scrollTrigger: {
         trigger: el,
         start: 'top bottom-=30px',
       },
       opacity: 0,
-      y: 12,
+      y: 30,
+      scale: 0.95,
       duration: 0.5,
-      ease: 'power2.out',
+      delay: (i % 6) * 0.06,
+      ease: 'power3.out',
     })
   })
 }
@@ -80,9 +139,9 @@ function animateContacto() {
     gsap.from(header, {
       scrollTrigger: { trigger: header, start: 'top bottom-=40px' },
       opacity: 0,
-      y: 12,
-      duration: 0.6,
-      ease: 'power2.out',
+      y: 30,
+      duration: 0.8,
+      ease: 'power3.out',
     })
   }
 
@@ -93,9 +152,9 @@ function animateContacto() {
     gsap.from(form, {
       scrollTrigger: { trigger: form, start: 'top bottom-=60px' },
       opacity: 0,
-      y: 12,
-      duration: 0.6,
-      ease: 'power2.out',
+      x: -40,
+      duration: 0.8,
+      ease: 'power3.out',
     })
   }
 
@@ -103,10 +162,10 @@ function animateContacto() {
     gsap.from(info, {
       scrollTrigger: { trigger: info, start: 'top bottom-=60px' },
       opacity: 0,
-      y: 12,
-      duration: 0.6,
-      delay: 0.1,
-      ease: 'power2.out',
+      x: 40,
+      duration: 0.8,
+      delay: 0.15,
+      ease: 'power3.out',
     })
   }
 }

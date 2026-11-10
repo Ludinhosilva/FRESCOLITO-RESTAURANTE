@@ -2,19 +2,23 @@
 import BaseLayout from '../layouts/BaseLayout.astro'
 import CateringCotizador from '../components/react/CateringCotizador.tsx'
 import GaleriaIsland from '../components/react/GaleriaIsland.tsx'
+import { UtensilsCrossed, Armchair, Users } from 'lucide-react'
 import '../styles/catering.css'
 import '../styles/galeria.css'
 
 const servicios = [
   {
+    Icon: UtensilsCrossed,
     title: 'Comida para eventos',
     desc: 'Llevamos nuestra sazón amazónica y marina a tu evento: ceviches, chicharrones, chaufas, arroz con mariscos y más, preparado al momento.',
   },
   {
+    Icon: Armchair,
     title: 'Alquiler de menaje',
     desc: 'Vajilla, cubiertos, copas, mantelería y montaje de mesas. Nos encargamos del detalle para que tu celebración se vea impecable.',
   },
   {
+    Icon: Users,
     title: 'Personal de servicio',
     desc: 'Mozos y personal de atención para tu evento, con trato cercano y coordinado para que tú solo disfrutes con tus invitados.',
   },
@@ -64,7 +68,7 @@ const faqs = [
     <section class="cat-hero">
       <div class="container cat-hero-grid">
         <div data-reveal>
-          <span class="cat-label">Servicio de catering</span>
+          <span class="cat-label">· Servicio de catering ·</span>
           <h1 class="cat-title">Llevamos Frescolito a tu evento</h1>
           <p class="cat-lead">
             Comida para eventos, alquiler de menaje y personal de servicio. Nos encargamos de
@@ -84,14 +88,14 @@ const faqs = [
     <section class="cat-section alt">
       <div class="container">
         <div class="cat-head" data-reveal>
-          <span class="cat-label">Lo que ofrecemos</span>
+          <span class="cat-label">· Lo que ofrecemos ·</span>
           <h2 class="cat-h2">Nuestros servicios</h2>
           <p class="cat-sub">Todo lo que necesitas para tu evento, en un solo lugar.</p>
         </div>
         <div class="cat-grid-3">
-          {servicios.map(({ title, desc }, i) => (
+          {servicios.map(({ Icon, title, desc }) => (
             <article class="cat-card" data-reveal>
-              <span class="cat-card-num">{String(i + 1).padStart(2, '0')}</span>
+              <div class="cat-card-icon"><Icon /></div>
               <h3>{title}</h3>
               <p>{desc}</p>
             </article>
@@ -104,7 +108,7 @@ const faqs = [
     <section class="cat-section">
       <div class="container">
         <div class="cat-head" data-reveal>
-          <span class="cat-label">Así de simple</span>
+          <span class="cat-label">· Así de simple ·</span>
           <h2 class="cat-h2">Cómo funciona</h2>
         </div>
         <div class="cat-pasos">
@@ -123,7 +127,7 @@ const faqs = [
     <section class="cat-section alt">
       <div class="container">
         <div class="cat-head" data-reveal>
-          <span class="cat-label">Momentos</span>
+          <span class="cat-label">· Momentos ·</span>
           <h2 class="cat-h2">Nuestros eventos</h2>
         </div>
         <GaleriaIsland client:visible tabla="eventos_fotos" categorias={catEventos} fallback={fallbackEventos} />
@@ -134,7 +138,7 @@ const faqs = [
     <section class="cat-section">
       <div class="container">
         <div class="cat-head" data-reveal>
-          <span class="cat-label">Dónde llegamos</span>
+          <span class="cat-label">· Dónde llegamos ·</span>
           <h2 class="cat-h2">Cobertura y capacidad</h2>
         </div>
         <div class="cat-cobertura">
@@ -154,7 +158,7 @@ const faqs = [
     <section class="cat-section alt">
       <div class="container">
         <div class="cat-head" data-reveal>
-          <span class="cat-label">Dudas frecuentes</span>
+          <span class="cat-label">· Dudas frecuentes ·</span>
           <h2 class="cat-h2">Preguntas frecuentes</h2>
         </div>
         <div class="cat-faq" data-reveal>
@@ -173,7 +177,7 @@ const faqs = [
       <div class="container">
         <div class="cat-cta-card" data-reveal-scale>
           <div>
-            <span class="cat-label" style="color: var(--color-primary)">Cotiza tu evento</span>
+            <span class="cat-label" style="color: var(--color-primary)">· Cotiza tu evento ·</span>
             <h2>Cuéntanos tu evento</h2>
             <p>
               Completa los datos y te llevamos directo a WhatsApp con el mensaje listo.

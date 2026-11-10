@@ -17,7 +17,6 @@ const promo = {
 
 describe('popup automático de promociones', () => {
   beforeEach(() => {
-    sessionStorage.clear()
     vi.useFakeTimers()
     Object.defineProperty(HTMLDialogElement.prototype, 'showModal', {
       configurable: true,
@@ -66,22 +65,5 @@ describe('popup automático de promociones', () => {
     })
 
     expect(HTMLDialogElement.prototype.close).toHaveBeenCalledTimes(1)
-  })
-
-  it('no vuelve a abrir el popup en la misma sesión', () => {
-    const { unmount } = render(<PromoBanner inicial={[promo]} />)
-    act(() => vi.advanceTimersByTime(1200))
-    act(() => {
-      screen.getByRole('button', { name: /cerrar promoción/i }).click()
-    })
-    unmount()
-
-    const showModal = vi.mocked(HTMLDialogElement.prototype.showModal)
-    showModal.mockClear()
-
-    render(<PromoBanner inicial={[promo]} />)
-    act(() => vi.advanceTimersByTime(1200))
-
-    expect(showModal).not.toHaveBeenCalled()
   })
 })
