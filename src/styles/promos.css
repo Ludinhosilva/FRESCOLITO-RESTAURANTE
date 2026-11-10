@@ -421,6 +421,128 @@
   white-space: nowrap;
 }
 
+/* ===== Popup publicitario de inicio ===== */
+.promo-modal--anuncio {
+  width: min(780px, 92vw);
+  max-width: 780px;
+  max-height: 90vh;
+}
+.promo-modal--anuncio .promo-modal-card {
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #24132f;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 32px 90px rgba(30, 12, 42, 0.48);
+}
+.promo-modal--anuncio .promo-modal-media {
+  position: absolute;
+  inset: 0;
+  min-height: 0;
+  height: 100%;
+  background: #24132f;
+}
+.promo-popup-bg {
+  position: absolute;
+  inset: -16px;
+  background-position: center;
+  background-size: cover;
+  filter: blur(22px) saturate(1.15);
+  opacity: 0.55;
+  transform: scale(1.12);
+  pointer-events: none;
+}
+.promo-popup-frame {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.promo-popup-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.promo-popup-ph {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #4b1c61, #fdb913);
+  color: #fff;
+  font-family: var(--font-script);
+  font-size: clamp(3.5rem, 10vw, 7rem);
+}
+.promo-popup-badge {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 2;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: var(--color-dark);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 8px 22px rgba(253, 185, 19, 0.42);
+}
+.promo-popup-count {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  z-index: 2;
+}
+.promo-popup-body {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.15rem 1.5rem 1.35rem;
+  background: linear-gradient(180deg, transparent, rgba(28, 12, 38, 0.78));
+  pointer-events: none;
+}
+.promo-popup-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-width: 220px;
+  padding: 0.72rem 1.7rem;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(100deg, #eaff9a, #70efc1);
+  color: #4c2470;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 8px 28px rgba(112, 239, 193, 0.38);
+  pointer-events: auto;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.promo-popup-cta:hover {
+  color: #4c2470;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 34px rgba(112, 239, 193, 0.5);
+}
+.promo-modal-close--anuncio {
+  top: 14px;
+  right: auto;
+  left: 14px;
+  width: 38px;
+  height: 38px;
+  border-color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.9);
+}
+
 /* ===== Banner: responsive ===== */
 @media (max-width: 860px) {
   .promo-banner {
@@ -451,6 +573,20 @@
   .promo-modal-body {
     padding: 1.6rem;
   }
+  .promo-modal--anuncio .promo-modal-card {
+    display: block;
+    max-height: none;
+    overflow: hidden;
+  }
+  .promo-modal--anuncio .promo-modal-media {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    min-height: 0;
+  }
+  .promo-modal--anuncio .promo-popup-body {
+    padding: 1rem 1.1rem 1.2rem;
+  }
 }
 
 @media (max-width: 560px) {
@@ -477,6 +613,25 @@
     max-height: 90dvh;
     border-radius: 24px;
   }
+  .promo-modal--anuncio {
+    width: 92vw;
+    max-width: 92vw;
+    max-height: 82vh;
+  }
+  .promo-modal--anuncio .promo-modal-card {
+    aspect-ratio: auto;
+    min-height: min(82vh, 620px);
+  }
+  .promo-modal--anuncio .promo-popup-badge,
+  .promo-modal--anuncio .promo-popup-count {
+    right: 12px;
+  }
+  .promo-modal--anuncio .promo-popup-badge { top: 12px; }
+  .promo-modal--anuncio .promo-popup-count { bottom: 82px; }
+  .promo-popup-cta {
+    width: min(100%, 280px);
+    min-width: 0;
+  }
   .promo-modal-card {
     min-height: 0;
     height: auto;
@@ -500,4 +655,5 @@
   .promo-modal-close {
     transition: none;
   }
+  .promo-popup-cta { transition: none; }
 }

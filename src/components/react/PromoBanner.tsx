@@ -34,7 +34,10 @@ function Countdown({ hasta }: { hasta: string }) {
   return <span className="promo-count">Termina en {partes}</span>
 }
 
-function PromoMedia({ promo, variant }: { promo: Promocion; variant: 'banner' | 'modal' }) {
+type PromoMediaVariant = 'banner' | 'modal' | 'popup'
+type PromoModalVariant = 'detalle' | 'anuncio'
+
+function PromoMedia({ promo, variant }: { promo: Promocion; variant: PromoMediaVariant }) {
   const [error, setError] = useState(false)
   if (!promo.imagen || error) {
     return (
@@ -64,7 +67,17 @@ function PromoMedia({ promo, variant }: { promo: Promocion; variant: 'banner' | 
   )
 }
 
-function PromoModal({ promo, open, onClose }: { promo: Promocion; open: boolean; onClose: () => void }) {
+function PromoModal({
+  promo,
+  open,
+  variant,
+  onClose,
+}: {
+  promo: Promocion
+  open: boolean
+  variant: PromoModalVariant
+  onClose: () => void
+}) {
   const ref = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
@@ -84,52 +97,77 @@ function PromoModal({ promo, open, onClose }: { promo: Promocion; open: boolean;
   const enlace = promo.enlace && promo.enlace !== '#' ? promo.enlace : '/menu'
   const externo = /^https?:\/\//.test(enlace)
   const tituloId = `promo-modal-title-${promo.id}`
+  const anuncio = variant === 'anuncio'
 
   return (
     <dialog
       ref={ref}
-      className="promo-modal"
+      className={'promo-modal' + (anuncio ? ' promo-modal--anuncio' : '')}
       aria-labelledby={tituloId}
       onCancel={(e) => { e.preventDefault(); onClose() }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
     >
       <div className="promo-modal-card">
-        <button type="button" className="promo-modal-close" onClick={onClose} aria-label="Cerrar promoción">
+        <button
+          type="button"
+          className={'promo-modal-close' + (anuncio ? ' promo-modal-close--anuncio' : '')}
+          onClick={onClose}
+          aria-label="Cerrar promoción"
+        >
           <X size={20} />
         </button>
         <div className="promo-modal-media">
-          <PromoMedia key={promo.id} promo={promo} variant="modal" />
-          {promo.badge && <span className="promo-banner-badge">{promo.badge}</span>}
-        </div>
-        <div className="promo-modal-body">
-          <span className="promo-banner-label">Promoción</span>
-          <h2 id={tituloId}>{promo.titulo}</h2>
-          {promo.descripcion && <p>{promo.descripcion}</p>}
-          {(promo.precio_oferta || promo.precio_regular) && (
-            <div className="promo-banner-prices">
-              {promo.precio_oferta && <strong className="promo-banner-price">{promo.precio_oferta}</strong>}
-              {promo.precio_regular && <s className="promo-banner-price-regular">{promo.precio_regular}</s>}
+          <PromoMedia key={`${promo.id}-${variant}`} promo={promo} variant={anuncio ? 'popup' : 'modal'} />
+          {promo.badge && <span className={anuncio ? 'promo-popup-badge' : 'promo-banner-badge'}>{promo.badge}</span>}
+          {anuncio && promo.fecha_fin && (
+            <div className="promo-popup-count">
+              <Countdown key={`${promo.id}-${promo.fecha_fin}`} hasta={promo.fecha_fin} />
             </div>
           )}
-          {promo.fecha_fin && <Countdown key={`${promo.id}-${promo.fecha_fin}`} hasta={promo.fecha_fin} />}
-          <div className="promo-modal-actions">
+        </div>
+        {anuncio ? (
+          <div className="promo-modal-body promo-popup-body">
+            <h2 id={tituloId} className="sr-only">{promo.titulo}</h2>
             <a
-              className="btn btn-primary"
+              className="promo-popup-cta"
               href={enlace}
               {...(externo ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
               onClick={onClose}
             >
-              {promo.cta_label || 'Ver menú'} <ArrowRight size={16} />
+              {promo.cta_label || '¡Lo quiero!'} <ArrowRight size={17} />
             </a>
-            <button type="button" className="btn btn-outline" onClick={onClose}>Cerrar</button>
           </div>
-        </div>
+        ) : (
+          <div className="promo-modal-body">
+            <span className="promo-banner-label">Promoción</span>
+            <h2 id={tituloId}>{promo.titulo}</h2>
+            {promo.descripcion && <p>{promo.descripcion}</p>}
+            {(promo.precio_oferta || promo.precio_regular) && (
+              <div className="promo-banner-prices">
+                {promo.precio_oferta && <strong className="promo-banner-price">{promo.precio_oferta}</strong>}
+                {promo.precio_regular && <s className="promo-banner-price-regular">{promo.precio_regular}</s>}
+              </div>
+            )}
+            {promo.fecha_fin && <Countdown key={`${promo.id}-${promo.fecha_fin}`} hasta={promo.fecha_fin} />}
+            <div className="promo-modal-actions">
+              <a
+                className="btn btn-primary"
+                href={enlace}
+                {...(externo ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                onClick={onClose}
+              >
+                {promo.cta_label || 'Ver menú'} <ArrowRight size={16} />
+              </a>
+              <button type="button" className="btn btn-outline" onClick={onClose}>Cerrar</button>
+            </div>
+          </div>
+        )}
       </div>
     </dialog>
   )
 }
 
-export function PromoBannerContenido({ inicial = [] }: { inicial?: Promocion[] }) {
+export function PromoBannerContenido({ inicial = [], popup = false }: { inicial?: Promocion[]; popup?: boolean }) {
   const { data } = useQuery({
     queryKey: ['promociones'],
     queryFn: listarPromociones,
@@ -143,6 +181,17 @@ export function PromoBannerContenido({ inicial = [] }: { inicial?: Promocion[] }
   const [indice, setIndice] = useState(0)
   const [pausado, setPausado] = useState(false)
   const [modalAbierto, setModalAbierto] = useState(false)
+  const [modalVariant, setModalVariant] = useState<PromoModalVariant>('detalle')
+
+  useEffect(() => {
+    if (!popup || promos.length === 0 || modalAbierto) return
+    const id = window.setTimeout(() => {
+      setIndice(0)
+      setModalVariant('anuncio')
+      setModalAbierto(true)
+    }, 1200)
+    return () => window.clearTimeout(id)
+  }, [popup, promos.length, modalAbierto])
 
   useEffect(() => {
     const id = window.setTimeout(() => {
@@ -213,7 +262,14 @@ export function PromoBannerContenido({ inicial = [] }: { inicial?: Promocion[] }
                 {promo.precio_oferta && <strong className="promo-banner-price">{promo.precio_oferta}</strong>}
                 {promo.precio_regular && <s className="promo-banner-price-regular">{promo.precio_regular}</s>}
               </div>
-              <button type="button" className="promo-banner-cta" onClick={() => setModalAbierto(true)}>
+              <button
+                type="button"
+                className="promo-banner-cta"
+                onClick={() => {
+                  setModalVariant('detalle')
+                  setModalAbierto(true)
+                }}
+              >
                 Ver promoción <ArrowRight size={16} />
               </button>
             </div>
@@ -234,7 +290,12 @@ export function PromoBannerContenido({ inicial = [] }: { inicial?: Promocion[] }
           </div>
         </section>
       </div>
-      <PromoModal promo={promo} open={modalAbierto} onClose={() => setModalAbierto(false)} />
+      <PromoModal
+        promo={promo}
+        open={modalAbierto}
+        variant={modalVariant}
+        onClose={() => setModalAbierto(false)}
+      />
     </>
   )
 }
@@ -242,7 +303,7 @@ export function PromoBannerContenido({ inicial = [] }: { inicial?: Promocion[] }
 export default function PromoBanner({ inicial = [] }: { inicial?: Promocion[] }) {
   return (
     <QueryProvider>
-      <PromoBannerContenido inicial={inicial} />
+      <PromoBannerContenido inicial={inicial} popup />
     </QueryProvider>
   )
 }
