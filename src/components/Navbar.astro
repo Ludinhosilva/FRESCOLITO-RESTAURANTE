@@ -48,49 +48,49 @@ const links = [
   .navbar {
     position: fixed; top: 0; left: 0; right: 0; z-index: var(--z-navbar, 100);
     background: transparent;
-    transition: background 0.35s ease;
+    transition: background 0.3s ease, border-color 0.3s ease;
+    border-bottom: 1px solid transparent;
   }
   .navbar.scrolled {
-    background: rgba(255, 255, 255, 0.72);
-    -webkit-backdrop-filter: blur(var(--glass-blur, 16px)) saturate(var(--glass-saturate, 160%));
-    backdrop-filter: blur(var(--glass-blur, 16px)) saturate(var(--glass-saturate, 160%));
-    box-shadow: 0 1px 0 var(--glass-border-soft, rgba(255, 255, 255, 0.35));
+    background: rgba(251, 248, 242, 0.94);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-bottom-color: var(--color-line);
   }
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .navbar.scrolled { background: rgba(255, 255, 255, 0.97); }
+    .navbar.scrolled { background: var(--color-bg); }
   }
   .nav-container {
     display: flex; align-items: center; justify-content: center;
-    height: 70px; position: relative;
+    height: 68px; position: relative;
   }
   .nav-logo {
     display: flex; align-items: center; gap: 0.5rem;
     text-decoration: none;
-    position: absolute; left: var(--space-md);
+    position: absolute; left: 1.25rem;
   }
   .nav-logo-img {
-    height: 45px; width: 45px; border-radius: 50%; object-fit: cover;
+    height: 40px; width: 40px; border-radius: 50%; object-fit: cover;
     transition: border 0.3s ease;
-    border: 2px solid transparent;
+    border: 1px solid rgba(255, 255, 255, 0.5);
   }
-  .navbar:not(.scrolled) .nav-logo-img {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 12px rgba(253,185,19,0.3);
+  .navbar.scrolled .nav-logo-img {
+    border-color: var(--color-line);
   }
-  .nav-links { display: flex; gap: 2.5rem; align-items: center; }
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
   .nav-link {
-    font-family: var(--font-body); font-weight: 600; font-size: 0.9rem;
-    text-transform: uppercase; letter-spacing: 2px;
-    position: relative; transition: color 0.3s ease;
+    font-family: var(--font-body); font-weight: 500; font-size: 0.78rem;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    position: relative; transition: color 0.25s ease;
     text-decoration: none;
     padding: 0.5rem 0;
   }
-  .navbar:not(.scrolled) .nav-link { color: white; text-shadow: 0 2px 6px rgba(0,0,0,0.4); }
+  .navbar:not(.scrolled) .nav-link { color: rgba(255, 255, 255, 0.92); text-shadow: 0 1px 4px rgba(0,0,0,0.3); }
   .navbar.scrolled .nav-link { color: var(--color-dark); }
   .nav-link::after {
     content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-    height: 3px; background: var(--color-primary);
-    transform: scaleX(0); transition: transform 0.3s ease;
+    height: 1px; background: var(--color-primary);
+    transform: scaleX(0); transition: transform 0.25s ease;
   }
   .nav-link:hover::after, .nav-link.active::after { transform: scaleX(1); }
   .navbar:not(.scrolled) .nav-link:hover { color: var(--color-primary); }
@@ -117,33 +117,23 @@ const links = [
   /* ===== Drawer lateral móvil ===== */
   .mobile-backdrop {
     position: fixed; inset: 0; z-index: var(--z-overlay, 400);
-    background: rgba(62, 39, 35, 0.35);
+    background: rgba(38, 30, 25, 0.42);
     opacity: 0; visibility: hidden; pointer-events: none;
-    -webkit-backdrop-filter: blur(6px) saturate(140%);
-    backdrop-filter: blur(6px) saturate(140%);
     transition: opacity 0.3s ease, visibility 0.3s;
   }
   .mobile-backdrop.open { opacity: 1; visibility: visible; pointer-events: auto; }
-  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .mobile-backdrop { background: rgba(62, 39, 35, 0.55); }
-  }
 
   .mobile-drawer {
     position: fixed; top: 0; right: 0; bottom: 0; z-index: var(--z-modal, 450);
     width: min(84vw, 340px);
     display: flex; flex-direction: column;
-    background: rgba(255, 253, 248, 0.88);
-    -webkit-backdrop-filter: blur(var(--glass-blur, 16px)) saturate(var(--glass-saturate, 160%));
-    backdrop-filter: blur(var(--glass-blur, 16px)) saturate(var(--glass-saturate, 160%));
-    border-left: 1px solid rgba(255, 255, 255, 0.55);
-    box-shadow: -16px 0 48px rgba(62, 39, 35, 0.25);
+    background: var(--color-bg);
+    border-left: 1px solid var(--color-line);
+    box-shadow: -12px 0 40px rgba(51, 42, 36, 0.14);
     transform: translateX(100%);
     transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1), visibility 0s linear 0.35s;
     padding-bottom: env(safe-area-inset-bottom);
     visibility: hidden;
-  }
-  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .mobile-drawer { background: #FFFDF8; }
   }
   .mobile-drawer.open {
     transform: translateX(0); visibility: visible;
@@ -171,15 +161,15 @@ const links = [
   .mobile-link {
     display: flex; align-items: center; min-height: 52px;
     padding: 0 20px; font-family: var(--font-body);
-    font-weight: 700; font-size: 1rem; text-transform: uppercase;
-    letter-spacing: 1px; color: var(--color-dark);
+    font-weight: 500; font-size: 0.95rem; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--color-dark);
     text-decoration: none;
-    border-bottom: 1px solid rgba(62, 39, 35, 0.06);
+    border-bottom: 1px solid var(--color-line);
     transition: background 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
   }
   .mobile-link:hover, .mobile-link:focus-visible {
-    background: rgba(253, 185, 19, 0.12); color: var(--color-primary-hover);
-    padding-left: 26px;
+    background: var(--color-surface-alt); color: var(--color-dark);
+    padding-left: 24px;
   }
   .mobile-link.active { color: var(--color-primary-hover); }
   .mobile-link.active::after {
