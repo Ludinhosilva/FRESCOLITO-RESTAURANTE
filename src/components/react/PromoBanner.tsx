@@ -5,6 +5,7 @@ import QueryProvider from './ui/QueryProvider.tsx'
 import { listarPromociones, type Promocion } from '../../lib/promociones.ts'
 
 const SESSION_KEY = 'frescolito_promo_banner_closed'
+const POPUP_KEY = 'frescolito_promo_popup_closed'
 
 function calcRestante(hasta: string) {
   const diff = new Date(hasta).getTime() - Date.now()
@@ -182,16 +183,24 @@ export function PromoBannerContenido({ inicial = [], popup = false }: { inicial?
   const [pausado, setPausado] = useState(false)
   const [modalAbierto, setModalAbierto] = useState(false)
   const [modalVariant, setModalVariant] = useState<PromoModalVariant>('detalle')
+  const [popupCerrado, setPopupCerrado] = useState(() => {
+    if (typeof window === 'undefined') return false
+    try {
+      return sessionStorage.getItem(POPUP_KEY) === '1'
+    } catch {
+      return false
+    }
+  })
 
   useEffect(() => {
-    if (!popup || promos.length === 0 || modalAbierto) return
+    if (!popup || popupCerrado || promos.length === 0 || modalAbierto) return
     const id = window.setTimeout(() => {
       setIndice(0)
       setModalVariant('anuncio')
       setModalAbierto(true)
     }, 1200)
     return () => window.clearTimeout(id)
-  }, [popup, promos.length, modalAbierto])
+  }, [popup, popupCerrado, promos.length, modalAbierto])
 
   useEffect(() => {
     const id = window.setTimeout(() => {
@@ -228,6 +237,18 @@ export function PromoBannerContenido({ inicial = [], popup = false }: { inicial?
         /* noop */
       }
     }, 220)
+  }
+
+  const cerrarModal = () => {
+    if (modalVariant === 'anuncio') {
+      setPopupCerrado(true)
+      try {
+        sessionStorage.setItem(POPUP_KEY, '1')
+      } catch {
+        /* noop */
+      }
+    }
+    setModalAbierto(false)
   }
 
   return (
@@ -294,7 +315,7 @@ export function PromoBannerContenido({ inicial = [], popup = false }: { inicial?
         promo={promo}
         open={modalAbierto}
         variant={modalVariant}
-        onClose={() => setModalAbierto(false)}
+        onClose={cerrarModal}
       />
     </>
   )
