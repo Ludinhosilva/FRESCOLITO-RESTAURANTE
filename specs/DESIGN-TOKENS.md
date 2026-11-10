@@ -1,31 +1,37 @@
 # DESIGN TOKENS — FRESCOLITO RESTAURANTE
 
 > El proyecto tiene **dos sistemas** con la misma identidad de marca:
-> 1. **Landing / sitio público** (abajo) — cálido, expresivo, tipografía Playfair/Satisfy.
+> 1. **Landing / sitio público** (abajo) — editorial cálido, tipografía Playfair/Work Sans.
 > 2. **Paneles de personal** (Dirección A "Operativo moderno, cálido") — utilitario,
 >    mobile-first, neutro + acento de marca. Tokens en `src/styles/panel.css`.
 
 ## Colores
 
+Sistema editorial cálido: marfil, cacao, amarillo medido y verde profundo.
+
 | Token | Hex | Uso |
 |-------|-----|-----|
-| `--color-primary` | `#FDB913` | Amarillo vibrante — fondo logo, CTAs, acentos |
-| `--color-primary-hover` | `#F39C12` | Amarillo oscuro — hover de botones |
-| `--color-dark` | `#3E2723` | Marrón chocolate — textos principales, fondos oscuros |
-| `--color-mid` | `#8D6E63` | Marrón medio — bordes, fondos secundarios |
-| `--color-light` | `#BCAAA4` | Beige claro — fondos de tarjetas, secciones |
-| `--color-bg` | `#FFFFFF` | Blanco — fondo general |
-| `--color-text` | `#000000` | Negro — texto corporal |
+| `--color-primary` | `#E9A900` | Amarillo marca — CTAs y acentos |
+| `--color-primary-hover` | `#C98F00` | Hover de marca |
+| `--color-dark` | `#332A24` | Cacao — títulos y superficies oscuras |
+| `--color-mid` | `#6D6156` | Texto secundario |
+| `--color-light` | `#E6DDD0` | Bordes suaves |
+| `--color-bg` | `#FBF8F2` | Marfil — fondo general |
+| `--color-surface` | `#FFFFFF` | Tarjetas y superficies |
+| `--color-surface-alt` | `#F4EEE4` | Secciones alternas |
+| `--color-line` | `#E4DACB` | Bordes de 1px |
+| `--color-forest` | `#2F5D4A` | Verde profundo — etiquetas y enlaces |
+| `--color-text` | `#2B2520` | Texto corporal |
 
 ## Tipografía
 
 | Token | Fuente | Uso |
 |-------|--------|-----|
-| `--font-heading` | Playfair Display (400, 700, 900) | Títulos de sección |
-| `--font-body` | Poppins / Work Sans (300, 400, 600, 700) | Cuerpo de texto |
-| `--font-script` | Satisfy (400) | Marca "Frescolito" y títulos del landing |
+| `--font-heading` | Playfair Display (400–700) | Títulos y marca |
+| `--font-body` | Work Sans (300–700) | Cuerpo, botones y etiquetas |
+| `--font-script` | Playfair Display | Alias heredado para títulos |
 
-Cargadas vía Google Fonts en `src/layouts/BaseLayout.astro`.
+Solo estas dos familias se cargan en el sitio público (`src/layouts/BaseLayout.astro`).
 
 ## Espaciados
 
@@ -34,19 +40,20 @@ Cargadas vía Google Fonts en `src/layouts/BaseLayout.astro`.
 | `--space-xs` | 0.25rem |
 | `--space-sm` | 0.5rem |
 | `--space-md` | 1rem |
-| `--space-lg` | 2rem |
-| `--space-xl` | 4rem |
+| `--space-lg` | 1.75rem |
+| `--space-xl` | 3.5rem |
+| `--space-2xl` | 5rem |
 
 ## Bordes y Sombras
 
-- Radio de borde por defecto: `8px`
-- Sombras suaves en tarjetas: `0 4px 6px rgba(0,0,0,0.1)`
-- Sombras fuertes en modales: `0 10px 25px rgba(0,0,0,0.2)`
+- Radio de borde por defecto: `6px`
+- Sombras suaves en tarjetas: `0 1px 2px rgba(51, 42, 36, 0.06)`
+- Sombra de modales: `0 18px 50px rgba(51, 42, 36, 0.10)`
 
 ## Transiciones
 
-- Duración por defecto: `0.3s`
-- Easing: `ease-in-out`
+- Duración por defecto: `0.28s`
+- Easing: `cubic-bezier(0.25, 0.46, 0.45, 0.94)`
 
 ---
 
