@@ -33,13 +33,14 @@ const fallback = [
 ---
 
 <BaseLayout title="Galería | FRESCOLITO RESTAURANTE" description="Galería de fotos de nuestros platos, ambiente y momentos en FRESCOLITO." effect="scale">
-  <main style="padding-top:70px">
+  <main class="gal-page">
     <section class="gal-header">
-      <div class="container" style="text-align:center">
-        <span class="gal-label">· Explora ·</span>
-        <h1 class="gal-title">Galería</h1>
-        <span class="gal-divider"></span>
-        <p class="gal-sub">Descubre nuestros platos, ambiente y momentos</p>
+      <div class="container">
+        <div class="section-head">
+          <span class="section-kicker">Explora</span>
+          <h1 class="section-title">Galería</h1>
+          <p class="section-lead">Nuestros platos, el ambiente del salón y los momentos que se viven en Frescolito.</p>
+        </div>
       </div>
     </section>
 
@@ -52,41 +53,10 @@ const fallback = [
 </BaseLayout>
 
 <style>
-  .gal-header { padding: var(--space-lg) 0 var(--space-md); }
-  .gal-label {
-    font-family: var(--font-body); font-size: 0.7rem;
-    text-transform: uppercase; letter-spacing: 0.2em;
-    color: var(--color-mid); margin-bottom: var(--space-xs);
-    display: block;
+  .gal-page { padding-top: 68px; }
+  .gal-header {
+    padding: clamp(2.5rem, 5vw, 4rem) 0 2rem;
+    border-bottom: 1px solid var(--color-line);
   }
-  .gal-title {
-    font-family: var(--font-script); font-weight: 400;
-    font-size: clamp(2rem, 4vw, 3rem);
-    color: var(--color-dark);
-    background: linear-gradient(90deg,
-      var(--color-dark) 0%, var(--color-dark) 20%,
-      var(--color-primary-hover) 50%, var(--color-dark) 80%
-    );
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: gal-shine 6s ease-in-out infinite;
-    margin-bottom: var(--space-sm);
-  }
-  @keyframes gal-shine {
-    from { background-position: 200% center; }
-    to { background-position: -200% center; }
-  }
-  .gal-divider {
-    display: block; width: 30px; height: 2px;
-    background: var(--color-primary); border-radius: 2px;
-    margin: 0 auto var(--space-sm);
-  }
-  .gal-sub {
-    font-family: var(--font-body); font-size: 0.9rem;
-    color: var(--color-mid); margin: 0;
-  }
-
-  .gal-section { padding: 0 0 var(--space-xl); }
+  .gal-section { padding: 2.5rem 0 clamp(3rem, 6vw, 4.5rem); }
 </style>

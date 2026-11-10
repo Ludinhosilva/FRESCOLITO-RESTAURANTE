@@ -8,7 +8,7 @@ import ReclamacionForm from '../components/react/ReclamacionForm.tsx'
   description="Libro de Reclamaciones Virtual de Frescolito Restaurante."
   effect="fade"
 >
-  <main class="legal-page" style="padding-top:70px">
+  <main class="legal-page" style="padding-top:68px">
     <div class="container legal">
       <span class="legal-label">Legal</span>
       <h1 class="legal-title">Libro de Reclamaciones</h1>
@@ -35,18 +35,19 @@ import ReclamacionForm from '../components/react/ReclamacionForm.tsx'
 
 <style>
   .legal-page { padding-bottom: var(--space-xl); }
-  .legal { max-width: 820px; padding-top: var(--space-xl); }
+  .legal { max-width: 760px; padding-top: clamp(2.5rem, 5vw, 4rem); }
   .legal-label {
-    display: inline-block; font-family: var(--font-body); font-size: 0.75rem;
-    font-weight: 700; text-transform: uppercase; letter-spacing: 0.22em;
-    color: var(--color-primary-hover); margin-bottom: var(--space-sm);
+    display: inline-block; font-family: var(--font-body); font-size: 0.72rem;
+    font-weight: 600; text-transform: uppercase; letter-spacing: 0.16em;
+    color: var(--color-forest); margin-bottom: 0.6rem;
   }
   .legal-title {
-    font-family: var(--font-script); font-weight: 400;
-    font-size: clamp(2.25rem, 5vw, 3.25rem); color: var(--color-dark); margin-bottom: var(--space-md);
+    font-family: var(--font-heading); font-style: italic; font-weight: 400;
+    font-size: clamp(2.2rem, 4.5vw, 3.1rem); letter-spacing: -0.02em;
+    color: var(--color-dark); margin-bottom: 1rem;
   }
-  .legal p { color: var(--color-mid); line-height: 1.9; margin-bottom: var(--space-md); }
-  .legal a { color: var(--color-primary-hover); font-weight: 600; }
+  .legal p { color: var(--color-mid); line-height: 1.8; font-size: 0.94rem; margin-bottom: var(--space-md); }
+  .legal a { color: var(--color-forest); font-weight: 500; }
   .legal-form { margin: var(--space-lg) 0; }
   .legal-note { font-size: 0.9rem; }
 </style>
