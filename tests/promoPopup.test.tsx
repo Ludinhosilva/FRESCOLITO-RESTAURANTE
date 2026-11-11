@@ -1,6 +1,7 @@
 import { act, cleanup, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import PromoBanner from '../src/components/react/PromoBanner.tsx'
+import { queryClient } from '../src/lib/queryClient.ts'
 
 const promo = {
   id: 1,
@@ -18,6 +19,7 @@ const promo = {
 describe('popup automático de promociones', () => {
   beforeEach(() => {
     sessionStorage.clear()
+    queryClient.clear()
     vi.useFakeTimers()
     Object.defineProperty(HTMLDialogElement.prototype, 'showModal', {
       configurable: true,
@@ -66,6 +68,22 @@ describe('popup automático de promociones', () => {
     })
 
     expect(HTMLDialogElement.prototype.close).toHaveBeenCalledTimes(1)
+  })
+
+  it('muestra solo la promoción destacada en el inicio', () => {
+    const destacada = {
+      ...promo,
+      id: 3,
+      titulo: 'Combinado S/ 20',
+      imagen: '/imagenes/promos/promo-principal.jpg',
+      orden: 3,
+    }
+
+    render(<PromoBanner inicial={[destacada, { ...promo, id: 1, orden: 1 }]} />)
+    act(() => vi.advanceTimersByTime(0))
+
+    expect(screen.getByRole('heading', { name: /combinado s\/ 20/i })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: /desayuno frescolito/i })).not.toBeInTheDocument()
   })
 
   it('no vuelve a abrir el popup en la misma sesión', () => {

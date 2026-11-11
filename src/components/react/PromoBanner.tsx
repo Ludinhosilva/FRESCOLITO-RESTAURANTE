@@ -179,8 +179,6 @@ export function PromoBannerContenido({ inicial = [], popup = false }: { inicial?
   const [montado, setMontado] = useState(false)
   const [cerrado, setCerrado] = useState(false)
   const [closing, setClosing] = useState(false)
-  const [indice, setIndice] = useState(0)
-  const [pausado, setPausado] = useState(false)
   const [modalAbierto, setModalAbierto] = useState(false)
   const [modalVariant, setModalVariant] = useState<PromoModalVariant>('detalle')
   const [popupCerrado, setPopupCerrado] = useState(() => {
@@ -195,7 +193,6 @@ export function PromoBannerContenido({ inicial = [], popup = false }: { inicial?
   useEffect(() => {
     if (!popup || popupCerrado || promos.length === 0 || modalAbierto) return
     const id = window.setTimeout(() => {
-      setIndice(0)
       setModalVariant('anuncio')
       setModalAbierto(true)
     }, 1200)
@@ -214,17 +211,9 @@ export function PromoBannerContenido({ inicial = [], popup = false }: { inicial?
     return () => window.clearTimeout(id)
   }, [])
 
-  useEffect(() => {
-    if (promos.length < 2 || pausado || modalAbierto || cerrado) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const id = setInterval(() => setIndice((i) => (i + 1) % promos.length), 7000)
-    return () => clearInterval(id)
-  }, [promos.length, pausado, modalAbierto, cerrado])
-
   if (!montado || cerrado || promos.length === 0) return null
 
-  const actual = indice % promos.length
-  const promo = promos[actual]
+  const promo = promos[0]
 
   const cerrarBanner = () => {
     if (closing) return
@@ -256,11 +245,7 @@ export function PromoBannerContenido({ inicial = [], popup = false }: { inicial?
       <div className="promo-banner-wrap">
         <section
           className={'promo-banner' + (closing ? ' is-closing' : '')}
-          aria-label="Promociones"
-          onMouseEnter={() => setPausado(true)}
-          onMouseLeave={() => setPausado(false)}
-          onFocus={() => setPausado(true)}
-          onBlur={() => setPausado(false)}
+          aria-label="Promoción"
         >
           <button type="button" className="promo-banner-close" onClick={cerrarBanner} aria-label="Cerrar promociones">
             <X size={18} />
@@ -294,20 +279,6 @@ export function PromoBannerContenido({ inicial = [], popup = false }: { inicial?
                 Ver promoción <ArrowRight size={16} />
               </button>
             </div>
-            {promos.length > 1 && (
-              <div className="promo-banner-dots" aria-label="Promociones disponibles">
-                {promos.map((p, i) => (
-                  <button
-                    key={p.id}
-                    type="button"
-                    className={'promo-banner-dot' + (i === actual ? ' active' : '')}
-                    aria-label={`Ver promoción ${i + 1}`}
-                    aria-current={i === actual ? 'true' : undefined}
-                    onClick={() => setIndice(i)}
-                  />
-                ))}
-              </div>
-            )}
           </div>
         </section>
       </div>

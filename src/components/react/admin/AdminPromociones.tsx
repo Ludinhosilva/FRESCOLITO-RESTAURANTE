@@ -46,6 +46,7 @@ export default function AdminPromociones() {
     queryFn: listarPromocionesAdmin,
   })
 
+  const destacada = promos.find((p) => p.activo)
   const invalidar = () => queryClient.invalidateQueries({ queryKey: ['promociones-admin'] })
 
   const set = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }))
@@ -76,8 +77,9 @@ export default function AdminPromociones() {
     setSubiendo(true)
     try {
       const url = await subirImagenGaleria(file)
-      set('imagen', url)
-      toast('Imagen lista')
+      const nombreArchivo = file.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').trim().slice(0, 80)
+      setForm((f) => ({ ...f, imagen: url, titulo: f.titulo.trim() || nombreArchivo }))
+      toast('Flyer listo')
     } catch (err) {
       toast('Error: ' + err.message, 'error')
     } finally {
@@ -160,7 +162,7 @@ export default function AdminPromociones() {
       <div className="card">
         <div className="card-title">
           {editId ? <Pencil style={{ width: 16, height: 16 }} /> : <Plus style={{ width: 16, height: 16 }} />}
-          {editId ? 'Editar promoción' : 'Nueva promoción'}
+          {editId ? 'Editar flyer / promoción' : 'Nuevo flyer / promoción'}
           {editId && (
             <button className="icon-btn sm" style={{ marginLeft: 'auto' }} onClick={reset} aria-label="Cancelar edición">
               <X />
@@ -212,26 +214,37 @@ export default function AdminPromociones() {
             <input id="promo-fin" type="datetime-local" value={form.fecha_fin} onChange={(e) => set('fecha_fin', e.target.value)} />
           </div>
           <div className="field">
-            <label>Imagen</label>
+            <label>Flyer / imagen</label>
             <label className="btn btn-block" style={{ cursor: 'pointer' }}>
-              <ImagePlus /> {subiendo ? 'Subiendo...' : 'Elegir imagen'}
+              <ImagePlus /> {subiendo ? 'Subiendo...' : 'Subir flyer'}
               <input type="file" accept="image/*" onChange={subirImagen} disabled={subiendo} style={{ display: 'none' }} />
             </label>
-            {form.imagen && <img src={form.imagen} alt="" style={{ width: 72, height: 54, objectFit: 'cover', borderRadius: 8, marginTop: 8 }} />}
+            <p className="text-xs muted" style={{ marginTop: 6 }}>
+              Vertical recomendado: 1080 × 1350 px.
+            </p>
+            {form.imagen && (
+              <div className="promo-admin-preview">
+                <img src={form.imagen} alt="Vista previa del flyer" />
+              </div>
+            )}
           </div>
         </div>
 
-        <button className="btn btn-block" onClick={guardar}>{editId ? 'Guardar cambios' : 'Crear promoción'}</button>
+        <button className="btn btn-block" onClick={guardar}>{editId ? 'Guardar cambios' : 'Crear flyer / promoción'}</button>
       </div>
 
       <div className="card">
-        <div className="card-title">Promociones ({promos.length})</div>
+        <div className="card-title">Flyers y promociones ({promos.length})</div>
+        <p className="text-xs muted" style={{ marginTop: -4, marginBottom: 10 }}>
+          El primer flyer activo de la lista es el que se muestra en el inicio y en el popup. Usa las flechas para cambiar cuál se ve.
+        </p>
         {isLoading && <div className="skeleton" style={{ height: 80 }} />}
-        {!isLoading && promos.length === 0 && <div className="empty">Sin promociones todavía</div>}
+        {!isLoading && promos.length === 0 && <div className="empty">Sin flyers todavía</div>}
         <div className="gal-admin-grid">
           {promos.map((p, i) => (
             <div key={p.id} className={'gal-admin-item' + (p.activo ? '' : ' off')}>
               {p.imagen ? <img src={p.imagen} alt={p.titulo} loading="lazy" /> : <div className="promo-ph">{p.titulo.slice(0, 1)}</div>}
+              {destacada?.id === p.id && <span className="gal-admin-inicio">En inicio</span>}
               <span className="gal-admin-cat">{p.badge || p.titulo}</span>
               {p.fecha_fin && <span className="text-xs muted">vence {new Date(p.fecha_fin).toLocaleDateString()}</span>}
               <div className="gal-admin-actions">
@@ -248,7 +261,7 @@ export default function AdminPromociones() {
 
       {eliminando && (
         <ConfirmDialog
-          titulo="Eliminar promoción"
+          titulo="Eliminar flyer / promoción"
           peligro
           confirmLabel="Sí, eliminar"
           ocupado={eliminandoBusy}

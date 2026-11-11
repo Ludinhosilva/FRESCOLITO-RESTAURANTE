@@ -23,7 +23,7 @@ const TABS = [
   { id: 'uso', label: 'Uso' },
   { id: 'platos', label: 'Platos' },
   { id: 'galeria', label: 'Galería' },
-  { id: 'promociones', label: 'Promociones' },
+  { id: 'promociones', label: 'Flyers y promos' },
   { id: 'mesas', label: 'Mesas' },
   { id: 'inventario', label: 'Inventario' },
   { id: 'horario', label: 'Horario' },

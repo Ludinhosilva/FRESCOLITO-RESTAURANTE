@@ -24,8 +24,8 @@ export async function listarPromociones() {
     .from('promociones')
     .select('*')
     .eq('activo', true)
-    .order('orden')
-    .order('creado_en')
+    .order('orden', { ascending: false })
+    .order('creado_en', { ascending: false })
   if (error) throw error
   return data as Promocion[]
 }
@@ -35,8 +35,8 @@ export async function listarPromocionesAdmin() {
   const { data, error } = await db
     .from('promociones')
     .select('*')
-    .order('orden')
-    .order('creado_en')
+    .order('orden', { ascending: false })
+    .order('creado_en', { ascending: false })
   if (error) throw error
   return data as Promocion[]
 }
