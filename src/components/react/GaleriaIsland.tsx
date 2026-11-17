@@ -21,6 +21,7 @@ function Contenido({ tabla = 'galeria', categorias = [], fallback = [] }) {
 
   const [cat, setCat] = useState('todas')
   const visibles = cat === 'todas' ? fotos : fotos.filter((f) => f.cat === cat)
+  const contar = (id: string) => (id === 'todas' ? fotos.length : fotos.filter((f) => f.cat === id).length)
 
   const [idx, setIdx] = useState(null)
   const lastFocused = useRef(null)
@@ -65,17 +66,21 @@ function Contenido({ tabla = 'galeria', categorias = [], fallback = [] }) {
   return (
     <>
       {categorias.length > 1 && (
-        <div className="gal-filters">
-          {categorias.map((c) => (
-            <button
-              key={c.id}
-              className={'gal-filter' + (cat === c.id ? ' active' : '')}
-              aria-pressed={cat === c.id}
-              onClick={() => { setCat(c.id); setIdx(null) }}
-            >
-              {c.label}
-            </button>
-          ))}
+        <div className="gal-filters-wrap">
+          <span className="gal-filters-label">Filtrar</span>
+          <div className="gal-filters" role="group" aria-label="Filtrar galería">
+            {categorias.map((c) => (
+              <button
+                key={c.id}
+                className={'gal-filter' + (cat === c.id ? ' active' : '')}
+                aria-pressed={cat === c.id}
+                onClick={() => { setCat(c.id); setIdx(null) }}
+              >
+                <span>{c.label}</span>
+                <span className="gal-filter-count">{contar(c.id)}</span>
+              </button>
+            ))}
+          </div>
         </div>
       )}
 

@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro'
 import CateringCotizador from '../components/react/CateringCotizador.tsx'
 import GaleriaIsland from '../components/react/GaleriaIsland.tsx'
-import { UtensilsCrossed, Armchair, Users } from 'lucide-react'
+import { UtensilsCrossed, Armchair, Users, MapPin, ArrowRight } from 'lucide-react'
 import '../styles/catering.css'
 import '../styles/galeria.css'
 
@@ -85,19 +85,29 @@ const faqs = [
     </section>
 
     <!-- Servicios -->
-    <section class="cat-section alt">
-      <div class="container">
-        <div class="cat-head" data-reveal>
+    <section class="cat-section alt cat-services">
+      <div class="container cat-services-layout">
+        <div class="cat-services-intro" data-reveal-left>
           <span class="cat-label">· Lo que ofrecemos ·</span>
           <h2 class="cat-h2">Nuestros servicios</h2>
           <p class="cat-sub">Todo lo que necesitas para tu evento, en un solo lugar.</p>
+          <div class="cat-services-note">
+            <span>Comida</span>
+            <span aria-hidden="true">·</span>
+            <span>Menaje</span>
+            <span aria-hidden="true">·</span>
+            <span>Servicio</span>
+          </div>
         </div>
-        <div class="cat-grid-3">
-          {servicios.map(({ Icon, title, desc }) => (
-            <article class="cat-card" data-reveal>
-              <div class="cat-card-icon"><Icon /></div>
-              <h3>{title}</h3>
-              <p>{desc}</p>
+        <div class="cat-service-list">
+          {servicios.map(({ Icon, title, desc }, i) => (
+            <article class="cat-service-row" data-reveal>
+              <span class="cat-service-num">{String(i + 1).padStart(2, '0')}</span>
+              <div class="cat-service-icon"><Icon /></div>
+              <div class="cat-service-copy">
+                <h3>{title}</h3>
+                <p>{desc}</p>
+              </div>
             </article>
           ))}
         </div>
@@ -105,19 +115,20 @@ const faqs = [
     </section>
 
     <!-- Cómo funciona -->
-    <section class="cat-section">
+    <section class="cat-section cat-como">
       <div class="container">
-        <div class="cat-head" data-reveal>
+        <div class="cat-head cat-head--light" data-reveal>
           <span class="cat-label">· Así de simple ·</span>
           <h2 class="cat-h2">Cómo funciona</h2>
+          <p class="cat-sub">Cuatro pasos y una sola conversación.</p>
         </div>
-        <div class="cat-pasos">
+        <div class="cat-steps">
           {pasos.map((p, i) => (
-            <div class="cat-paso" data-reveal>
-              <span class="cat-paso-num">{i + 1}</span>
+            <article class="cat-step" data-reveal>
+              <span class="cat-step-num">{String(i + 1).padStart(2, '0')}</span>
               <h3>{p.title}</h3>
               <p>{p.desc}</p>
-            </div>
+            </article>
           ))}
         </div>
       </div>
@@ -137,18 +148,29 @@ const faqs = [
     <!-- Cobertura -->
     <section class="cat-section">
       <div class="container">
-        <div class="cat-head" data-reveal>
-          <span class="cat-label">· Dónde llegamos ·</span>
-          <h2 class="cat-h2">Cobertura y capacidad</h2>
-        </div>
-        <div class="cat-cobertura">
-          <div class="cat-cobertura-item" data-reveal-left>
-            <h3>Zona de atención</h3>
-            <p>Atendemos Iquitos y alrededores. Cuéntanos la ubicación de tu evento y coordinamos la logística del servicio.</p>
+        <div class="cat-cobertura-card" data-reveal>
+          <div class="cat-cobertura-visual">
+            <span class="cat-cobertura-kicker">Dónde llegamos</span>
+            <span class="cat-cobertura-pin" aria-hidden="true"><MapPin /></span>
+            <strong>Iquitos</strong>
+            <span class="cat-cobertura-zone">y alrededores</span>
+            <span class="cat-cobertura-region">Amazonía peruana</span>
           </div>
-          <div class="cat-cobertura-item" data-reveal-right>
-            <h3>Capacidad</h3>
-            <p>Nos adaptamos a eventos pequeños y grandes. Indícanos el número de invitados y te confirmamos la disponibilidad según la fecha.</p>
+          <div class="cat-cobertura-info">
+            <div class="cat-cobertura-item">
+              <span class="cat-cobertura-icon" aria-hidden="true"><MapPin /></span>
+              <div>
+                <h3>Zona de atención</h3>
+                <p>Atendemos Iquitos y alrededores. Cuéntanos la ubicación de tu evento y coordinamos la logística del servicio.</p>
+              </div>
+            </div>
+            <div class="cat-cobertura-item">
+              <span class="cat-cobertura-icon" aria-hidden="true"><Users /></span>
+              <div>
+                <h3>Capacidad</h3>
+                <p>Nos adaptamos a eventos pequeños y grandes. Indícanos el número de invitados y te confirmamos la disponibilidad según la fecha.</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -156,15 +178,23 @@ const faqs = [
 
     <!-- FAQ -->
     <section class="cat-section alt">
-      <div class="container">
-        <div class="cat-head" data-reveal>
+      <div class="container cat-faq-layout">
+        <div class="cat-faq-intro" data-reveal-left>
           <span class="cat-label">· Dudas frecuentes ·</span>
           <h2 class="cat-h2">Preguntas frecuentes</h2>
+          <p class="cat-sub">Lo esencial antes de cotizar tu evento, en un solo lugar.</p>
+          <a class="cat-faq-contact" href="#cotizar">
+            ¿Otra duda? Escríbenos <ArrowRight />
+          </a>
         </div>
-        <div class="cat-faq" data-reveal>
-          {faqs.map((f) => (
+        <div class="cat-faq" data-reveal-right>
+          {faqs.map((f, i) => (
             <details>
-              <summary>{f.q}</summary>
+              <summary>
+                <span class="cat-faq-num">{String(i + 1).padStart(2, '0')}</span>
+                <span class="cat-faq-q">{f.q}</span>
+                <span class="cat-faq-toggle" aria-hidden="true"></span>
+              </summary>
               <p>{f.a}</p>
             </details>
           ))}

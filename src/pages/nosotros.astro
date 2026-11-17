@@ -60,21 +60,31 @@ const marquee = ['SABORES DE LA AMAZONÍA', 'Frescura de la selva en tu mesa']
 
     <!-- 3. Misión / Visión -->
     <section class="nst-mv">
-      <div class="container nst-mv-grid">
-        <article class="nst-mv-card">
-          <h3>Misión</h3>
-          <p>
-            Ofrecer platos frescos y sabrosos de la cocina amazónica y marina, preparados al momento con
-            ingredientes de la región, brindando un servicio atento y una experiencia acogedora a cada cliente.
-          </p>
-        </article>
-        <article class="nst-mv-card">
-          <h3>Visión</h3>
-          <p>
-            Ser reconocidos como el restaurante favorito de Iquitos y un referente de la gastronomía amazónica
-            del Perú, destacados por nuestra sazón, nuestra calidad y el trato familiar que nos caracteriza.
-          </p>
-        </article>
+      <div class="container">
+        <div class="nst-mv-head" data-reveal>
+          <span class="nst-label">Lo que nos guía</span>
+          <h2 class="nst-h2">Misión y visión</h2>
+        </div>
+        <div class="nst-mv-grid">
+          <article class="nst-mv-card nst-mv-card--mision">
+            <span class="nst-mv-num" aria-hidden="true">01</span>
+            <span class="nst-mv-kicker">Misión</span>
+            <h3>Lo que hacemos cada día</h3>
+            <p>
+              Ofrecer platos frescos y sabrosos de la cocina amazónica y marina, preparados al momento con
+              ingredientes de la región, brindando un servicio atento y una experiencia acogedora a cada cliente.
+            </p>
+          </article>
+          <article class="nst-mv-card nst-mv-card--vision">
+            <span class="nst-mv-num" aria-hidden="true">02</span>
+            <span class="nst-mv-kicker">Visión</span>
+            <h3>Hacia dónde queremos llegar</h3>
+            <p>
+              Ser reconocidos como el restaurante favorito de Iquitos y un referente de la gastronomía amazónica
+              del Perú, destacados por nuestra sazón, nuestra calidad y el trato familiar que nos caracteriza.
+            </p>
+          </article>
+        </div>
       </div>
     </section>
 
@@ -102,9 +112,10 @@ const marquee = ['SABORES DE LA AMAZONÍA', 'Frescura de la selva en tu mesa']
           <h2 class="nst-h2">Nuestra historia</h2>
         </div>
         <div class="nst-timeline">
-          {historia.map((h) => (
-            <article class="nst-tl-item">
+          {historia.map((h, i) => (
+            <article class={`nst-tl-item ${i % 2 === 0 ? 'nst-tl-left' : 'nst-tl-right'}`}>
               <span class="nst-year">{h.year}</span>
+              <span class="nst-tl-dot" aria-hidden="true"></span>
               <p>{h.texto}</p>
             </article>
           ))}
@@ -200,19 +211,53 @@ const marquee = ['SABORES DE LA AMAZONÍA', 'Frescura de la selva en tu mesa']
 
   /* ===== 3. Misión / Visión ===== */
   .nst-mv { padding: var(--space-xl) 0; }
+  .nst-mv-head {
+    max-width: 640px; margin: 0 auto var(--space-xl); text-align: center;
+  }
   .nst-mv-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg);
+    display: grid; grid-template-columns: 1.15fr 0.85fr;
+    gap: clamp(2rem, 5vw, 5rem); align-items: center;
   }
-  .nst-mv-card {
-    background: var(--color-bg); border: 1px solid var(--color-light);
-    border-radius: var(--radius); padding: var(--space-lg);
-    box-shadow: var(--shadow-sm); border-top: 4px solid var(--color-primary);
+  .nst-mv-card { position: relative; }
+  .nst-mv-card--mision {
+    padding-top: var(--space-md);
+    border-top: 3px solid var(--color-primary);
   }
+  .nst-mv-card--vision {
+    background: var(--color-dark); color: #fff;
+    border-radius: calc(var(--radius) + 6px);
+    padding: var(--space-xl);
+    box-shadow: var(--shadow-lg); overflow: hidden;
+  }
+  .nst-mv-num {
+    position: absolute; top: 0; right: 0;
+    font-family: var(--font-heading); font-weight: 800;
+    font-size: clamp(4rem, 8vw, 6.5rem); line-height: 1;
+    color: var(--color-primary); opacity: 0.14;
+    pointer-events: none; user-select: none;
+  }
+  .nst-mv-card--vision .nst-mv-num {
+    top: var(--space-sm); right: var(--space-lg); opacity: 0.22;
+  }
+  .nst-mv-kicker {
+    display: inline-block; font-family: var(--font-body);
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.24em; color: var(--color-primary-hover);
+    margin-bottom: var(--space-sm);
+  }
+  .nst-mv-card--vision .nst-mv-kicker { color: var(--color-primary); }
   .nst-mv-card h3 {
-    font-family: var(--font-heading); font-weight: 700;
-    font-size: 1.5rem; color: var(--color-dark); margin-bottom: var(--space-sm);
+    font-family: var(--font-script); font-weight: 400;
+    font-size: clamp(1.7rem, 2.8vw, 2.35rem); line-height: 1.15;
+    color: var(--color-dark); margin-bottom: var(--space-sm);
+    max-width: 18ch;
   }
-  .nst-mv-card p { color: var(--color-mid); line-height: 1.9; }
+  .nst-mv-card--vision h3 { color: #fff; }
+  .nst-mv-card p {
+    color: var(--color-mid); line-height: 1.85; font-size: 0.98rem;
+    max-width: 46ch; margin: 0;
+  }
+  .nst-mv-card--vision p { color: rgba(255, 255, 255, 0.82); }
 
   /* ===== 4. Marquee ===== */
   .nst-marquee {
@@ -240,32 +285,66 @@ const marquee = ['SABORES DE LA AMAZONÍA', 'Frescura de la selva en tu mesa']
     .nst-marquee-track { animation: none; }
   }
 
-  /* ===== 5. Historia ===== */
+  /* ===== 5. Historia: línea de tiempo editorial ===== */
   .nst-historia { padding: var(--space-xl) 0; background: #FBF6EE; }
   .nst-head { text-align: center; margin-bottom: var(--space-xl); }
   .nst-timeline {
-    display: flex; gap: var(--space-md); overflow-x: auto;
-    scroll-snap-type: x mandatory; padding-bottom: var(--space-md);
-    -webkit-overflow-scrolling: touch;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    padding: var(--space-sm) 0;
   }
-  .nst-timeline::-webkit-scrollbar { height: 8px; }
-  .nst-timeline::-webkit-scrollbar-thumb { background: var(--color-light); border-radius: 50px; }
+  .nst-timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg,
+      transparent 0%,
+      rgba(62, 39, 35, 0.22) 6%,
+      rgba(62, 39, 35, 0.22) 94%,
+      transparent 100%);
+  }
   .nst-tl-item {
-    scroll-snap-align: start; flex: 0 0 320px;
-    background: var(--color-bg); border: 1px solid var(--color-light);
-    border-radius: var(--radius); padding: var(--space-lg);
-    box-shadow: var(--shadow-sm); position: relative;
+    position: relative;
+    width: calc(50% - var(--space-lg));
+    padding: 0 var(--space-lg) var(--space-md);
   }
-  .nst-tl-item::before {
-    content: ''; position: absolute; top: 0; left: var(--space-lg);
-    width: 44px; height: 4px; background: var(--color-primary); border-radius: 0 0 4px 4px;
-  }
+  .nst-tl-left { align-self: flex-start; text-align: right; }
+  .nst-tl-right { align-self: flex-end; text-align: left; }
   .nst-year {
-    display: block; font-family: var(--font-heading); font-weight: 900;
-    font-size: 2.25rem; color: var(--color-primary-hover);
-    margin-bottom: var(--space-sm); line-height: 1;
+    display: block;
+    font-family: var(--font-script);
+    font-weight: 400;
+    font-size: clamp(2.3rem, 4vw, 3.1rem);
+    color: var(--color-primary-hover);
+    line-height: 1;
+    margin-bottom: var(--space-sm);
   }
-  .nst-tl-item p { color: var(--color-mid); line-height: 1.8; font-size: 0.95rem; }
+  .nst-tl-dot {
+    position: absolute;
+    top: 0.85rem;
+    width: 13px;
+    height: 13px;
+    border: 3px solid var(--color-primary);
+    border-radius: 50%;
+    background: #FBF6EE;
+    box-shadow: 0 0 0 4px #FBF6EE;
+  }
+  .nst-tl-left .nst-tl-dot { right: calc(-1 * var(--space-lg) - 6px); }
+  .nst-tl-right .nst-tl-dot { left: calc(-1 * var(--space-lg) - 6px); }
+  .nst-tl-item p {
+    color: var(--color-mid);
+    line-height: 1.85;
+    font-size: 0.98rem;
+    max-width: 38ch;
+  }
+  .nst-tl-left p { margin-left: auto; }
+  .nst-tl-item:last-child .nst-year { color: var(--color-dark); }
 
   /* ===== 6. Visítanos ===== */
   .nst-visitanos { padding: var(--space-xl) 0; }
@@ -287,7 +366,18 @@ const marquee = ['SABORES DE LA AMAZONÍA', 'Frescura de la selva en tu mesa']
     }
     .nst-grid .nst-img { order: 2; }
     .nst-grid .nst-text { order: 1; }
-    .nst-tl-item { flex: 0 0 78vw; }
+    .nst-mv-card--vision { padding: var(--space-lg); }
+    .nst-mv-num { font-size: 4.5rem; }
+    .nst-timeline::before { left: 7px; transform: none; }
+    .nst-tl-item {
+      width: 100%;
+      align-self: stretch;
+      padding: 0 0 var(--space-lg) 2.1rem;
+      text-align: left;
+    }
+    .nst-tl-left p, .nst-tl-right p { margin-left: 0; }
+    .nst-tl-left .nst-tl-dot,
+    .nst-tl-right .nst-tl-dot { left: 1px; right: auto; top: 0.8rem; }
     .nst-visit-map { height: 300px; }
   }
 </style>

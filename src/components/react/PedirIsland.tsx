@@ -29,6 +29,7 @@ function Contenido() {
   const [codigo, setCodigo] = useState(() => obtenerUltimoPedido())
   const [hayUltimo, setHayUltimo] = useState(() => !!obtenerUltimoPedido())
   const [catActiva, setCatActiva] = useState(null)
+  const [franjaVisible, setFranjaVisible] = useState(false)
 
   const bodyRef = useRef(null)
   const sectionRefs = useRef({})
@@ -57,6 +58,17 @@ function Contenido() {
     }
     window.addEventListener('abrir-pedido', abrir)
     return () => window.removeEventListener('abrir-pedido', abrir)
+  }, [])
+
+  useEffect(() => {
+    const franja = document.querySelector('.nst-marquee')
+    if (!franja || typeof IntersectionObserver === 'undefined') return
+    const observer = new IntersectionObserver(
+      ([entry]) => setFranjaVisible(entry.isIntersecting),
+      { threshold: 0.01 }
+    )
+    observer.observe(franja)
+    return () => observer.disconnect()
   }, [])
 
   const porCategoria = useMemo(() => {
@@ -231,7 +243,14 @@ function Contenido() {
   return (
     <>
       {hayUltimo && !visible && (
-        <button className="verpedido-fab" onClick={verUltimo}>Ver mi pedido</button>
+        <button
+          className={`verpedido-fab${franjaVisible ? ' is-hidden' : ''}`}
+          onClick={verUltimo}
+          aria-hidden={franjaVisible}
+          tabIndex={franjaVisible ? -1 : 0}
+        >
+          Ver mi pedido
+        </button>
       )}
 
       {visible && (

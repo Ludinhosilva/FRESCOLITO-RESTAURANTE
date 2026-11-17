@@ -697,9 +697,13 @@
   border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.55));
   border-radius: var(--r-pill); padding: 12px 20px; font-family: var(--font-body);
   font-weight: 700; font-size: 14px; min-height: 44px; cursor: pointer;
-  box-shadow: var(--glass-shadow, 0 8px 32px rgba(28, 25, 23, 0.18)); transition: all 0.15s ease;
+  box-shadow: var(--glass-shadow, 0 8px 32px rgba(28, 25, 23, 0.18)); transition: all 0.25s ease;
 }
 .panel-root .verpedido-fab:hover { background: var(--brand-soft); }
+.panel-root .verpedido-fab.is-hidden {
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transform: translateY(12px);
+}
 
 /* Overlay de pedido cliente (editar pedido admin; glass) */
 .panel-root .pedir-overlay {

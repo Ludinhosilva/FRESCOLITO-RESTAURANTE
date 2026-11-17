@@ -6,11 +6,11 @@ import ContactForm from '../components/react/ContactForm.tsx'
 <BaseLayout title="Contacto | FRESCOLITO RESTAURANTE" description="Contáctanos. Estamos ubicados en Iquitos, Perú." effect="slide-right">
   <main style="padding-top: 70px">
     <section class="pc-header">
-      <div class="container" style="text-align:center">
+      <div class="container pc-head">
         <span class="pc-label">· Contáctanos ·</span>
         <h1 class="pc-title">Contacto</h1>
         <span class="pc-divider"></span>
-        <p class="pc-sub">Estamos ubicados en Iquitos, Perú</p>
+        <p class="pc-sub">Escríbenos o visítanos en Iquitos, Perú. Te respondemos por WhatsApp.</p>
       </div>
     </section>
     <ContactForm client:load />
@@ -18,7 +18,28 @@ import ContactForm from '../components/react/ContactForm.tsx'
 </BaseLayout>
 
 <style>
-  .pc-header { padding: var(--space-lg) 0 var(--space-md); }
+  .pc-header {
+    position: relative;
+    overflow: hidden;
+    padding: var(--space-xl) 0 var(--space-lg);
+  }
+  .pc-header::before {
+    content: '';
+    position: absolute;
+    top: -140px;
+    left: 50%;
+    width: 520px;
+    height: 320px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(253, 185, 19, 0.12), transparent 65%);
+    pointer-events: none;
+  }
+  .pc-head {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
   .pc-label {
     font-family: var(--font-body); font-size: 0.7rem;
     text-transform: uppercase; letter-spacing: 0.2em;

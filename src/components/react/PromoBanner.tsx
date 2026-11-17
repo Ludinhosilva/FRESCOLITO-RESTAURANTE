@@ -140,9 +140,13 @@ function PromoModal({
           </div>
         ) : (
           <div className="promo-modal-body">
-            <span className="promo-banner-label">Promoción</span>
+            <span className="promo-banner-label">Promoción especial</span>
             <h2 id={tituloId}>{promo.titulo}</h2>
-            {promo.descripcion && <p>{promo.descripcion}</p>}
+            <span className="promo-modal-rule" aria-hidden="true" />
+            <p>
+              {promo.descripcion ||
+                'Disfruta esta propuesta especial de Frescolito. Consulta disponibilidad al hacer tu pedido en el local o por delivery.'}
+            </p>
             {(promo.precio_oferta || promo.precio_regular) && (
               <div className="promo-banner-prices">
                 {promo.precio_oferta && <strong className="promo-banner-price">{promo.precio_oferta}</strong>}
@@ -150,6 +154,10 @@ function PromoModal({
               </div>
             )}
             {promo.fecha_fin && <Countdown key={`${promo.id}-${promo.fecha_fin}`} hasta={promo.fecha_fin} />}
+            <ul className="promo-modal-perks">
+              <li>Disponible en local y delivery</li>
+              <li>{promo.fecha_fin ? 'Promoción por tiempo limitado' : 'Consulta disponibilidad al pedir'}</li>
+            </ul>
             <div className="promo-modal-actions">
               <a
                 className="btn btn-primary"

@@ -76,32 +76,6 @@ function animateNosotros() {
     )
   })
 
-  // Stagger en las tarjetas de Mision / Vision.
-  const cards = gsap.utils.toArray<HTMLElement>('.nst-mv-card')
-  if (cards.length) {
-    gsap.from(cards, {
-      scrollTrigger: { trigger: '.nst-mv', start: 'top bottom-=60px' },
-      opacity: 0,
-      y: 40,
-      duration: 0.7,
-      stagger: 0.15,
-      ease: 'power3.out',
-    })
-  }
-
-  // Stagger en la linea de tiempo.
-  const items = gsap.utils.toArray<HTMLElement>('.nst-tl-item')
-  if (items.length) {
-    gsap.from(items, {
-      scrollTrigger: { trigger: '.nst-timeline', start: 'top bottom-=60px' },
-      opacity: 0,
-      x: 40,
-      duration: 0.6,
-      stagger: 0.12,
-      ease: 'power3.out',
-    })
-  }
-
   // Blur-in.
   gsap.utils.toArray<HTMLElement>('.nst-blur').forEach((el) => {
     gsap.from(el, {
